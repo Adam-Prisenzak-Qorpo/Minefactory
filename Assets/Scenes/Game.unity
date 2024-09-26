@@ -291,7 +291,7 @@ MonoBehaviour:
   worldSize: 100
   heightMultiplier: 25
   heightAddition: 10
-  sprite: {fileID: 7482667652216324306, guid: e044f484104894aa6a0419850556ebef, type: 3}
+  stone: {fileID: 11400000, guid: d54c66a26f3f24b4b8085634c81eb0b9, type: 2}
   caveFrequency: 0.05
   terrainFrequency: 0.05
   seed: 0

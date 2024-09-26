@@ -59,6 +59,8 @@
     "dotnet.defaultSolution": "Minefactory.sln",
     "cSpell.words": [
         "Mathf",
-        "Perlin"
+        "newtileclass",
+        "Perlin",
+        "Scriptable"
     ]
 }
