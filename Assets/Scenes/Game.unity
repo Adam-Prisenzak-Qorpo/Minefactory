@@ -288,11 +288,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2f58a6a896b98495888ba0f0d8858560, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  WorldSize: 100
-  Sprite: {fileID: 7482667652216324306, guid: e044f484104894aa6a0419850556ebef, type: 3}
-  NoiseFrequency: 0.05
-  Seed: 0
-  NoiseTexture: {fileID: 0}
+  worldSize: 100
+  heightMultiplier: 25
+  heightAddition: 10
+  sprite: {fileID: 7482667652216324306, guid: e044f484104894aa6a0419850556ebef, type: 3}
+  noiseFrequency: 0.05
+  seed: 0
+  noiseTexture: {fileID: 0}
 --- !u!4 &1924386280
 Transform:
   m_ObjectHideFlags: 0
