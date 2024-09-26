@@ -56,5 +56,9 @@
         "temp/": true,
         "Temp/": true
     },
-    "dotnet.defaultSolution": "Minefactory.sln"
+    "dotnet.defaultSolution": "Minefactory.sln",
+    "cSpell.words": [
+        "Mathf",
+        "Perlin"
+    ]
 }
