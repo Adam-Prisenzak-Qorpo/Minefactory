@@ -292,7 +292,8 @@ MonoBehaviour:
   heightMultiplier: 25
   heightAddition: 10
   sprite: {fileID: 7482667652216324306, guid: e044f484104894aa6a0419850556ebef, type: 3}
-  noiseFrequency: 0.05
+  caveFrequency: 0.05
+  terrainFrequency: 0.05
   seed: 0
   noiseTexture: {fileID: 0}
 --- !u!4 &1924386280
