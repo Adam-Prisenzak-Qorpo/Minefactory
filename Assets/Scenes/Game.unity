@@ -288,14 +288,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2f58a6a896b98495888ba0f0d8858560, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  tileAtlas: {fileID: 11400000, guid: 04762c43388674ed099d2ef4714b21ef, type: 2}
   worldSize: 100
   heightMultiplier: 25
   heightAddition: 10
-  stone: {fileID: 11400000, guid: d54c66a26f3f24b4b8085634c81eb0b9, type: 2}
   caveFrequency: 0.05
   terrainFrequency: 0.05
   seed: 0
-  noiseTexture: {fileID: 0}
+  caveNoiseTexture: {fileID: 0}
 --- !u!4 &1924386280
 Transform:
   m_ObjectHideFlags: 0

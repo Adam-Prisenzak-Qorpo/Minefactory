@@ -58,7 +58,9 @@
     },
     "dotnet.defaultSolution": "Minefactory.sln",
     "cSpell.words": [
+        "Behaviour",
         "Mathf",
+        "newtileatlas",
         "newtileclass",
         "Perlin",
         "Scriptable"

@@ -1,28 +1,33 @@
 using System.Collections.Generic;
+using TreeEditor;
 using UnityEngine;
 
 public class TerrainGeneration : MonoBehaviour
 {
+    [Header("Tile Settings")]
+    public TileAtlas tileAtlas;
+
+    [Header("Terrain Generation Settings")]
     public int worldSize = 100;
     public float heightMultiplier = 2f;
     public float heightAddition = 10f;
-    public TileClass stone;
-    public TileClass dirt;
+
+    [Header("Noise Settings")]
     public float caveFrequency = 0.05f;
     public float terrainFrequency = 0.05f;
     public float seed;
-    public Texture2D noiseTexture;
+    public Texture2D caveNoiseTexture;
     private readonly List<Vector2> tiles = new();
 
     // Start is called before the first frame update
     void Start()
     {
         seed = Random.Range(-10_000, 10_000);
-        GenerateNoiseTexture();
+        GenerateNoiseTexture(caveNoiseTexture, caveFrequency);
         GenerateTerrain();
     }
 
-    private void GenerateNoiseTexture()
+    private void GenerateNoiseTexture(Texture2D noiseTexture, float noiseFrequency)
     {
         noiseTexture = new Texture2D(worldSize, worldSize) { filterMode = FilterMode.Point };
         for (int x = 0; x < noiseTexture.width; x++)
@@ -30,8 +35,8 @@ public class TerrainGeneration : MonoBehaviour
             for (int y = 0; y < noiseTexture.height; y++)
             {
                 float noiseValue = Mathf.PerlinNoise(
-                    (x + seed) * caveFrequency,
-                    (y + seed) * caveFrequency
+                    (x + seed) * noiseFrequency,
+                    (y + seed) * noiseFrequency
                 );
                 noiseTexture.SetPixel(x, y, new Color(noiseValue, noiseValue, noiseValue));
             }
@@ -52,14 +57,14 @@ public class TerrainGeneration : MonoBehaviour
             {
                 if (y > height)
                 {
-                    PlaceTile(dirt, new Vector2(x, y));
+                    PlaceTile(tileAtlas.dirt, new Vector2(x, y));
                     continue;
                 }
 
-                float noiseValue = noiseTexture.GetPixel(x, y).r;
+                float noiseValue = caveNoiseTexture.GetPixel(x, y).r;
                 if (noiseValue > 0.2f)
                 {
-                    PlaceTile(stone, new Vector2(x, y));
+                    PlaceTile(tileAtlas.stone, new Vector2(x, y));
                 }
             }
         }
