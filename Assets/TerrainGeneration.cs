@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using TreeEditor;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class TerrainGeneration : MonoBehaviour
 {
@@ -10,7 +11,8 @@ public class TerrainGeneration : MonoBehaviour
     [Header("Terrain Generation Settings")]
     public int worldSize = 100;
     public float heightMultiplier = 2f;
-    public float heightAddition = 10f;
+    public float dirtHeight = 10f;
+    public bool generateCaves = true;
 
     [Header("Noise Settings")]
     public float caveFrequency = 0.05f;
@@ -19,17 +21,37 @@ public class TerrainGeneration : MonoBehaviour
     public Texture2D caveNoiseTexture;
     private readonly List<Vector2> tiles = new();
 
+    [Header("Ore Generation Settings")]
+    public float ironRarity;
+    public float ironSize;
+    public float ironDepth;
+    public float goldRarity,
+        goldSize,
+        goldDepth;
+    public float diamondRarity,
+        diamondSize,
+        diamondDepth;
+
+    public Texture2D ironNoiseTexture;
+    public Texture2D goldNoiseTexture;
+    public Texture2D diamondNoiseTexture;
+
     // Start is called before the first frame update
     void Start()
     {
         seed = Random.Range(-10_000, 10_000);
-        GenerateNoiseTexture(caveNoiseTexture, caveFrequency);
+        if (generateCaves)
+        {
+            caveNoiseTexture = GenerateNoiseTexture(0.25f, caveFrequency);
+        }
+        ironNoiseTexture = GenerateNoiseTexture(ironSize, ironRarity);
+        goldNoiseTexture = GenerateNoiseTexture(goldSize, goldRarity);
         GenerateTerrain();
     }
 
-    private void GenerateNoiseTexture(Texture2D noiseTexture, float noiseFrequency)
+    private Texture2D GenerateNoiseTexture(float limit, float noiseFrequency)
     {
-        noiseTexture = new Texture2D(worldSize, worldSize) { filterMode = FilterMode.Point };
+        var noiseTexture = new Texture2D(worldSize, worldSize) { filterMode = FilterMode.Point };
         for (int x = 0; x < noiseTexture.width; x++)
         {
             for (int y = 0; y < noiseTexture.height; y++)
@@ -38,11 +60,15 @@ public class TerrainGeneration : MonoBehaviour
                     (x + seed) * noiseFrequency,
                     (y + seed) * noiseFrequency
                 );
-                noiseTexture.SetPixel(x, y, new Color(noiseValue, noiseValue, noiseValue));
+                if (noiseValue > limit)
+                    noiseTexture.SetPixel(x, y, Color.white);
+                else
+                    noiseTexture.SetPixel(x, y, Color.black);
             }
         }
 
         noiseTexture.Apply();
+        return noiseTexture;
     }
 
     private void GenerateTerrain()
@@ -52,17 +78,27 @@ public class TerrainGeneration : MonoBehaviour
             var height =
                 Mathf.PerlinNoise((x + seed) * terrainFrequency, seed * terrainFrequency)
                     * heightMultiplier
-                + heightAddition;
+                + dirtHeight;
             for (int y = 0; y < worldSize; y++)
             {
-                if (y > height)
+                if (y > (worldSize - height))
                 {
                     PlaceTile(tileAtlas.dirt, new Vector2(x, y));
                     continue;
                 }
 
-                float noiseValue = caveNoiseTexture.GetPixel(x, y).r;
-                if (noiseValue > 0.2f)
+                if (generateCaves && caveNoiseTexture.GetPixel(x, y).r < 0.5f)
+                    continue;
+
+                if (y < (worldSize - ironDepth) && ironNoiseTexture.GetPixel(x, y).r > 0.5f)
+                {
+                    PlaceTile(tileAtlas.iron, new Vector2(x, y));
+                }
+                else if (y < (worldSize - goldDepth) && goldNoiseTexture.GetPixel(x, y).r > 0.5f)
+                {
+                    PlaceTile(tileAtlas.gold, new Vector2(x, y));
+                }
+                else
                 {
                     PlaceTile(tileAtlas.stone, new Vector2(x, y));
                 }
@@ -72,6 +108,8 @@ public class TerrainGeneration : MonoBehaviour
 
     private void PlaceTile(TileClass tile, Vector2 position)
     {
+        if (tiles.Contains(position))
+            return;
         var newTile = new GameObject(tile.tileName);
         newTile.transform.parent = this.transform;
         newTile.transform.position = position + new Vector2(0.5f, 0.5f);

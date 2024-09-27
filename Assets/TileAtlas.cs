@@ -6,4 +6,5 @@ public class TileAtlas : ScriptableObject
     public TileClass stone;
     public TileClass dirt;
     public TileClass iron;
+    public TileClass gold;
 }

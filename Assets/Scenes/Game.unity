@@ -290,12 +290,25 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   tileAtlas: {fileID: 11400000, guid: 04762c43388674ed099d2ef4714b21ef, type: 2}
   worldSize: 100
-  heightMultiplier: 25
-  heightAddition: 10
+  heightMultiplier: 5
+  dirtHeight: 2
+  generateCaves: 1
   caveFrequency: 0.05
   terrainFrequency: 0.05
   seed: 0
   caveNoiseTexture: {fileID: 0}
+  ironRarity: 0.4
+  ironSize: 0.8
+  ironDepth: 14
+  goldRarity: 0.9
+  goldSize: 0.8
+  goldDepth: 50
+  diamondRarity: 0
+  diamondSize: 0
+  diamondDepth: 0
+  ironNoiseTexture: {fileID: 0}
+  goldNoiseTexture: {fileID: 0}
+  diamondNoiseTexture: {fileID: 0}
 --- !u!4 &1924386280
 Transform:
   m_ObjectHideFlags: 0

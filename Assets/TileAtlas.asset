@@ -15,3 +15,4 @@ MonoBehaviour:
   stone: {fileID: 11400000, guid: d54c66a26f3f24b4b8085634c81eb0b9, type: 2}
   dirt: {fileID: 11400000, guid: afd167427018441b8b874913393429cd, type: 2}
   iron: {fileID: 11400000, guid: 72e2f124abdea48648fabca3135656db, type: 2}
+  gold: {fileID: 11400000, guid: bc74655512a4a4435902187eec5132c5, type: 2}
