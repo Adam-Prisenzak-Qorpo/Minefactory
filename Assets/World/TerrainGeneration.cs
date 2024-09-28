@@ -7,6 +7,8 @@ public class TerrainGeneration : MonoBehaviour
 {
     [Header("Tile Settings")]
     public TileAtlas tileAtlas;
+    // public OreContainer oreContainer;
+
 
     [Header("Terrain Generation Settings")]
     public int worldSize = 100;
@@ -22,19 +24,7 @@ public class TerrainGeneration : MonoBehaviour
     private readonly List<Vector2> tiles = new();
 
     [Header("Ore Generation Settings")]
-    public float ironRarity;
-    public float ironSize;
-    public float ironDepth;
-    public float goldRarity,
-        goldSize,
-        goldDepth;
-    public float diamondRarity,
-        diamondSize,
-        diamondDepth;
-
-    public Texture2D ironNoiseTexture;
-    public Texture2D goldNoiseTexture;
-    public Texture2D diamondNoiseTexture;
+    public OreContainer oreContainer;
 
     // Start is called before the first frame update
     void Start()
@@ -44,8 +34,10 @@ public class TerrainGeneration : MonoBehaviour
         {
             caveNoiseTexture = GenerateNoiseTexture(0.25f, caveFrequency);
         }
-        ironNoiseTexture = GenerateNoiseTexture(ironSize, ironRarity);
-        goldNoiseTexture = GenerateNoiseTexture(goldSize, goldRarity);
+        foreach (var ore in oreContainer.ores)
+        {
+            ore.SetNoiseTexture(GenerateNoiseTexture(ore.rarity, ore.size));
+        }
         GenerateTerrain();
     }
 
@@ -90,18 +82,19 @@ public class TerrainGeneration : MonoBehaviour
                 if (generateCaves && caveNoiseTexture.GetPixel(x, y).r < 0.5f)
                     continue;
 
-                if (y < (worldSize - ironDepth) && ironNoiseTexture.GetPixel(x, y).r > 0.5f)
+
+                bool orePlaced = false;
+                foreach (var ore in oreContainer.ores)
                 {
-                    PlaceTile(tileAtlas.iron, new Vector2(x, y));
+                    if (ore.canPlace(worldSize, x, y))
+                    {
+                        PlaceTile(ore.tile, new Vector2(x, y));
+                        orePlaced = true;
+                        break;
+                    }
                 }
-                else if (y < (worldSize - goldDepth) && goldNoiseTexture.GetPixel(x, y).r > 0.5f)
-                {
-                    PlaceTile(tileAtlas.gold, new Vector2(x, y));
-                }
-                else
-                {
-                    PlaceTile(tileAtlas.stone, new Vector2(x, y));
-                }
+                if (!orePlaced)
+                   PlaceTile(tileAtlas.stone, new Vector2(x, y));
             }
         }
     }
@@ -112,8 +105,12 @@ public class TerrainGeneration : MonoBehaviour
             return;
         var newTile = new GameObject(tile.tileName);
         newTile.transform.parent = this.transform;
-        newTile.transform.position = position + new Vector2(0.5f, 0.5f);
+        newTile.transform.position = position;
         newTile.AddComponent<SpriteRenderer>().sprite = tile.tileSprite;
+        newTile.AddComponent<BoxCollider2D>();
+        newTile.GetComponent<BoxCollider2D>().size = new Vector2(1, 1);
+        newTile.tag = "Ground";
+
         tiles.Add(position);
     }
 }
