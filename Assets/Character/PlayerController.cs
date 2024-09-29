@@ -1,6 +1,8 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PlayerController : MonoBehaviour
 {
@@ -35,6 +37,12 @@ public class PlayerController : MonoBehaviour
 
     private void FixedUpdate()
     {
+        bool worldChange = Input.GetKey(KeyCode.N);
+        if (worldChange)
+        {
+            SceneManager.LoadScene(topWorld ? "Game" : "FactoryGame");
+            return;
+        }
         float horizontal = Input.GetAxis("Horizontal");
         float vertical = Input.GetAxis("Vertical");
 
@@ -53,10 +61,10 @@ public class PlayerController : MonoBehaviour
             rb.velocity = move;
             return;
         }
-        move *= new Vector2(0, rb.velocity.y);
+        move.y = rb.velocity.y;
 
         float jump = Input.GetAxisRaw("Jump");
-
+        Console.WriteLine(isGrounded);
         if (vertical > 0.1f || jump > 0.1f)
         {
             if (isGrounded)

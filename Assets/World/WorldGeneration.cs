@@ -13,12 +13,15 @@ public class WorldGeneration : MonoBehaviour
 
     [Header("World Generation Settings")]
     public int worldSize = 100;
+    public int safeRadius = 10;
 
     [Header("Noise Settings")]
     public float woodFrequency = 0.05f;
     public float seed;
     public Texture2D woodNoiseTexture;
     private readonly List<Vector2> tiles = new();
+
+    private Vector2 MapCenter => new Vector2(worldSize / 2, worldSize / 2);
 
     // Start is called before the first frame update
     void Start()
@@ -57,14 +60,17 @@ public class WorldGeneration : MonoBehaviour
             for (int y = 0; y < worldSize; y++)
             {
                 var position = new Vector2(x, y);
+                PlaceTile(tileAtlas.dirt, position, false);
+
+                if (Vector2.Distance(position, MapCenter) < safeRadius)
+                {
+                    continue;
+                }
+
                 var woodValue = woodNoiseTexture.GetPixel(x, y).grayscale;
                 if (woodValue < 0.5f)
                 {
                     PlaceTile(tileAtlas.wood, position);
-                }
-                else
-                {
-                    PlaceTile(tileAtlas.dirt, position, false);
                 }
             }
         }
@@ -75,7 +81,7 @@ public class WorldGeneration : MonoBehaviour
         if (tiles.Contains(position))
             return;
         var newTile = new GameObject(tile.tileName);
-        newTile.transform.parent = this.transform;
+        newTile.transform.parent = transform;
         newTile.transform.position = position;
         newTile.AddComponent<SpriteRenderer>().sprite = tile.topTileSprite;
         if (isSolid)
@@ -83,6 +89,10 @@ public class WorldGeneration : MonoBehaviour
             newTile.AddComponent<BoxCollider2D>();
             newTile.GetComponent<BoxCollider2D>().size = new Vector2(1, 1);
             tiles.Add(position);
+        }
+        else
+        {
+            newTile.layer = LayerMask.NameToLayer("Background");
         }
     }
 }
