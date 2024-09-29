@@ -4,16 +4,16 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "newOre", menuName = "Ore Class")]
 public class OreClass : ScriptableObject
 {
-
     public TileClass tile;
     public float rarity;
     public float size;
     public int depth;
     private Texture2D noiseTexture;
 
-    public bool canPlace(int worldSize, int x, int y)
+    public bool CanPlace(int worldSize, int x, int y)
     {
-        if (y < (worldSize - depth) && noiseTexture.GetPixel(x, y).r > 0.5f) return true;
+        if (y < (worldSize - depth) && noiseTexture.GetPixel(x, y).r > 0.5f)
+            return true;
         return false;
     }
 

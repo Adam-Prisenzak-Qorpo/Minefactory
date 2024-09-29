@@ -7,6 +7,7 @@ public class PlayerController : MonoBehaviour
     public float speed;
     public float jumpForce;
     public bool isGrounded;
+    public bool topWorld;
     private Rigidbody2D rb;
     private SpriteRenderer sr;
 
@@ -15,7 +16,7 @@ public class PlayerController : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         sr = GetComponent<SpriteRenderer>();
     }
-    
+
     private void OnTriggerStay2D(Collider2D collision)
     {
         if (collision.CompareTag("Ground"))
@@ -35,10 +36,9 @@ public class PlayerController : MonoBehaviour
     private void FixedUpdate()
     {
         float horizontal = Input.GetAxis("Horizontal");
-        float jump = Input.GetAxisRaw("Jump");
-        float vertical = Input.GetAxisRaw("Vertical");
+        float vertical = Input.GetAxis("Vertical");
 
-        Vector2 move = new Vector2(horizontal*speed, rb.velocity.y);
+        var move = new Vector2(horizontal * speed, vertical * speed);
 
         if (horizontal < 0)
         {
@@ -48,15 +48,23 @@ public class PlayerController : MonoBehaviour
         {
             sr.flipX = false;
         }
+        if (topWorld)
+        {
+            rb.velocity = move;
+            return;
+        }
+        move *= new Vector2(0, rb.velocity.y);
+
+        float jump = Input.GetAxisRaw("Jump");
 
         if (vertical > 0.1f || jump > 0.1f)
         {
-            if (isGrounded){
+            if (isGrounded)
+            {
                 move.y = jumpForce;
             }
         }
 
         rb.velocity = move;
-
     }
 }

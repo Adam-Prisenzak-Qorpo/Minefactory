@@ -7,6 +7,7 @@ public class TerrainGeneration : MonoBehaviour
 {
     [Header("Tile Settings")]
     public TileAtlas tileAtlas;
+
     // public OreContainer oreContainer;
 
 
@@ -82,11 +83,10 @@ public class TerrainGeneration : MonoBehaviour
                 if (generateCaves && caveNoiseTexture.GetPixel(x, y).r < 0.5f)
                     continue;
 
-
                 bool orePlaced = false;
                 foreach (var ore in oreContainer.ores)
                 {
-                    if (ore.canPlace(worldSize, x, y))
+                    if (ore.CanPlace(worldSize, x, y))
                     {
                         PlaceTile(ore.tile, new Vector2(x, y));
                         orePlaced = true;
@@ -94,7 +94,7 @@ public class TerrainGeneration : MonoBehaviour
                     }
                 }
                 if (!orePlaced)
-                   PlaceTile(tileAtlas.stone, new Vector2(x, y));
+                    PlaceTile(tileAtlas.stone, new Vector2(x, y));
             }
         }
     }

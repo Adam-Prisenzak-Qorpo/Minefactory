@@ -1,11 +1,10 @@
-using UnityEngine;
 using System.Collections.Generic;
+using UnityEngine;
 
 [CreateAssetMenu(fileName = "NewOreContainer", menuName = "Ore Container")]
 public class OreContainer : ScriptableObject
 {
-    [SerializeField]
-    public List<OreClass> ores = new List<OreClass>();
+    public List<OreClass> ores = new();
 
     private Dictionary<string, OreClass> oreDictionary;
 

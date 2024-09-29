@@ -10,8 +10,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7b55ce94dd6da4eaa85c1d269153ea20, type: 3}
-  m_Name: Dirt
+  m_Name: Wood
   m_EditorClassIdentifier: 
-  tileName: dirt
-  tileSprite: {fileID: 581068379, guid: 2aafe21edcfe8486195ce41a2aab8e3a, type: 3}
-  topTileSprite: {fileID: -1960987817, guid: 2aafe21edcfe8486195ce41a2aab8e3a, type: 3}
+  tileName: wood
+  tileSprite: {fileID: 1096840357, guid: 2aafe21edcfe8486195ce41a2aab8e3a, type: 3}
+  topTileSprite: {fileID: 2019820943, guid: 2aafe21edcfe8486195ce41a2aab8e3a, type: 3}

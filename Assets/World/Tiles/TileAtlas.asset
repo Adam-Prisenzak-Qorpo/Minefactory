@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 317b268030646493faca4e4d841b21cd, type: 3}
   m_Name: TileAtlas
   m_EditorClassIdentifier: 
+  wood: {fileID: 11400000, guid: a45ac25a9488a40ef907d67e173a6f82, type: 2}
   stone: {fileID: 11400000, guid: d54c66a26f3f24b4b8085634c81eb0b9, type: 2}
   dirt: {fileID: 11400000, guid: afd167427018441b8b874913393429cd, type: 2}
   iron: {fileID: 11400000, guid: 72e2f124abdea48648fabca3135656db, type: 2}

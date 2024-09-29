@@ -5,4 +5,5 @@ public class TileClass : ScriptableObject
 {
     public string tileName;
     public Sprite tileSprite;
+    public Sprite topTileSprite;
 }
