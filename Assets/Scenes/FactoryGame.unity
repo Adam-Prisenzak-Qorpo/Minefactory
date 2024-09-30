@@ -134,9 +134,41 @@ PrefabInstance:
       propertyPath: topWorld
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 3222244687251136274, guid: 74567a78e87c4479d832b7f929540d17, type: 3}
+      propertyPath: m_IsTrigger
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6950665080087343781, guid: 74567a78e87c4479d832b7f929540d17, type: 3}
+      propertyPath: m_Mass
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 6950665080087343781, guid: 74567a78e87c4479d832b7f929540d17, type: 3}
       propertyPath: m_BodyType
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6950665080087343781, guid: 74567a78e87c4479d832b7f929540d17, type: 3}
+      propertyPath: m_Simulated
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6950665080087343781, guid: 74567a78e87c4479d832b7f929540d17, type: 3}
+      propertyPath: m_UseAutoMass
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6950665080087343781, guid: 74567a78e87c4479d832b7f929540d17, type: 3}
+      propertyPath: m_GravityScale
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6950665080087343781, guid: 74567a78e87c4479d832b7f929540d17, type: 3}
+      propertyPath: m_ExcludeLayers.m_Bits
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6950665080087343781, guid: 74567a78e87c4479d832b7f929540d17, type: 3}
+      propertyPath: m_IncludeLayers.m_Bits
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6950665080087343781, guid: 74567a78e87c4479d832b7f929540d17, type: 3}
+      propertyPath: m_UseFullKinematicContacts
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7495000943171874022, guid: 74567a78e87c4479d832b7f929540d17, type: 3}
       propertyPath: m_Name
@@ -144,11 +176,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8550743322738814522, guid: 74567a78e87c4479d832b7f929540d17, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 1.8211882
+      value: 50
       objectReference: {fileID: 0}
     - target: {fileID: 8550743322738814522, guid: 74567a78e87c4479d832b7f929540d17, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -2.894641
+      value: 50
       objectReference: {fileID: 0}
     - target: {fileID: 8550743322738814522, guid: 74567a78e87c4479d832b7f929540d17, type: 3}
       propertyPath: m_LocalPosition.z
@@ -345,6 +377,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   tileAtlas: {fileID: 11400000, guid: 04762c43388674ed099d2ef4714b21ef, type: 2}
   worldSize: 100
+  safeRadius: 10
   woodFrequency: 0.05
   seed: 0
   woodNoiseTexture: {fileID: 0}
@@ -352,6 +385,6 @@ MonoBehaviour:
 SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
-  - {fileID: 1165514074}
   - {fileID: 1924386280}
+  - {fileID: 1165514074}
   - {fileID: 1416826740}
