@@ -4,13 +4,8 @@ using UnityEngine;
 
 public class TileEntityClass : MonoBehaviour
 {
-    public Inventory playerInventory;
+    public InventoryClass playerInventory;
     public Item? item;
-
-    void Start()
-    {
-        Debug.Log($"Tile Entity Class: {name}");
-    }
 
     void OnMouseDown()
     {
