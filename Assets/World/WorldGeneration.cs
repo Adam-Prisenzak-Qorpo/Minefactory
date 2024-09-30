@@ -82,6 +82,7 @@ public class WorldGeneration : MonoBehaviour
         newTile.transform.parent = transform;
         newTile.transform.position = position;
         newTile.AddComponent<SpriteRenderer>().sprite = tile.topTileSprite;
+        newTile.AddComponent<TileEntityClass>();
         if (isSolid)
         {
             newTile.AddComponent<BoxCollider2D>();
