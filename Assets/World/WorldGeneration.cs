@@ -4,7 +4,7 @@ using UnityEngine;
 public class WorldGeneration : MonoBehaviour
 {
     [Header("Inventory Settings")]
-    public Inventory playerInventory;
+    public InventoryClass playerInventory;
 
     [Header("Tile Settings")]
     public TileAtlas tileAtlas;

@@ -1,38 +1,84 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "Inventory", menuName = "ScriptableObjects/Inventory")]
-public class Inventory : ScriptableObject
+public class Inventory : MonoBehaviour
 {
-    public List<ItemStack> items = new();
-    public int maxItems = 20;
+    public InventoryClass inventory;
+    public Sprite cellSprite;
 
-    public void AddItem(Item item)
+    public List<GameObject> cells;
+
+    // Start is called before the first frame update
+    void Start()
     {
-        if (items.Count < maxItems)
+        DisplayCells();
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        var toggleInventory = Input.GetKeyDown(KeyCode.I);
+        if (toggleInventory)
         {
-            var stack = items.Find(i => i.item == item);
-            if (stack == null)
+            var inventorySprite = GetComponent<SpriteRenderer>();
+            inventorySprite.enabled = !inventorySprite.enabled;
+            if (inventorySprite.enabled)
             {
-                stack = new ItemStack(item, 0);
-                items.Add(stack);
+                DisplayCells();
             }
-            stack.amount++;
-            Debug.Log("Added item: " + item.itemName);
-            Debug.Log("Item count: " + stack.amount);
+            else
+            {
+                foreach (var cell in cells)
+                {
+                    Destroy(cell);
+                }
+                cells.Clear();
+            }
         }
     }
 
-    public void RemoveItem(Item item)
+    // 2 x 10 grid. Cell size is 16x16
+    void DisplayCells()
     {
-        var stack = items.Find(i => i.item == item);
-        if (stack != null)
+        for (int i = 0; i < 20; i++)
         {
-            stack.amount--;
-            if (stack.amount <= 0)
+            var x = i % 10;
+            var y = i / 10;
+            var cell = new GameObject("Cell-" + i);
+            cell.transform.parent = transform;
+            cell.transform.localPosition = new Vector2(x - 4.5f, y - .5f);
+            cell.transform.localScale = Vector2.one;
+            var cellRenderer = cell.AddComponent<SpriteRenderer>();
+            cellRenderer.sprite = cellSprite;
+            cellRenderer.sortingOrder = 1;
+
+            var stack = inventory.GetItemStack(i);
+            if (stack != null)
             {
-                items.Remove(stack);
+                var itemObject = new GameObject("Item");
+                itemObject.transform.parent = cell.transform;
+                itemObject.transform.localScale = Vector2.one;
+                itemObject.transform.localPosition = Vector2.zero;
+                var itemRenderer = itemObject.AddComponent<SpriteRenderer>();
+                itemRenderer.sprite = stack.item.sprite;
+                itemRenderer.sortingOrder = 2;
+
+                // Add text
+                var textObject = new GameObject("Text");
+                textObject.transform.parent = cell.transform;
+                textObject.transform.localScale = new Vector2(0.1f, 0.1f);
+                textObject.transform.localPosition = new Vector2(-0.25f, 0.25f);
+                var text = textObject.AddComponent<TextMesh>();
+                text.text = stack.amount.ToString();
+                text.fontSize = 100;
+                text.characterSize = 0.3f;
+                text.anchor = TextAnchor.MiddleCenter;
+                text.color = Color.white;
+                var textRenderer = textObject.GetComponent<Renderer>();
+                textRenderer.sortingOrder = 3;
             }
+            cells.Add(cell);
         }
     }
 }
