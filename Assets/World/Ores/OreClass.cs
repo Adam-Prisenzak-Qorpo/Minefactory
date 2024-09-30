@@ -1,7 +1,7 @@
 using UnityEngine;
 
 [System.Serializable]
-[CreateAssetMenu(fileName = "newOre", menuName = "Ore Class")]
+[CreateAssetMenu(fileName = "newOre", menuName = "ScriptableObjects/Ore Class")]
 public class OreClass : ScriptableObject
 {
     public TileClass tile;

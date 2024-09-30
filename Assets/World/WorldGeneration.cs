@@ -3,6 +3,9 @@ using UnityEngine;
 
 public class WorldGeneration : MonoBehaviour
 {
+    [Header("Inventory Settings")]
+    public Inventory playerInventory;
+
     [Header("Tile Settings")]
     public TileAtlas tileAtlas;
 
@@ -84,6 +87,9 @@ public class WorldGeneration : MonoBehaviour
         newTile.AddComponent<SpriteRenderer>().sprite = tile.topTileSprite;
         if (isSolid)
         {
+            var entityClass = newTile.AddComponent<TileEntityClass>();
+            entityClass.playerInventory = playerInventory;
+            entityClass.item = tile.item;
             newTile.AddComponent<BoxCollider2D>();
             newTile.GetComponent<BoxCollider2D>().size = new Vector2(1, 1);
             tiles.Add(position);

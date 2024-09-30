@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "NewOreContainer", menuName = "Ore Container")]
+[CreateAssetMenu(fileName = "NewOreContainer", menuName = "ScriptableObjects/Ore Container")]
 public class OreContainer : ScriptableObject
 {
     public List<OreClass> ores = new();
