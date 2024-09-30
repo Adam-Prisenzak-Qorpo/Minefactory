@@ -1,6 +1,6 @@
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "newtileatlas", menuName = "Tile Atlas")]
+[CreateAssetMenu(fileName = "newtileatlas", menuName = "ScriptableObjects/Tile Atlas")]
 public class TileAtlas : ScriptableObject
 {
     public TileClass wood;

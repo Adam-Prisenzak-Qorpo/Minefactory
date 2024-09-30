@@ -15,3 +15,4 @@ MonoBehaviour:
   tileName: wood
   tileSprite: {fileID: 1096840357, guid: 2aafe21edcfe8486195ce41a2aab8e3a, type: 3}
   topTileSprite: {fileID: 2019820943, guid: 2aafe21edcfe8486195ce41a2aab8e3a, type: 3}
+  item: {fileID: 11400000, guid: 95758610dbe5149f5872d3022ec93b83, type: 2}
