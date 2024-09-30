@@ -3,6 +3,9 @@ using UnityEngine;
 
 public class TerrainGeneration : MonoBehaviour
 {
+    [Header("Inventory Settings")]
+    public InventoryClass playerInventory;
+
     [Header("Tile Settings")]
     public TileAtlas tileAtlas;
 
@@ -72,14 +75,17 @@ public class TerrainGeneration : MonoBehaviour
                 + dirtHeight;
             for (int y = 0; y < worldSize; y++)
             {
+                PlaceTile(tileAtlas.mineBackground, new Vector2(x, y), false);
                 if (y > (worldSize - height))
                 {
                     PlaceTile(tileAtlas.dirt, new Vector2(x, y));
                     continue;
                 }
 
-                if (generateCaves && caveNoiseTexture.GetPixel(x, y).r < 0.5f)
+                if (generateCaves && caveNoiseTexture.GetPixel(x, y).r < 0.5f) 
                     continue;
+                
+                    
 
                 bool orePlaced = false;
                 foreach (var ore in oreContainer.ores)
@@ -97,18 +103,31 @@ public class TerrainGeneration : MonoBehaviour
         }
     }
 
-    private void PlaceTile(TileClass tile, Vector2 position)
+    private void PlaceTile(TileClass tile, Vector2 position, bool isSolid = true)
     {
         if (tiles.Contains(position))
             return;
         var newTile = new GameObject(tile.tileName);
-        newTile.transform.parent = this.transform;
+        newTile.transform.parent = transform;
         newTile.transform.position = position;
-        newTile.AddComponent<SpriteRenderer>().sprite = tile.tileSprite;
-        newTile.AddComponent<BoxCollider2D>();
-        newTile.GetComponent<BoxCollider2D>().size = new Vector2(1, 1);
-        newTile.tag = "Ground";
-
-        tiles.Add(position);
+        var spriteRenderer = newTile.AddComponent<SpriteRenderer>();
+        spriteRenderer.sprite = tile.tileSprite;
+        if (isSolid)
+        {
+            var entityClass = newTile.AddComponent<TileEntityClass>();
+            entityClass.playerInventory = playerInventory;
+            entityClass.item = tile.item;
+            newTile.AddComponent<BoxCollider2D>();
+            newTile.GetComponent<BoxCollider2D>().size = new Vector2(1, 1);
+            newTile.tag = "Ground";
+            tiles.Add(position);
+        }
+        else
+        {
+            newTile.layer = LayerMask.NameToLayer("Background");
+            spriteRenderer.sortingLayerName = "Background"; 
+            spriteRenderer.sortingOrder = -1;
+        }
     }
+
 }
