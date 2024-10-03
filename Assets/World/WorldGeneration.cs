@@ -17,9 +17,12 @@ public class WorldGeneration : MonoBehaviour
     public int safeRadius = 10;
 
     [Header("Noise Settings")]
-    public float woodFrequency = 0.05f;
     public float seed;
+    public float woodFrequency = 0.05f;
     public Texture2D woodNoiseTexture;
+
+    public float stoneFrequency = 0.05f;
+    public Texture2D stoneNoiseTexture;
     private readonly List<Vector2> tiles = new();
 
     private Vector2 MapCenter => new Vector2(worldSize / 2, worldSize / 2);
@@ -29,6 +32,7 @@ public class WorldGeneration : MonoBehaviour
     {
         seed = Random.Range(-10_000, 10_000);
         woodNoiseTexture = GenerateNoiseTexture(0.25f, woodFrequency);
+        stoneNoiseTexture = GenerateNoiseTexture(0.5f, stoneFrequency);
         GenerateTerrain();
     }
 
@@ -72,6 +76,11 @@ public class WorldGeneration : MonoBehaviour
                 if (woodValue < 0.5f)
                 {
                     PlaceTile(tileAtlas.wood, position);
+                }
+                var stoneValue = stoneNoiseTexture.GetPixel(x, y).grayscale;
+                if (stoneValue < 0.5f)
+                {
+                    PlaceTile(tileAtlas.stone, position);
                 }
             }
         }

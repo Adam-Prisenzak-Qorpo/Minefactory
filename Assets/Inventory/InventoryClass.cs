@@ -18,8 +18,7 @@ public class InventoryClass : ScriptableObject
                 items.Add(stack);
             }
             stack.amount++;
-            Debug.Log("Added item: " + item.itemName);
-            Debug.Log("Item count: " + stack.amount);
+            Inventory.onItemAdded();
         }
     }
 
@@ -33,6 +32,7 @@ public class InventoryClass : ScriptableObject
             {
                 items.Remove(stack);
             }
+            Inventory.onItemAdded();
         }
     }
 
