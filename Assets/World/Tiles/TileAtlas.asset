@@ -17,3 +17,4 @@ MonoBehaviour:
   dirt: {fileID: 11400000, guid: afd167427018441b8b874913393429cd, type: 2}
   iron: {fileID: 11400000, guid: 72e2f124abdea48648fabca3135656db, type: 2}
   gold: {fileID: 11400000, guid: bc74655512a4a4435902187eec5132c5, type: 2}
+  mineBackground: {fileID: 11400000, guid: 8234e8ee9c3bf4abb8866ec408817298, type: 2}

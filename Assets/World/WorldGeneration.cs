@@ -93,7 +93,8 @@ public class WorldGeneration : MonoBehaviour
         var newTile = new GameObject(tile.tileName);
         newTile.transform.parent = transform;
         newTile.transform.position = position;
-        newTile.AddComponent<SpriteRenderer>().sprite = tile.topTileSprite;
+        var spriteRenderer = newTile.AddComponent<SpriteRenderer>();
+        spriteRenderer.sprite = tile.topTileSprite;
         if (isSolid)
         {
             var entityClass = newTile.AddComponent<TileEntityClass>();
@@ -106,6 +107,8 @@ public class WorldGeneration : MonoBehaviour
         else
         {
             newTile.layer = LayerMask.NameToLayer("Background");
+            spriteRenderer.sortingLayerName = "Background"; 
+            spriteRenderer.sortingOrder = -1;
         }
     }
 }
