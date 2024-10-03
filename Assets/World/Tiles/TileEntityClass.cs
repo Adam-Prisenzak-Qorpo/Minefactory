@@ -1,11 +1,9 @@
 using UnityEngine;
 
-#nullable enable
-
 public class TileEntityClass : MonoBehaviour
 {
     public InventoryClass playerInventory;
-    public Item? item;
+    public Item item;
 
     void OnMouseDown()
     {
