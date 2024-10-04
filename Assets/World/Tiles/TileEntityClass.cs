@@ -17,5 +17,6 @@ public class TileEntityClass : MonoBehaviour
             Debug.Log("No item to add");
         }
         Destroy(gameObject);
+        WorldGeneration.onTileRemoved(transform.position);
     }
 }

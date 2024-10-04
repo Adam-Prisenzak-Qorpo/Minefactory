@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using UnityEditor.PackageManager;
 using UnityEngine;
 
 public class WorldGeneration : MonoBehaviour
@@ -23,13 +24,25 @@ public class WorldGeneration : MonoBehaviour
 
     public float stoneFrequency = 0.05f;
     public Texture2D stoneNoiseTexture;
-    private readonly List<Vector2> tiles = new();
+    public readonly List<Vector2> tiles = new();
 
     private Vector2 MapCenter => new Vector2(worldSize / 2, worldSize / 2);
+
+    public delegate bool CanPlace(Vector2 position);
+    public static CanPlace canPlace;
+
+    public delegate bool OnTilePlaced(Vector2 position, Item item);
+    public static OnTilePlaced onTilePlaced;
+
+    public delegate bool OnTileRemoved(Vector2 position);
+    public static OnTileRemoved onTileRemoved;
 
     // Start is called before the first frame update
     void Start()
     {
+        onTilePlaced = OnPlaceTile;
+        canPlace = CanPlaceOnTile;
+        onTileRemoved = OnRemoveTile;
         seed = Random.Range(-10_000, 10_000);
         woodNoiseTexture = GenerateNoiseTexture(0.25f, woodFrequency);
         stoneNoiseTexture = GenerateNoiseTexture(0.5f, stoneFrequency);
@@ -86,13 +99,48 @@ public class WorldGeneration : MonoBehaviour
         }
     }
 
-    private void PlaceTile(TileClass tile, Vector2 position, bool isSolid = true)
+    private bool OnPlaceTile(Vector2 position, Item item)
     {
-        if (tiles.Contains(position))
-            return;
+        var tile = tileAtlas.GetTile(item);
+        if (tile)
+        {
+            return PlaceTile(tile, position);
+        }
+        return false;
+    }
+
+    private bool OnRemoveTile(Vector2 position)
+    {
+        foreach (var tile in tiles)
+        {
+            if (tile.x == Mathf.Round(position.x) && tile.y == Mathf.Round(position.y))
+            {
+                tiles.Remove(tile);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private bool CanPlaceOnTile(Vector2 position)
+    {
+        foreach (var tile in tiles)
+        {
+            if (tile.x == Mathf.Round(position.x) && tile.y == Mathf.Round(position.y))
+            {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private bool PlaceTile(TileClass tile, Vector2 position, bool isSolid = true)
+    {
+        if (!CanPlaceOnTile(position))
+            return false;
         var newTile = new GameObject(tile.tileName);
         newTile.transform.parent = transform;
-        newTile.transform.position = position;
+        newTile.transform.position = new Vector2(Mathf.Round(position.x), Mathf.Round(position.y));
         var spriteRenderer = newTile.AddComponent<SpriteRenderer>();
         spriteRenderer.sprite = tile.topTileSprite;
         if (isSolid)
@@ -102,13 +150,14 @@ public class WorldGeneration : MonoBehaviour
             entityClass.item = tile.item;
             newTile.AddComponent<BoxCollider2D>();
             newTile.GetComponent<BoxCollider2D>().size = new Vector2(1, 1);
-            tiles.Add(position);
+            tiles.Add(newTile.transform.position);
         }
         else
         {
             newTile.layer = LayerMask.NameToLayer("Background");
-            spriteRenderer.sortingLayerName = "Background"; 
+            spriteRenderer.sortingLayerName = "Background";
             spriteRenderer.sortingOrder = -1;
         }
+        return true;
     }
 }
