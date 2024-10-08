@@ -5,14 +5,20 @@ public class Inventory : MonoBehaviour
 {
     public InventoryClass inventory;
     public Sprite cellSprite;
-    public delegate void OnItemAdded();
-    public static OnItemAdded onItemAdded;
+    public delegate void OnItemChange();
+    public static OnItemChange onItemChange;
     public List<GameObject> cells;
+    public Transform playerTransform;
+
+    public void FixedUpdate()
+    {
+        GetComponent<Transform>().position = playerTransform.position;
+    }
 
     // Start is called before the first frame update
     void Start()
     {
-        onItemAdded += RefreshInventory;
+        onItemChange += RefreshInventory;
         DisplayCells();
     }
 
@@ -66,26 +72,9 @@ public class Inventory : MonoBehaviour
                 itemObject.transform.parent = cell.transform;
                 itemObject.transform.localScale = Vector2.one;
                 itemObject.transform.localPosition = Vector2.zero;
-
-                var itemRenderer = itemObject.AddComponent<SpriteRenderer>();
-                itemRenderer.sprite = stack.item.sprite;
-                itemRenderer.sortingOrder = 2;
-
-                // Add text
-                var textObject = new GameObject("Text");
-                textObject.transform.parent = cell.transform;
-                textObject.transform.localScale = new Vector2(0.1f, 0.1f);
-                textObject.transform.localPosition = new Vector2(-0.25f, 0.25f);
-
-                var text = textObject.AddComponent<TextMesh>();
-                text.text = stack.amount.ToString();
-                text.fontSize = 100;
-                text.characterSize = 0.3f;
-                text.anchor = TextAnchor.MiddleCenter;
-                text.color = Color.white;
-
-                var textRenderer = textObject.GetComponent<Renderer>();
-                textRenderer.sortingOrder = 3;
+                var script = itemObject.AddComponent<InventorySlot>();
+                script.stack = stack;
+                script.inventory = inventory;
             }
             cells.Add(cell);
         }
