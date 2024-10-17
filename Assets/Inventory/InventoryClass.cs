@@ -18,12 +18,11 @@ public class InventoryClass : ScriptableObject
                 items.Add(stack);
             }
             stack.amount++;
-            Debug.Log("Added item: " + item.itemName);
-            Debug.Log("Item count: " + stack.amount);
+            Inventory.onItemChange();
         }
     }
 
-    public void RemoveItem(Item item)
+    public int RemoveItem(Item item)
     {
         var stack = items.Find(i => i.item == item);
         if (stack != null)
@@ -33,7 +32,9 @@ public class InventoryClass : ScriptableObject
             {
                 items.Remove(stack);
             }
+            Inventory.onItemChange();
         }
+        return stack.amount;
     }
 
     public ItemStack GetItemStack(int index)

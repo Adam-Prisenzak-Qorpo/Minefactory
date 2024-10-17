@@ -149,11 +149,11 @@ Transform:
   m_GameObject: {fileID: 877195099}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 50, y: 50, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 1
   m_Children: []
-  m_Father: {fileID: 1165514075}
+  m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &877195102
 MonoBehaviour:
@@ -170,6 +170,7 @@ MonoBehaviour:
   inventory: {fileID: 11400000, guid: d2046fd92d8b74c4ab7e37c98ea1d610, type: 2}
   cellSprite: {fileID: 21300000, guid: 39206e26390ed4c4bbad8a9ed8ebc254, type: 3}
   cells: []
+  playerTransform: {fileID: 1165514075}
 --- !u!212 &877195103
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -322,12 +323,13 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8730789231505272915, guid: 74567a78e87c4479d832b7f929540d17, type: 3}
+      propertyPath: m_SortingOrder
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
-    m_AddedGameObjects:
-    - targetCorrespondingSourceObject: {fileID: 8550743322738814522, guid: 74567a78e87c4479d832b7f929540d17, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 877195100}
+    m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 74567a78e87c4479d832b7f929540d17, type: 3}
 --- !u!4 &1165514075 stripped
@@ -347,6 +349,7 @@ GameObject:
   - component: {fileID: 1416826739}
   - component: {fileID: 1416826738}
   - component: {fileID: 1416826737}
+  - component: {fileID: 1416826741}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -442,6 +445,50 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1416826741
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1416826736}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a79441f348de89743a2939f4d699eac1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_RenderShadows: 1
+  m_RequiresDepthTextureOption: 2
+  m_RequiresOpaqueTextureOption: 2
+  m_CameraType: 0
+  m_Cameras: []
+  m_RendererIndex: -1
+  m_VolumeLayerMask:
+    serializedVersion: 2
+    m_Bits: 1
+  m_VolumeTrigger: {fileID: 0}
+  m_VolumeFrameworkUpdateModeOption: 2
+  m_RenderPostProcessing: 0
+  m_Antialiasing: 0
+  m_AntialiasingQuality: 2
+  m_StopNaN: 0
+  m_Dithering: 0
+  m_ClearDepth: 1
+  m_AllowXRRendering: 1
+  m_AllowHDROutput: 1
+  m_UseScreenCoordOverride: 0
+  m_ScreenSizeOverride: {x: 0, y: 0, z: 0, w: 0}
+  m_ScreenCoordScaleBias: {x: 0, y: 0, z: 0, w: 0}
+  m_RequiresDepthTexture: 0
+  m_RequiresColorTexture: 0
+  m_Version: 2
+  m_TaaSettings:
+    m_Quality: 3
+    m_FrameInfluence: 0.1
+    m_JitterScale: 1
+    m_MipBias: 0
+    m_VarianceClampScale: 0.9
+    m_ContrastAdaptiveSharpening: 0
 --- !u!1 &1924386278
 GameObject:
   m_ObjectHideFlags: 0
@@ -490,9 +537,11 @@ MonoBehaviour:
   tileAtlas: {fileID: 11400000, guid: 04762c43388674ed099d2ef4714b21ef, type: 2}
   worldSize: 100
   safeRadius: 10
-  woodFrequency: 0.05
   seed: 0
+  woodFrequency: 0.05
   woodNoiseTexture: {fileID: 0}
+  stoneFrequency: 0.05
+  stoneNoiseTexture: {fileID: 0}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
@@ -500,3 +549,4 @@ SceneRoots:
   - {fileID: 1924386280}
   - {fileID: 1165514074}
   - {fileID: 1416826740}
+  - {fileID: 877195100}

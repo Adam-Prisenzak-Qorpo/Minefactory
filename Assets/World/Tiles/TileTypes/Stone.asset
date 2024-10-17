@@ -15,3 +15,4 @@ MonoBehaviour:
   tileName: stone
   tileSprite: {fileID: -1120809991, guid: 2aafe21edcfe8486195ce41a2aab8e3a, type: 3}
   topTileSprite: {fileID: -53964446, guid: 2aafe21edcfe8486195ce41a2aab8e3a, type: 3}
+  item: {fileID: 11400000, guid: e91ad1affa47f4123b49d7a4a46e1c82, type: 2}
