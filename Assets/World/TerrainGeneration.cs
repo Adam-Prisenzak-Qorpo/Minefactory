@@ -43,6 +43,11 @@ public class TerrainGeneration : MonoBehaviour
         GenerateTerrain();
     }
 
+    private bool isSpawnArea(Vector2 position)
+    {
+        return position.y >=90 && position.y <= 92 && position.x >= 49 && position.x <= 51;
+    }
+
     private Texture2D GenerateNoiseTexture(float limit, float noiseFrequency)
     {
         var noiseTexture = new Texture2D(worldSize, worldSize) { filterMode = FilterMode.Point };
@@ -76,6 +81,10 @@ public class TerrainGeneration : MonoBehaviour
             for (int y = 0; y < worldSize; y++)
             {
                 PlaceTile(tileAtlas.mineBackground, new Vector2(x, y), false);
+                if (isSpawnArea(new Vector2(x, y)))
+                {
+                    continue;
+                }
                 if (y > (worldSize - height))
                 {
                     PlaceTile(tileAtlas.dirt, new Vector2(x, y));
@@ -104,9 +113,7 @@ public class TerrainGeneration : MonoBehaviour
     }
 
     private void PlaceTile(TileClass tile, Vector2 position, bool isSolid = true)
-    {
-        if (tiles.Contains(position))
-            return;
+    {   
         var newTile = new GameObject(tile.tileName);
         newTile.transform.parent = transform;
         newTile.transform.position = position;
@@ -119,14 +126,16 @@ public class TerrainGeneration : MonoBehaviour
             entityClass.item = tile.item;
             newTile.AddComponent<BoxCollider2D>();
             newTile.GetComponent<BoxCollider2D>().size = new Vector2(1, 1);
-            newTile.tag = "Ground";
+            newTile.tag = "Solid";
+            spriteRenderer.sortingLayerName = "Solid"; 
             tiles.Add(position);
         }
         else
         {
-            newTile.layer = LayerMask.NameToLayer("Background");
+            if (tiles.Contains(position))
+                return;
+            newTile.tag = "Background";
             spriteRenderer.sortingLayerName = "Background"; 
-            spriteRenderer.sortingOrder = -1;
         }
     }
 
