@@ -302,7 +302,7 @@ GameObject:
   - component: {fileID: 1006727140}
   - component: {fileID: 1006727139}
   m_Layer: 3
-  m_Name: Light 2D
+  m_Name: GlobalLight
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -622,11 +622,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5906814258319831750, guid: 74567a78e87c4479d832b7f929540d17, type: 3}
       propertyPath: m_Size.x
-      value: 0.7500324
+      value: 0.76
       objectReference: {fileID: 0}
     - target: {fileID: 5906814258319831750, guid: 74567a78e87c4479d832b7f929540d17, type: 3}
       propertyPath: m_Size.y
-      value: 1.000031
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5906814258319831750, guid: 74567a78e87c4479d832b7f929540d17, type: 3}
       propertyPath: m_Enabled
@@ -638,11 +638,11 @@ PrefabInstance:
       objectReference: {fileID: 6200000, guid: 2e1fe4b45404747058e09397b218500b, type: 2}
     - target: {fileID: 5906814258319831750, guid: 74567a78e87c4479d832b7f929540d17, type: 3}
       propertyPath: m_Offset.x
-      value: -0.00002002716
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5906814258319831750, guid: 74567a78e87c4479d832b7f929540d17, type: 3}
       propertyPath: m_Offset.y
-      value: -0.0000150203705
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5906814258319831750, guid: 74567a78e87c4479d832b7f929540d17, type: 3}
       propertyPath: m_IsTrigger
@@ -691,6 +691,10 @@ PrefabInstance:
     - target: {fileID: 8550743322738814522, guid: 74567a78e87c4479d832b7f929540d17, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8730789231505272915, guid: 74567a78e87c4479d832b7f929540d17, type: 3}
+      propertyPath: m_Enabled
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

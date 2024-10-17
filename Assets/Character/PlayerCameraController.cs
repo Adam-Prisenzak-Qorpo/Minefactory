@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class CamController : MonoBehaviour
+public class PalyerCameraController : MonoBehaviour
 {
     [Range(0, 1)]
     public float smoothTime = 0.1f;
