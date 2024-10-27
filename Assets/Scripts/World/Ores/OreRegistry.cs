@@ -1,4 +1,8 @@
+using Minefactory.Common;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "NewOreRegistry", menuName = "Ores/Registry")]
-public class OreRegistry : Registry<OreData> { }
+namespace Minefactory.World.Ores
+{
+    [CreateAssetMenu(fileName = "NewOreRegistry", menuName = "Ores/Registry")]
+    public class OreRegistry : Registry<OreData> { }
+}

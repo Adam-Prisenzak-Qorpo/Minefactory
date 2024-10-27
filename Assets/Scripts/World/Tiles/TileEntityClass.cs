@@ -1,22 +1,26 @@
+using Minefactory.Storage;
+using Minefactory.Storage.Items;
 using UnityEngine;
-
-public class TileEntityClass : MonoBehaviour
+namespace Minefactory.World.Tiles
 {
-    public StorageData playerInventory;
-    public ItemData item;
-
-    void OnMouseDown()
+    public class TileEntityClass : MonoBehaviour
     {
-        Debug.Log($"Clicked on {name}");
-        if (item != null)
+        public StorageData playerInventory;
+        public ItemData item;
+
+        void OnMouseDown()
         {
-            playerInventory.AddItem(item);
+            Debug.Log($"Clicked on {name}");
+            if (item != null)
+            {
+                playerInventory.AddItem(item);
+            }
+            else
+            {
+                Debug.Log("No item to add");
+            }
+            Destroy(gameObject);
+            WorldGeneration.onTileRemoved(transform.position);
         }
-        else
-        {
-            Debug.Log("No item to add");
-        }
-        Destroy(gameObject);
-        WorldGeneration.onTileRemoved(transform.position);
     }
 }

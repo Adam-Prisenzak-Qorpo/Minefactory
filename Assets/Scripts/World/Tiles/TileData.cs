@@ -1,15 +1,20 @@
+using Minefactory.Common;
+using Minefactory.Storage.Items;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "newtiledata", menuName = "Tiles/Data")]
-public class TileData : ScriptableObject, IWithName
+namespace Minefactory.World.Tiles
 {
-    public string tileName;
-    public Sprite tileSprite;
-    public Sprite topTileSprite;
-    public ItemData item;
-
-    public string GetName()
+    [CreateAssetMenu(fileName = "newtiledata", menuName = "Tiles/Data")]
+    public class TileData : ScriptableObject, IWithName
     {
-        return tileName;
+        public string tileName;
+        public Sprite tileSprite;
+        public Sprite topTileSprite;
+        public ItemData item;
+
+        public string GetName()
+        {
+            return tileName;
+        }
     }
 }

@@ -1,13 +1,17 @@
+using Minefactory.Common;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "new_item_data", menuName = "Items/Data")]
-public class ItemData : ScriptableObject, IWithName
+namespace Minefactory.Storage.Items
 {
-    public Sprite sprite;
-    public string itemName;
-
-    public string GetName()
+    [CreateAssetMenu(fileName = "new_item_data", menuName = "Items/Data")]
+    public class ItemData : ScriptableObject, IWithName
     {
-        return itemName;
+        public Sprite sprite;
+        public string itemName;
+
+        public string GetName()
+        {
+            return itemName;
+        }
     }
 }

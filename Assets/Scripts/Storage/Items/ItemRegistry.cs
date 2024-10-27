@@ -1,4 +1,8 @@
+using Minefactory.Common;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "NewItemRegistry", menuName = "Items/Registry")]
-public class ItemRegistry : Registry<ItemData> { }
+namespace Minefactory.Storage.Items
+{
+    [CreateAssetMenu(fileName = "NewItemRegistry", menuName = "Items/Registry")]
+    public class ItemRegistry : Registry<ItemData> { }
+}

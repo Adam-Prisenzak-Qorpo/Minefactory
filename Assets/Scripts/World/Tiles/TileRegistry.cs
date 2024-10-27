@@ -1,18 +1,22 @@
+using Minefactory.Common;
+using Minefactory.Storage.Items;
 using UnityEngine;
-
-[CreateAssetMenu(fileName = "newtileregistry", menuName = "Tiles/Registry")]
-public class TileRegistry : Registry<TileData>
+namespace Minefactory.World.Tiles
 {
-
-    public TileData GetTileByItem(ItemData item)
+    [CreateAssetMenu(fileName = "NewTileRegistry", menuName = "Tiles/Registry")]
+    public class TileRegistry : Registry<TileData>
     {
-        foreach (TileData tile in list)
+
+        public TileData GetTileByItem(ItemData item)
         {
-            if (tile.item == item)
+            foreach (TileData tile in list)
             {
-                return tile;
+                if (tile.item == item)
+                {
+                    return tile;
+                }
             }
+            return null;
         }
-        return null;
     }
 }

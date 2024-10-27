@@ -1,4 +1,7 @@
-public interface IWithName
+namespace Minefactory.Common
 {
-    public string GetName();
+    public interface IWithName
+    {
+        public string GetName();
+    }
 }

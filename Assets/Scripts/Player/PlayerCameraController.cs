@@ -1,18 +1,21 @@
 using UnityEngine;
 
-public class PlayerCameraController : MonoBehaviour
+namespace Minefactory.Player
 {
-    [Range(0, 1)]
-    public float smoothTime = 0.1f;
-    public Transform target;
-
-    public void FixedUpdate()
+    public class PlayerCameraController : MonoBehaviour
     {
-        Vector3 position = GetComponent<Transform>().position;
+        [Range(0, 1)]
+        public float smoothTime = 0.1f;
+        public Transform target;
 
-        position.x = Mathf.Lerp(position.x, target.position.x, smoothTime);
-        position.y = Mathf.Lerp(position.y, target.position.y, smoothTime);
+        public void FixedUpdate()
+        {
+            Vector3 position = GetComponent<Transform>().position;
 
-        GetComponent<Transform>().position = position;
+            position.x = Mathf.Lerp(position.x, target.position.x, smoothTime);
+            position.y = Mathf.Lerp(position.y, target.position.y, smoothTime);
+
+            GetComponent<Transform>().position = position;
+        }
     }
 }

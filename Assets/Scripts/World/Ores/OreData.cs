@@ -1,29 +1,33 @@
+using Minefactory.Common;
+using Minefactory.World.Tiles;
 using UnityEngine;
-
-[System.Serializable]
-[CreateAssetMenu(fileName = "newOre", menuName = "Ores/Data")]
-public class OreData : ScriptableObject, IWithName
+namespace Minefactory.World.Ores
 {
-    public TileData tile;
-    public float rarity;
-    public float size;
-    public int depth;
-    private Texture2D noiseTexture;
-
-    public bool CanPlace(int worldSize, int x, int y)
+    [System.Serializable]
+    [CreateAssetMenu(fileName = "newOre", menuName = "Ores/Data")]
+    public class OreData : ScriptableObject, IWithName
     {
-        if (y < (worldSize - depth) && noiseTexture.GetPixel(x, y).r > 0.5f)
-            return true;
-        return false;
-    }
+        public TileData tile;
+        public float rarity;
+        public float size;
+        public int depth;
+        private Texture2D noiseTexture;
 
-    public void SetNoiseTexture(Texture2D noiseTexture)
-    {
-        this.noiseTexture = noiseTexture;
-    }
+        public bool CanPlace(int worldSize, int x, int y)
+        {
+            if (y < (worldSize - depth) && noiseTexture.GetPixel(x, y).r > 0.5f)
+                return true;
+            return false;
+        }
 
-    public string GetName()
-    {
-        return tile.name;
+        public void SetNoiseTexture(Texture2D noiseTexture)
+        {
+            this.noiseTexture = noiseTexture;
+        }
+
+        public string GetName()
+        {
+            return tile.name;
+        }
     }
 }

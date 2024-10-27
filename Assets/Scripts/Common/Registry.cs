@@ -1,39 +1,41 @@
 using System.Collections.Generic;
 using UnityEngine;
-
-public abstract class Registry<T> : ScriptableObject where T : IWithName
+namespace Minefactory.Common
 {
-    public List<T> list = new();
-    private readonly Dictionary<string, T> dict = new();
-
-    private void OnEnable()
+    public abstract class Registry<T> : ScriptableObject where T : IWithName
     {
-        Initialize();
-    }
+        public List<T> list = new();
+        private readonly Dictionary<string, T> dict = new();
 
-    // Optimize for faster search
-    public void Initialize()
-    {
-        foreach (var item in list)
+        private void OnEnable()
         {
-            dict.TryAdd(item.GetName(), item);
+            Initialize();
         }
-    }
 
-    public void Register(T item)
-    {
-        list.Add(item);
-        dict.Add(item.GetName(), item);
-    }
+        // Optimize for faster search
+        public void Initialize()
+        {
+            foreach (var item in list)
+            {
+                dict.TryAdd(item.GetName(), item);
+            }
+        }
 
-    public void Unregister(T item)
-    {
-        list.Remove(item);
-        dict.Remove(item.GetName());
-    }
+        public void Register(T item)
+        {
+            list.Add(item);
+            dict.Add(item.GetName(), item);
+        }
 
-    public T GetItem(string name)
-    {
-        return dict[name];
+        public void Unregister(T item)
+        {
+            list.Remove(item);
+            dict.Remove(item.GetName());
+        }
+
+        public T GetItem(string name)
+        {
+            return dict[name];
+        }
     }
 }
