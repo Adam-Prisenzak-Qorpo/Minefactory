@@ -1,13 +1,10 @@
 using Minefactory.Storage;
 using Minefactory.Storage.Items;
 using UnityEngine;
-namespace Minefactory.World.Tiles
+namespace Minefactory.World.Tiles.Behaviour
 {
-    public class TileEntityClass : MonoBehaviour
+    public class BreakableTileBehaviour : BaseTileBehaviour
     {
-        public StorageData playerInventory;
-        public ItemData item;
-
         void OnMouseDown()
         {
             Debug.Log($"Clicked on {name}");

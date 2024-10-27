@@ -1,5 +1,7 @@
 using System.Collections.Generic;
 using Minefactory.Storage;
+using Minefactory.Storage.Items;
+using Minefactory.World.Tiles;
 using UnityEngine;
 
 namespace Minefactory.Player.Inventory
@@ -7,16 +9,29 @@ namespace Minefactory.Player.Inventory
     public class Inventory : MonoBehaviour
     {
         public StorageData inventory;
+        public ItemRegistry itemRegistry;
+        public TileRegistry tileRegistry;
         public Sprite cellSprite;
         public delegate void OnItemChange();
         public static OnItemChange onItemChange;
         public List<GameObject> cells;
+
+
 
         // Start is called before the first frame update
         void Start()
         {
             onItemChange += RefreshInventory;
             DisplayCells();
+            var item = itemRegistry.GetItem("belt");
+            inventory.AddItem(item);
+            inventory.AddItem(item);
+            inventory.AddItem(item);
+            inventory.AddItem(item);
+            inventory.AddItem(item);
+            inventory.AddItem(item);
+            inventory.AddItem(item);
+            inventory.AddItem(item);
         }
 
         // Update is called once per frame
@@ -72,6 +87,7 @@ namespace Minefactory.Player.Inventory
                     var script = itemObject.AddComponent<InventorySlot>();
                     script.stack = stack;
                     script.inventory = inventory;
+                    script.tileRegistry = tileRegistry;
                 }
                 cells.Add(cell);
             }

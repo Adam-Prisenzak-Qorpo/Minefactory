@@ -13,6 +13,9 @@ MonoBehaviour:
   m_Name: Belt
   m_EditorClassIdentifier: 
   tileName: belt
+  solid: 0
+  sortingLayer: Belts
   tileSprite: {fileID: 0}
-  topTileSprite: {fileID: -1542039094, guid: ba936ccce22fc4e86a17724a22444c81, type: 3}
+  animator: {fileID: 1160356261127867848, guid: 27ffe3e34dbb14f0da98e617e16ad045, type: 3}
+  topTileSprite: {fileID: -143812242, guid: e09d34b9506674bf088e85acb62093e7, type: 3}
   item: {fileID: 11400000, guid: 1e3dfec64f5d944d4813c37964a2a76c, type: 2}

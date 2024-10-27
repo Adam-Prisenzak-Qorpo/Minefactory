@@ -9,14 +9,8 @@ namespace Minefactory.Storage
     public class StorageData : ScriptableObject
     {
         public List<ItemStack> items = new();
-        public ItemRegistry itemRegistry;
         public int maxItems = 20;
 
-        void Awake()
-        {
-            var item = itemRegistry.GetItem("belt");
-            AddItem(item);
-        }
 
         public void AddItem(ItemData item)
         {

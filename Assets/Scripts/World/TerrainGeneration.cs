@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using Minefactory.Storage;
 using Minefactory.World.Ores;
 using Minefactory.World.Tiles;
+using Minefactory.World.Tiles.Behaviour;
 using UnityEngine;
 namespace Minefactory.World
 {
@@ -125,7 +126,7 @@ namespace Minefactory.World
             spriteRenderer.sprite = tile.tileSprite;
             if (isSolid)
             {
-                var entityClass = newTile.AddComponent<TileEntityClass>();
+                var entityClass = newTile.AddComponent<BreakableTileBehaviour>();
                 entityClass.playerInventory = playerInventory;
                 entityClass.item = tile.item;
                 newTile.AddComponent<BoxCollider2D>();
