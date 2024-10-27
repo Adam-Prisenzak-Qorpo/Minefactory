@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7776fa5e66b704c7a8b2481f204615e4, type: 3}
   m_Name: OreRegistry
   m_EditorClassIdentifier: 
-  ores:
+  list:
   - {fileID: 11400000, guid: 78f07c6dba0974a59bdc113de771edc6, type: 2}
   - {fileID: 11400000, guid: a6fef0eca9e284282b1919a18bdbc8b1, type: 2}

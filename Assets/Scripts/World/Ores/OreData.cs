@@ -1,8 +1,8 @@
 using UnityEngine;
 
 [System.Serializable]
-[CreateAssetMenu(fileName = "newOre", menuName = "Ores/Ore Data")]
-public class OreData : ScriptableObject
+[CreateAssetMenu(fileName = "newOre", menuName = "Ores/Data")]
+public class OreData : ScriptableObject, IWithName
 {
     public TileData tile;
     public float rarity;
@@ -20,5 +20,10 @@ public class OreData : ScriptableObject
     public void SetNoiseTexture(Texture2D noiseTexture)
     {
         this.noiseTexture = noiseTexture;
+    }
+
+    public string GetName()
+    {
+        return tile.name;
     }
 }

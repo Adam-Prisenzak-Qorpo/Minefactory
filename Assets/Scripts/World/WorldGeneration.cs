@@ -8,7 +8,7 @@ public class WorldGeneration : MonoBehaviour
     public StorageData playerInventory;
 
     [Header("Tile Settings")]
-    public TileRegistry tileAtlas;
+    public TileRegistry tileRegistry;
 
     // public OreContainer oreContainer;
 
@@ -78,7 +78,7 @@ public class WorldGeneration : MonoBehaviour
             for (int y = 0; y < worldSize; y++)
             {
                 var position = new Vector2(x, y);
-                PlaceTile(tileAtlas.dirt, position, false);
+                PlaceTile(tileRegistry.GetItem("dirt"), position, false);
 
                 if (Vector2.Distance(position, MapCenter) < safeRadius)
                 {
@@ -88,12 +88,12 @@ public class WorldGeneration : MonoBehaviour
                 var woodValue = woodNoiseTexture.GetPixel(x, y).grayscale;
                 if (woodValue < 0.5f)
                 {
-                    PlaceTile(tileAtlas.wood, position);
+                    PlaceTile(tileRegistry.GetItem("wood"), position);
                 }
                 var stoneValue = stoneNoiseTexture.GetPixel(x, y).grayscale;
                 if (stoneValue < 0.5f)
                 {
-                    PlaceTile(tileAtlas.stone, position);
+                    PlaceTile(tileRegistry.GetItem("stone"), position);
                 }
             }
         }
@@ -101,7 +101,7 @@ public class WorldGeneration : MonoBehaviour
 
     private bool OnPlaceTile(Vector2 position, ItemData item)
     {
-        var tile = tileAtlas.GetTile(item);
+        var tile = tileRegistry.GetTileByItem(item);
         if (tile)
         {
             return PlaceTile(tile, position);
@@ -138,7 +138,7 @@ public class WorldGeneration : MonoBehaviour
     {
         if (!CanPlaceOnTile(position))
             return false;
-        var newTile = new GameObject(tile.tileName);
+        var newTile = new GameObject(tile.GetName());
         newTile.transform.parent = transform;
         newTile.transform.position = new Vector2(Mathf.Round(position.x), Mathf.Round(position.y));
         var spriteRenderer = newTile.AddComponent<SpriteRenderer>();

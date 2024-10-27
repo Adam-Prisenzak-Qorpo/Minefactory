@@ -5,12 +5,13 @@ using UnityEngine;
 public class StorageData : ScriptableObject
 {
     public List<ItemStack> items = new();
-    public TileRegistry tileAtlas;
+    public ItemRegistry itemRegistry;
     public int maxItems = 20;
 
     void Awake()
     {
-        AddItem(tileAtlas.belt.item);
+        var item = itemRegistry.GetItem("belt");
+        AddItem(item);
     }
 
     public void AddItem(ItemData item)

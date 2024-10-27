@@ -555,7 +555,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerInventory: {fileID: 11400000, guid: d2046fd92d8b74c4ab7e37c98ea1d610, type: 2}
-  tileAtlas: {fileID: 11400000, guid: 04762c43388674ed099d2ef4714b21ef, type: 2}
+  tileRegistry: {fileID: 11400000, guid: 04762c43388674ed099d2ef4714b21ef, type: 2}
   worldSize: 100
   heightMultiplier: 5
   dirtHeight: 2
@@ -564,7 +564,7 @@ MonoBehaviour:
   terrainFrequency: 0.05
   seed: 0
   caveNoiseTexture: {fileID: 0}
-  oreContainer: {fileID: 11400000, guid: 284c4e73284b341208f849580fe48b0e, type: 2}
+  oreRegistry: {fileID: 11400000, guid: 3a1c891f05b92431395dbe768775c309, type: 2}
 --- !u!4 &1924386280
 Transform:
   m_ObjectHideFlags: 0
@@ -591,14 +591,6 @@ PrefabInstance:
     - target: {fileID: 229819247906611442, guid: 74567a78e87c4479d832b7f929540d17, type: 3}
       propertyPath: jumpForce
       value: 7
-      objectReference: {fileID: 0}
-    - target: {fileID: 3222244687251136274, guid: 74567a78e87c4479d832b7f929540d17, type: 3}
-      propertyPath: m_Enabled
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3222244687251136274, guid: 74567a78e87c4479d832b7f929540d17, type: 3}
-      propertyPath: m_IsTrigger
-      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3222244687251136274, guid: 74567a78e87c4479d832b7f929540d17, type: 3}
       propertyPath: m_Size.x

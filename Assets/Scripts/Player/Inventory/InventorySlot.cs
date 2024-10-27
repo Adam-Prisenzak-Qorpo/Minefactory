@@ -57,7 +57,6 @@ public class InventorySlot : MonoBehaviour
         if (selected)
         {
             var sprite = GetComponent<SpriteRenderer>();
-            Debug.Log(WorldGeneration.canPlace(TransformedPosition));
             if (!WorldGeneration.canPlace(TransformedPosition))
             {
                 sprite.color = Color.red;
@@ -73,7 +72,6 @@ public class InventorySlot : MonoBehaviour
 
     void OnMouseDown()
     {
-        Debug.Log($"Clicked on {name}");
         // Bind position on mouse
         if (!selected)
         {

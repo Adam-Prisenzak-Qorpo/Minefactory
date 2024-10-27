@@ -7,7 +7,7 @@ public class TerrainGeneration : MonoBehaviour
     public StorageData playerInventory;
 
     [Header("Tile Settings")]
-    public TileRegistry tileAtlas;
+    public TileRegistry tileRegistry;
 
     // public OreContainer oreContainer;
 
@@ -26,7 +26,7 @@ public class TerrainGeneration : MonoBehaviour
     private readonly List<Vector2> tiles = new();
 
     [Header("Ore Generation Settings")]
-    public OreRegistry oreContainer;
+    public OreRegistry oreRegistry;
 
     // Start is called before the first frame update
     void Start()
@@ -36,7 +36,7 @@ public class TerrainGeneration : MonoBehaviour
         {
             caveNoiseTexture = GenerateNoiseTexture(0.25f, caveFrequency);
         }
-        foreach (var ore in oreContainer.ores)
+        foreach (var ore in oreRegistry.list)
         {
             ore.SetNoiseTexture(GenerateNoiseTexture(ore.rarity, ore.size));
         }
@@ -80,14 +80,14 @@ public class TerrainGeneration : MonoBehaviour
                 + dirtHeight;
             for (int y = 0; y < worldSize; y++)
             {
-                PlaceTile(tileAtlas.mineBackground, new Vector2(x, y), false);
+                PlaceTile(tileRegistry.GetItem("mine_background"), new Vector2(x, y), false);
                 if (isSpawnArea(new Vector2(x, y)))
                 {
                     continue;
                 }
                 if (y > (worldSize - height))
                 {
-                    PlaceTile(tileAtlas.dirt, new Vector2(x, y));
+                    PlaceTile(tileRegistry.GetItem("dirt"), new Vector2(x, y));
                     continue;
                 }
 
@@ -97,7 +97,7 @@ public class TerrainGeneration : MonoBehaviour
 
 
                 bool orePlaced = false;
-                foreach (var ore in oreContainer.ores)
+                foreach (var ore in oreRegistry.list)
                 {
                     if (ore.CanPlace(worldSize, x, y))
                     {
@@ -107,14 +107,14 @@ public class TerrainGeneration : MonoBehaviour
                     }
                 }
                 if (!orePlaced)
-                    PlaceTile(tileAtlas.stone, new Vector2(x, y));
+                    PlaceTile(tileRegistry.GetItem("stone"), new Vector2(x, y));
             }
         }
     }
 
     private void PlaceTile(TileData tile, Vector2 position, bool isSolid = true)
     {
-        var newTile = new GameObject(tile.tileName);
+        var newTile = new GameObject(tile.GetName());
         newTile.transform.parent = transform;
         newTile.transform.position = position;
         var spriteRenderer = newTile.AddComponent<SpriteRenderer>();
