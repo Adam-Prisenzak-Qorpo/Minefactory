@@ -1,7 +1,9 @@
 using System.Collections.Generic;
+using Minefactory.Common;
 using Minefactory.Storage;
 using Minefactory.Storage.Items;
 using Minefactory.World.Tiles;
+using Minefactory.World.Tiles.Behaviour;
 using UnityEngine;
 
 
@@ -36,7 +38,7 @@ namespace Minefactory.World
         public delegate bool CanPlace(Vector2 position);
         public static CanPlace canPlace;
 
-        public delegate bool OnTilePlaced(Vector2 position, ItemData item);
+        public delegate bool OnTilePlaced(Vector2 position, ItemData item, bool isSolid, Orientation orientation);
         public static OnTilePlaced onTilePlaced;
 
         public delegate bool OnTileRemoved(Vector2 position);
@@ -83,7 +85,7 @@ namespace Minefactory.World
                 for (int y = 0; y < worldSize; y++)
                 {
                     var position = new Vector2(x, y);
-                    PlaceTile(tileRegistry.GetItem("dirt"), position, false);
+                    PlaceBackgroundTile(tileRegistry.GetItem("dirt"), position);
 
                     if (Vector2.Distance(position, MapCenter) < safeRadius)
                     {
@@ -104,12 +106,12 @@ namespace Minefactory.World
             }
         }
 
-        private bool OnPlaceTile(Vector2 position, ItemData item)
+        private bool OnPlaceTile(Vector2 position, ItemData item, bool isSolid, Orientation orientation)
         {
             var tile = tileRegistry.GetTileByItem(item);
             if (tile)
             {
-                return PlaceTile(tile, position);
+                return PlaceTile(tile, position, isSolid, orientation);
             }
             return false;
         }
@@ -139,7 +141,12 @@ namespace Minefactory.World
             return true;
         }
 
-        private bool PlaceTile(TileData tile, Vector2 position, bool isSolid = true)
+        private void RotateSpriteByOrientation(SpriteRenderer spriteRenderer, Orientation orientation)
+        {
+            spriteRenderer.transform.Rotate(0, 0, (int)orientation * -90);
+        }
+
+        private bool PlaceTile(TileData tile, Vector2 position, bool isSolid = true, Orientation orientation = Orientation.Up)
         {
             if (!CanPlaceOnTile(position))
                 return false;
@@ -148,21 +155,48 @@ namespace Minefactory.World
             newTile.transform.position = new Vector2(Mathf.Round(position.x), Mathf.Round(position.y));
             var spriteRenderer = newTile.AddComponent<SpriteRenderer>();
             spriteRenderer.sprite = tile.topTileSprite;
-            if (isSolid)
+            spriteRenderer.sortingLayerID = SortingLayer.NameToID(tile.sortingLayer);
+            RotateSpriteByOrientation(spriteRenderer, orientation);
+
+            if (tile.animator)
             {
-                var entityClass = newTile.AddComponent<TileEntityClass>();
-                entityClass.playerInventory = playerInventory;
-                entityClass.item = tile.item;
-                newTile.AddComponent<BoxCollider2D>();
-                newTile.GetComponent<BoxCollider2D>().size = new Vector2(1, 1);
-                tiles.Add(newTile.transform.position);
+                var animator = newTile.AddComponent<Animator>();
+                animator.runtimeAnimatorController = tile.animator.runtimeAnimatorController;
             }
-            else
+
+            BreakableTileBehaviour tileBehaviour = tile.GetName() switch
             {
-                newTile.layer = LayerMask.NameToLayer("Background");
-                spriteRenderer.sortingLayerName = "Background";
-                spriteRenderer.sortingOrder = -1;
+                "belt" => newTile.AddComponent<BeltTileBehaviour>(),
+                _ => newTile.AddComponent<BreakableTileBehaviour>(),
+            };
+
+            tileBehaviour.orientation = orientation;
+            tileBehaviour.playerInventory = playerInventory;
+            tileBehaviour.item = tile.item;
+            newTile.AddComponent<BoxCollider2D>();
+            newTile.GetComponent<BoxCollider2D>().size = new Vector2(1, 1);
+            if (!isSolid)
+            {
+                newTile.GetComponent<BoxCollider2D>().isTrigger = true;
             }
+            tiles.Add(newTile.transform.position);
+
+            return true;
+        }
+
+        private bool PlaceBackgroundTile(TileData tile, Vector2 position)
+        {
+            if (!CanPlaceOnTile(position))
+                return false;
+            var newTile = new GameObject(tile.GetName());
+            newTile.transform.parent = transform;
+            newTile.transform.position = new Vector2(Mathf.Round(position.x), Mathf.Round(position.y));
+            var spriteRenderer = newTile.AddComponent<SpriteRenderer>();
+            spriteRenderer.sprite = tile.topTileSprite;
+            newTile.layer = LayerMask.NameToLayer("Background");
+            spriteRenderer.sortingLayerName = "Background";
+            spriteRenderer.sortingOrder = -1;
+
             return true;
         }
     }

@@ -44,6 +44,9 @@ TagManager:
   - name: Background
     uniqueID: 879765417
     locked: 0
+  - name: Belts
+    uniqueID: 3818959233
+    locked: 0
   - name: Default
     uniqueID: 0
     locked: 0
