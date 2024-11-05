@@ -534,7 +534,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1924386280}
-  - component: {fileID: 1924386279}
+  - component: {fileID: 1924386281}
   m_Layer: 0
   m_Name: WorldData
   m_TagString: Untagged
@@ -542,29 +542,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1924386279
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1924386278}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2f58a6a896b98495888ba0f0d8858560, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  playerInventory: {fileID: 11400000, guid: d2046fd92d8b74c4ab7e37c98ea1d610, type: 2}
-  tileRegistry: {fileID: 11400000, guid: 04762c43388674ed099d2ef4714b21ef, type: 2}
-  worldSize: 100
-  heightMultiplier: 5
-  dirtHeight: 2
-  generateCaves: 1
-  caveFrequency: 0.05
-  terrainFrequency: 0.05
-  seed: 0
-  caveNoiseTexture: {fileID: 0}
-  oreRegistry: {fileID: 11400000, guid: 3a1c891f05b92431395dbe768775c309, type: 2}
 --- !u!4 &1924386280
 Transform:
   m_ObjectHideFlags: 0
@@ -580,6 +557,27 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1924386281
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1924386278}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6e5400de0c39a4ef9b8c9d3401c1c73b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerInventory: {fileID: 11400000, guid: d2046fd92d8b74c4ab7e37c98ea1d610, type: 2}
+  tileRegistry: {fileID: 11400000, guid: 04762c43388674ed099d2ef4714b21ef, type: 2}
+  worldSize: 100
+  heightMultiplier: 5
+  dirtHeight: 2
+  generateCaves: 1
+  caveFrequency: 0.05
+  terrainFrequency: 0.05
+  oreRegistry: {fileID: 11400000, guid: 3a1c891f05b92431395dbe768775c309, type: 2}
 --- !u!1001 &2081889692
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -20,7 +20,7 @@ namespace Minefactory.World.Tiles
                 Debug.Log("No item to add");
             }
             Destroy(gameObject);
-            WorldGeneration.onTileRemoved(transform.position);
+            BaseWorldGeneration.onTileRemoved(transform.position);
         }
     }
 }

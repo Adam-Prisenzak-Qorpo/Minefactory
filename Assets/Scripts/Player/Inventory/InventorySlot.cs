@@ -62,7 +62,7 @@ namespace Minefactory.Player.Inventory
             if (selected)
             {
                 var sprite = GetComponent<SpriteRenderer>();
-                if (!WorldGeneration.canPlace(TransformedPosition))
+                if (!BaseWorldGeneration.canPlace(TransformedPosition))
                 {
                     sprite.color = Color.red;
                     canPlace = false;
@@ -84,7 +84,7 @@ namespace Minefactory.Player.Inventory
             }
             else if (canPlace)
             {
-                var didPlace = WorldGeneration.onTilePlaced(TransformedPosition, stack.item);
+                var didPlace = BaseWorldGeneration.onTilePlaced(TransformedPosition, stack.item);
                 if (!didPlace)
                 {
                     return;
