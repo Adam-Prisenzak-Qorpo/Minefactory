@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: MineBackground
   m_EditorClassIdentifier: 
   tileName: mine_background
-  tileSprite: {fileID: -2070765194, guid: 2aafe21edcfe8486195ce41a2aab8e3a, type: 3}
+  tileSprite: {fileID: 1803555363, guid: 2aafe21edcfe8486195ce41a2aab8e3a, type: 3}
   topTileSprite: {fileID: 0}
   item: {fileID: 0}

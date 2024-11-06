@@ -11,12 +11,13 @@ namespace Minefactory.Player
         public bool isGrounded;
         public bool topWorld;
         private Rigidbody2D rb;
-        private SpriteRenderer sr;
+        private SpriteRenderer[] srs;
+
 
         private void Start()
         {
             rb = GetComponent<Rigidbody2D>();
-            sr = GetComponent<SpriteRenderer>();
+            srs = GetComponentsInChildren<SpriteRenderer>();
         }
 
         private void OnTriggerStay2D(Collider2D collision)
@@ -50,11 +51,17 @@ namespace Minefactory.Player
 
             if (horizontal < 0)
             {
-                sr.flipX = true;
+                foreach (SpriteRenderer renderer in srs)
+                {
+                    renderer.flipX = true;
+                }
             }
             else if (horizontal > 0)
             {
-                sr.flipX = false;
+               foreach (SpriteRenderer renderer in srs)
+                {
+                    renderer.flipX = false;
+                }
             }
             if (topWorld)
             {
