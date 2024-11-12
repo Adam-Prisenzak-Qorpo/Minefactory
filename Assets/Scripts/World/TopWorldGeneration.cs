@@ -21,9 +21,7 @@ namespace Minefactory.World
             stoneNoiseTexture = GenerateNoiseTexture(0.5f, stoneFrequency);
         }
 
-        protected override string GetBackgroundTileName() => "dirt";
-
-        protected override Sprite GetTileSprite(TileData tile) => tile.topTileSprite;
+        protected override GameObject GetTilePrefab(TileData tileData) => tileData.topTilePrefab;
 
         protected override void GenerateWorld()
         {
@@ -33,7 +31,7 @@ namespace Minefactory.World
                 {
                     var position = new Vector2(x, y);
                     
-                    PlaceBackgroundTile(position);
+                    PlaceTile(backgroundTileData, position);
 
                     if (Vector2.Distance(position, MapCenter) < safeRadius)
                         continue;

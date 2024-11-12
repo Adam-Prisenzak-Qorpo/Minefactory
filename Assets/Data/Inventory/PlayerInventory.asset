@@ -13,4 +13,5 @@ MonoBehaviour:
   m_Name: PlayerInventory
   m_EditorClassIdentifier: 
   itemRegistry: {fileID: 11400000, guid: 3ab5254fe788b4a7f866da9ec9ded5e2, type: 2}
+  storageBehaviour: {fileID: 5460361312489632515, guid: 6d973a24c603940d9b98e0b70351e893, type: 3}
   maxItems: 20

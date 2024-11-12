@@ -13,5 +13,7 @@ MonoBehaviour:
   m_Name: Dirt
   m_EditorClassIdentifier: 
   tileName: dirt
-  tileSprite: {fileID: 581068379, guid: 2aafe21edcfe8486195ce41a2aab8e3a, type: 3}
-  topTileSprite: {fileID: -1960987817, guid: 2aafe21edcfe8486195ce41a2aab8e3a, type: 3}
+  sortingLayer: Default
+  underGroundTilePrefab: {fileID: 5242337658903041165, guid: 3d7a4eedebf0148b7884a433af826eb4, type: 3}
+  topTilePrefab: {fileID: 5242337658903041165, guid: 38c68df84c09b45bfa1fb926e78f122c, type: 3}
+  item: {fileID: 0}

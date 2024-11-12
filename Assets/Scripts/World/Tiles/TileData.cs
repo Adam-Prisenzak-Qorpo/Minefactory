@@ -8,8 +8,9 @@ namespace Minefactory.World.Tiles
     public class TileData : ScriptableObject, IWithName
     {
         public string tileName;
-        public Sprite tileSprite;
-        public Sprite topTileSprite;
+        public string sortingLayer = "Default";
+        public  GameObject underGroundTilePrefab;
+        public GameObject topTilePrefab;
         public ItemData item;
 
         public string GetName()

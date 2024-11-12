@@ -1,89 +1,87 @@
 using System.Collections.Generic;
 using Minefactory.Storage;
+using Minefactory.Storage.Items;
+using Minefactory.World.Tiles;
 using UnityEngine;
 
 namespace Minefactory.Player.Inventory
 {
-    public class Inventory : MonoBehaviour
+    public class Inventory : StorageBehaviour
     {
-        public StorageData inventory;
-        public Sprite cellSprite;
-        public delegate void OnItemChange();
-        public static OnItemChange onItemChange;
-        public List<GameObject> cells;
+        public StorageData inventoryData;
+        public ItemRegistry itemRegistry;
+        public TileRegistry tileRegistry;
+
+        public delegate void UseItem(ItemData item);
+        public static UseItem useItem;
+
+        private List<GameObject> cells = new List<GameObject>();
+
+
 
         // Start is called before the first frame update
         void Start()
         {
-            onItemChange += RefreshInventory;
-            DisplayCells();
+            // Get cell references
+            for (int i = 0; i < transform.childCount; i++)
+            {
+                var cell = transform.GetChild(i);
+                if (cell.CompareTag("InventoryCell"))
+                {
+                    var script = cell.GetComponent<InventorySlot>();
+                    script.slotIndex = i;
+                    cells.Add(cell.gameObject);
+                }
+            }
+            useItem += RemoveItemFromInventory;
         }
+
+        private bool inventoryInitialized = false;
 
         // Update is called once per frame
         void Update()
         {
+            if (!inventoryInitialized)
+            {
+                inventoryInitialized = true;
+                var item = itemRegistry.GetItem("belt");
+                for (int i = 0; i < 20; i++)
+                {
+                    inventoryData.AddItem(item);
+                }
+                UpdateUI();
+            }
             var toggleInventory = Input.GetKeyDown(KeyCode.I);
             if (toggleInventory)
             {
                 var inventorySprite = GetComponent<SpriteRenderer>();
                 inventorySprite.enabled = !inventorySprite.enabled;
-                if (inventorySprite.enabled)
+                foreach (var cell in cells)
                 {
-                    DisplayCells();
-                }
-                else
-                {
-                    ClearCells();
+                    cell.SetActive(!cell.activeSelf);
                 }
             }
         }
 
-        void ClearCells()
+        public void AddItem(ItemData item)
+        {
+            inventoryData.AddItem(item);
+            UpdateUI();
+        }
+
+        public override void UpdateUI()
         {
             foreach (var cell in cells)
             {
-                Destroy(cell);
+                cell.GetComponent<InventorySlot>().UpdateItem();
             }
-            cells.Clear();
         }
 
-        // 2 x 10 grid. Cell size is 16x16
-        void DisplayCells()
+        void RemoveItemFromInventory(ItemData item)
         {
-            for (int i = 0; i < 20; i++)
-            {
-                var x = i % 10;
-                var y = i / 10;
-                var cell = new GameObject("Cell-" + i);
-                cell.transform.parent = transform;
-                cell.transform.localPosition = new Vector2(x - 4.5f, y - .5f);
-                cell.transform.localScale = Vector2.one;
-                var cellRenderer = cell.AddComponent<SpriteRenderer>();
-                cellRenderer.sprite = cellSprite;
-                cellRenderer.sortingOrder = 1;
-
-                var stack = inventory.GetItemStack(i);
-                if (stack != null)
-                {
-                    var itemObject = new GameObject("Item");
-                    itemObject.transform.parent = cell.transform;
-                    itemObject.transform.localScale = Vector2.one;
-                    itemObject.transform.localPosition = Vector2.zero;
-                    var script = itemObject.AddComponent<InventorySlot>();
-                    script.stack = stack;
-                    script.inventory = inventory;
-                }
-                cells.Add(cell);
-            }
+            inventoryData.RemoveItem(item);
+            UpdateUI();
         }
 
-        void RefreshInventory()
-        {
-            if (cells.Count > 0)
-            {
-                ClearCells();
-                DisplayCells();
-            }
-        }
     }
 }

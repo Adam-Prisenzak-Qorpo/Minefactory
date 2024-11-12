@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using Minefactory.Player.Inventory;
 using Minefactory.Storage.Items;
 using UnityEngine;
 
@@ -9,14 +8,8 @@ namespace Minefactory.Storage
     public class StorageData : ScriptableObject
     {
         public List<ItemStack> items = new();
-        public ItemRegistry itemRegistry;
         public int maxItems = 20;
 
-        void Awake()
-        {
-            var item = itemRegistry.GetItem("belt");
-            AddItem(item);
-        }
 
         public void AddItem(ItemData item)
         {
@@ -29,7 +22,6 @@ namespace Minefactory.Storage
                     items.Add(stack);
                 }
                 stack.amount++;
-                Inventory.onItemChange();
             }
         }
 
@@ -43,7 +35,6 @@ namespace Minefactory.Storage
                 {
                     items.Remove(stack);
                 }
-                Inventory.onItemChange();
             }
             return stack.amount;
         }

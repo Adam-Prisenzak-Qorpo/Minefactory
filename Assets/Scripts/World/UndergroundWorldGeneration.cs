@@ -32,9 +32,7 @@ namespace Minefactory.World
                 }
             }
         }
-
-        protected override string GetBackgroundTileName() => "mine_background";
-        protected override Sprite GetTileSprite(TileData tile) => tile.tileSprite;
+        protected override GameObject GetTilePrefab(TileData tileData) => tileData.underGroundTilePrefab;
 
         protected override void GenerateWorld()
         {
@@ -47,7 +45,7 @@ namespace Minefactory.World
                 {
                     var position = new Vector2(x, y);
                     
-                    PlaceBackgroundTile(position);
+                    PlaceTile(backgroundTileData, position);
                     
                     if (IsSpawnArea(position)) continue;
 

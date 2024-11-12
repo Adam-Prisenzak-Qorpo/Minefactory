@@ -3,7 +3,11 @@ guid: 6e5400de0c39a4ef9b8c9d3401c1c73b
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - playerInventory: {instanceID: 0}
+  - tileRegistry: {fileID: 11400000, guid: 04762c43388674ed099d2ef4714b21ef, type: 2}
+  - backgroundTileData: {fileID: 11400000, guid: 8234e8ee9c3bf4abb8866ec408817298, type: 2}
+  - oreRegistry: {fileID: 11400000, guid: 3a1c891f05b92431395dbe768775c309, type: 2}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

@@ -2,6 +2,10 @@ using System.Collections.Generic;
 using Minefactory.Storage;
 using Minefactory.World.Tiles;
 using Minefactory.Storage.Items;
+using Minefactory.Common;
+using Minefactory.Player.Inventory;
+using Minefactory.World.Tiles.Behaviour;
+using UnityEditor;
 using UnityEngine;
 
 namespace Minefactory.World
@@ -9,9 +13,11 @@ namespace Minefactory.World
     public abstract class BaseWorldGeneration : MonoBehaviour
     {
         [Header("Base Settings")]
-        public StorageData playerInventory;
+        public Inventory playerInventory;
         public TileRegistry tileRegistry;
         public int worldSize = 100;
+
+        public TileData backgroundTileData;
         
         protected float seed;
         protected readonly List<Vector2> tiles = new();
@@ -20,8 +26,11 @@ namespace Minefactory.World
         public delegate bool CanPlace(Vector2 position);
         public static CanPlace canPlace;
 
-        public delegate bool OnTilePlaced(Vector2 position, ItemData item);
-        public static OnTilePlaced onTilePlaced;
+        public delegate void OnItemSelect(ItemData item);
+        public static OnItemSelect onItemSelect;
+
+        public delegate bool OnPlaceTile(Vector2 position, ItemData item, Orientation orientation);
+        public static OnPlaceTile onPlaceTile;
 
         public delegate bool OnTileRemoved(Vector2 position);
         public static OnTileRemoved onTileRemoved;
@@ -35,7 +44,8 @@ namespace Minefactory.World
         protected virtual void InitializeWorld()
         {
             seed = Random.Range(-10_000, 10_000);
-            onTilePlaced = OnPlaceTile;
+            onItemSelect = SpawnGhostTile;
+            onPlaceTile = OnPlaceTileHandler;
             canPlace = CanPlaceOnTile;
             onTileRemoved = OnRemoveTile;
             GenerateNoiseTextures();
@@ -43,7 +53,6 @@ namespace Minefactory.World
 
         protected abstract void GenerateNoiseTextures();
         protected abstract void GenerateWorld();
-        protected abstract string GetBackgroundTileName();
 
         protected Texture2D GenerateNoiseTexture(float limit, float noiseFrequency)
         {
@@ -63,15 +72,20 @@ namespace Minefactory.World
             return noiseTexture;
         }
 
-        protected bool OnPlaceTile(Vector2 position, ItemData item)
+        private bool OnPlaceTileHandler(Vector2 position, ItemData item, Orientation orientation)
         {
             var tile = tileRegistry.GetTileByItem(item);
-            if (tile)
+            if (tile && CanPlaceOnTile(position))
             {
-                return PlaceTile(tile, position);
+                return PlaceTile(tile, position, orientation);
             }
             return false;
         }
+
+        // private void RotateSpriteByOrientation(SpriteRenderer spriteRenderer, rotation=)
+        // {
+        //     spriteRenderer.transform.Rotate(0, 0, (int)orientation * -90);
+        // }
 
         protected bool OnRemoveTile(Vector2 position)
         {
@@ -86,64 +100,67 @@ namespace Minefactory.World
             return false;
         }
 
-        protected bool CanPlaceOnTile(Vector2 position)
+        protected bool CanPlaceOnTile(Vector2 mousePosition)
         {
-            foreach (var tile in tiles)
+            Collider2D[] colliders = Physics2D.OverlapPointAll(mousePosition);
+
+            foreach (Collider2D collider in colliders)
             {
-                if (tile.x == Mathf.Round(position.x) && tile.y == Mathf.Round(position.y))
+                if (collider.CompareTag("Solid"))
                 {
-                    return false;
+                    return false; 
                 }
             }
-            return true;
+            return true; 
         }
 
-        protected virtual void PlaceBackgroundTile(Vector2 position)
+
+
+        private Quaternion GetRotationByOrientation(Orientation orientation)
         {
-            PlaceTile(tileRegistry.GetItem(GetBackgroundTileName()), position, false);
+            return Quaternion.Euler(0, 0, (int)orientation * -90);
         }
 
-        protected virtual bool PlaceTile(TileData tile, Vector2 position, bool isSolid = true)
+        protected virtual bool PlaceTile(TileData tileData, Vector2 position, Orientation orientation = Orientation.Up)
         {
-            if (isSolid && !CanPlaceOnTile(position))
+            GameObject tilePrefab = GetTilePrefab(tileData);
+            if (!tilePrefab)
+            {
+                Debug.LogError($"Tile prefab for {tileData.GetName()} not found.");
                 return false;
-
-            var newTile = new GameObject(tile.GetName());
+            }
+            GameObject newTile = Instantiate(
+                tilePrefab,
+                new Vector2(Mathf.Round(position.x), Mathf.Round(position.y)),
+                GetRotationByOrientation(orientation)
+            );
+            BaseTileBehaviour tileBehaviour = newTile.GetComponent<BaseTileBehaviour>();
             newTile.transform.parent = transform;
-            newTile.transform.position = new Vector2(Mathf.Round(position.x), Mathf.Round(position.y));
-            
-            var spriteRenderer = newTile.AddComponent<SpriteRenderer>();
-            spriteRenderer.sprite = GetTileSprite(tile);
+            if (tileBehaviour)
+            {
+                tileBehaviour.orientation = orientation;
+                tileBehaviour.playerInventory = playerInventory;
+            }
 
-            if (isSolid)
-            {
-                SetupSolidTile(newTile, tile);
-            }
-            else
-            {
-                SetupBackgroundTile(newTile, position);
-            }
             return true;
         }
+        protected abstract GameObject GetTilePrefab(TileData tileData);
 
-        protected abstract Sprite GetTileSprite(TileData tile);
-        protected virtual void SetupBackgroundTile(GameObject tile, Vector2 position)
+        private void SpawnGhostTile(ItemData item)
         {
-            tile.layer = LayerMask.NameToLayer("Background");
-            tile.GetComponent<SpriteRenderer>().sortingLayerName = "Background";
-            tile.GetComponent<SpriteRenderer>().sortingOrder = -1;
-        }
-
-        protected virtual void SetupSolidTile(GameObject tile, TileData tileData)
-        {
-            var entityClass = tile.AddComponent<TileEntityClass>();
-            entityClass.playerInventory = playerInventory;
-            entityClass.item = tileData.item;
-            tile.AddComponent<BoxCollider2D>();
-            tile.GetComponent<BoxCollider2D>().size = new Vector2(1, 1);
-            tile.tag = "Solid";
-            tile.GetComponent<SpriteRenderer>().sortingLayerName = "Solid";
-            tiles.Add(tile.transform.position);
+            TileData tileData = tileRegistry.GetTileByItem(item);
+            GameObject tilePrefab = Instantiate(GetTilePrefab(tileData), Vector3.zero, Quaternion.identity);
+            tilePrefab.tag = "Ghost";
+            var tileGhost = tilePrefab.AddComponent<TileGhost>();
+            tileGhost.tileData = tileData;
+            tileGhost.transform.parent = transform;
+            var sr = tilePrefab.GetComponent<SpriteRenderer>();
+            sr.sortingLayerID = SortingLayer.NameToID("GhostTile");
+            var color = sr.color;
+            color.a = 0.5f;
+            sr.color = color;
+            tilePrefab.GetComponent<BoxCollider2D>().isTrigger = true;
+            Destroy(tilePrefab.GetComponent<BaseTileBehaviour>());
         }
     }
 }

@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: ba936ccce22fc4e86a17724a22444c81
+guid: e09d34b9506674bf088e85acb62093e7
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -118,14 +118,14 @@ TextureImporter:
         width: 16
         height: 16
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: eec4ba80bc13749d5ab8ac3218d19c8a
-      internalID: 26926573
+      spriteID: 96b0862e75b8c4374a9842f225c9a71c
+      internalID: -1658161548
       vertices: []
       indices: 
       edges: []
@@ -139,14 +139,14 @@ TextureImporter:
         width: 16
         height: 16
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: b6d3766996ea44155b93ae4af5dc9893
-      internalID: -358719008
+      spriteID: 73c2e365a8418463d8168865abf5ad17
+      internalID: 561515898
       vertices: []
       indices: 
       edges: []
@@ -160,14 +160,14 @@ TextureImporter:
         width: 16
         height: 16
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 80a31ad81bd3b4dc4a211f047ed43cd3
-      internalID: -1542039094
+      spriteID: e7776b0d670da408f8d37989d33461a8
+      internalID: -143812242
       vertices: []
       indices: 
       edges: []
@@ -183,9 +183,9 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      belt_0: 26926573
-      belt_1: -358719008
-      belt_2: -1542039094
+      belt_0: -1658161548
+      belt_1: 561515898
+      belt_2: -143812242
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

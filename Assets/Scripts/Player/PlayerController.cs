@@ -82,7 +82,10 @@ namespace Minefactory.Player
 
         private void Update()
         {
-            anim.SetFloat("horizontal", horizontal);
+            if(anim){
+                anim.SetFloat("horizontal", horizontal);
+            }
+            
         }
         
     }
