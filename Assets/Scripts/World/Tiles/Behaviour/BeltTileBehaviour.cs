@@ -12,7 +12,6 @@ namespace Minefactory.World.Tiles.Behaviour
         {
             if (collider.gameObject.CompareTag("Player"))
             {
-                Debug.Log("Player is on belt");
                 Rigidbody2D rb = collider.gameObject.GetComponent<Rigidbody2D>();
                 var velocity = orientation switch
                 {
@@ -22,7 +21,6 @@ namespace Minefactory.World.Tiles.Behaviour
                     Orientation.Right => new Vector2(1, 0),
                     _ => new Vector2(0, 0)
                 };
-                Debug.Log(rb.position);
                 rb.position += velocity * 0.01f;
 
             }

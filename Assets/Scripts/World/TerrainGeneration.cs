@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Minefactory.Player.Inventory;
 using Minefactory.Storage;
 using Minefactory.World.Ores;
 using Minefactory.World.Tiles;
@@ -9,7 +10,7 @@ namespace Minefactory.World
     public class TerrainGeneration : MonoBehaviour
     {
         [Header("Inventory Settings")]
-        public StorageData playerInventory;
+        public Inventory playerInventory;
 
         [Header("Tile Settings")]
         public TileRegistry tileRegistry;
