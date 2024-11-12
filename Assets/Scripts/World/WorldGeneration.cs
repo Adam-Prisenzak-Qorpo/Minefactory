@@ -1,9 +1,11 @@
 using System.Collections.Generic;
 using Minefactory.Common;
+using Minefactory.Player.Inventory;
 using Minefactory.Storage;
 using Minefactory.Storage.Items;
 using Minefactory.World.Tiles;
 using Minefactory.World.Tiles.Behaviour;
+using UnityEditor;
 using UnityEngine;
 
 
@@ -12,7 +14,7 @@ namespace Minefactory.World
     public class WorldGeneration : MonoBehaviour
     {
         [Header("Inventory Settings")]
-        public StorageData playerInventory;
+        public Inventory playerInventory;
 
         [Header("Tile Settings")]
         public TileRegistry tileRegistry;
@@ -35,11 +37,14 @@ namespace Minefactory.World
 
         private Vector2 MapCenter => new Vector2(worldSize / 2, worldSize / 2);
 
+        public delegate void OnItemSelect(ItemData item);
+        public static OnItemSelect onItemSelect;
+
         public delegate bool CanPlace(Vector2 position);
         public static CanPlace canPlace;
 
-        public delegate bool OnTilePlaced(Vector2 position, ItemData item, bool isSolid, Orientation orientation);
-        public static OnTilePlaced onTilePlaced;
+        public delegate bool OnPlaceTile(Vector2 position, ItemData item, bool isSolid, Orientation orientation);
+        public static OnPlaceTile onPlaceTile;
 
         public delegate bool OnTileRemoved(Vector2 position);
         public static OnTileRemoved onTileRemoved;
@@ -47,7 +52,8 @@ namespace Minefactory.World
         // Start is called before the first frame update
         void Start()
         {
-            onTilePlaced = OnPlaceTile;
+            onItemSelect = SpawnGhostTile;
+            onPlaceTile = OnPlaceTileHandler;
             canPlace = CanPlaceOnTile;
             onTileRemoved = OnRemoveTile;
             seed = Random.Range(-10_000, 10_000);
@@ -106,7 +112,7 @@ namespace Minefactory.World
             }
         }
 
-        private bool OnPlaceTile(Vector2 position, ItemData item, bool isSolid, Orientation orientation)
+        private bool OnPlaceTileHandler(Vector2 position, ItemData item, bool isSolid, Orientation orientation)
         {
             var tile = tileRegistry.GetTileByItem(item);
             if (tile)
@@ -151,8 +157,9 @@ namespace Minefactory.World
             if (!CanPlaceOnTile(position))
                 return false;
             var newTile = new GameObject(tile.GetName());
-            newTile.transform.parent = transform;
+
             newTile.transform.position = new Vector2(Mathf.Round(position.x), Mathf.Round(position.y));
+
             var spriteRenderer = newTile.AddComponent<SpriteRenderer>();
             spriteRenderer.sprite = tile.topTileSprite;
             spriteRenderer.sortingLayerID = SortingLayer.NameToID(tile.sortingLayer);
@@ -198,6 +205,28 @@ namespace Minefactory.World
             spriteRenderer.sortingOrder = -1;
 
             return true;
+        }
+
+        private void SpawnGhostTile(ItemData item)
+        {
+            var ghostTile = new GameObject("GhostTile");
+
+            var tileGhost = ghostTile.AddComponent<TileGhost>();
+            tileGhost.tileData = tileRegistry.GetTileByItem(item);
+            tileGhost.transform.parent = transform;
+
+            var spriteRenderer = ghostTile.AddComponent<SpriteRenderer>();
+            spriteRenderer.sprite = tileGhost.tileData.topTileSprite;
+            spriteRenderer.sortingLayerID = SortingLayer.NameToID(tileGhost.tileData.sortingLayer);
+
+            // Add opacity to the sprite
+            var color = spriteRenderer.color;
+            color.a = 0.5f;
+            spriteRenderer.color = color;
+
+            var boxCollider = ghostTile.AddComponent<BoxCollider2D>();
+            boxCollider.size = new Vector2(1, 1);
+            boxCollider.isTrigger = true;
         }
     }
 
