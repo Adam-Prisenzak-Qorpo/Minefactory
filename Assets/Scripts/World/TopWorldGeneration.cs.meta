@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: aad15b0a3a4744f3aaf1873485df394c
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - playerInventory: {instanceID: 0}
+  - tileRegistry: {fileID: 11400000, guid: 04762c43388674ed099d2ef4714b21ef, type: 2}
+  - backgroundTileData: {fileID: 11400000, guid: afd167427018441b8b874913393429cd, type: 2}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

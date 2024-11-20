@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: MineBackground
   m_EditorClassIdentifier: 
   tileName: mine_background
-  tileSprite: {fileID: -2070765194, guid: 2aafe21edcfe8486195ce41a2aab8e3a, type: 3}
-  topTileSprite: {fileID: 0}
+  sortingLayer: Default
+  underGroundTilePrefab: {fileID: 5242337658903041165, guid: b4385135f8fa44f689cf2191e64d48c2, type: 3}
+  topTilePrefab: {fileID: 0}
   item: {fileID: 0}

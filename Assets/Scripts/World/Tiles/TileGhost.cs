@@ -47,15 +47,15 @@ namespace Minefactory.World.Tiles
         void OnMouseOver()
         {
             var sprite = GetComponent<SpriteRenderer>();
-            canPlace = WorldGeneration.canPlace(transform.position);
+            canPlace = BaseWorldGeneration.canPlace(transform.position);
+            var currentAlpha = sprite.color.a;
             if (!canPlace)
             {
-                sprite.color = Color.red;
-
+                sprite.color = new Color(1f, 0f, 0f, currentAlpha);
             }
             else
             {
-                sprite.color = Color.white;
+                sprite.color = new Color(1f, 1f, 1f, currentAlpha);
             }
         }
 
@@ -65,7 +65,7 @@ namespace Minefactory.World.Tiles
             {
                 return;
             }
-            var placed = WorldGeneration.onPlaceTile(transform.position, tileData.item, tileData.solid, orientation);
+            var placed = BaseWorldGeneration.onPlaceTile(transform.position, tileData.item, orientation);
             if (placed)
             {
                 Inventory.useItem(tileData.item);

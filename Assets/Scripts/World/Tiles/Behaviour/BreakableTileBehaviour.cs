@@ -12,7 +12,7 @@ namespace Minefactory.World.Tiles.Behaviour
                 playerInventory.AddItem(item);
             }
             Destroy(gameObject);
-            WorldGeneration.onTileRemoved(transform.position);
+            BaseWorldGeneration.onTileRemoved(transform.position);
         }
     }
 }

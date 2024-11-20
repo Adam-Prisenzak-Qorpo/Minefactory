@@ -8,6 +8,7 @@ TagManager:
   - Solid
   - Background
   - InventoryCell
+  - Ghost
   layers:
   - Default
   - TransparentFX
@@ -53,4 +54,10 @@ TagManager:
     locked: 0
   - name: Solid
     uniqueID: 3236333825
+    locked: 0
+  - name: GhostTile
+    uniqueID: 2185597965
+    locked: 0
+  - name: UI
+    uniqueID: 462835671
     locked: 0
