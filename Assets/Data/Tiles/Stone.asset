@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Stone
   m_EditorClassIdentifier: 
   tileName: stone
-  tileSprite: {fileID: -1120809991, guid: 2aafe21edcfe8486195ce41a2aab8e3a, type: 3}
-  topTileSprite: {fileID: -53964446, guid: 2aafe21edcfe8486195ce41a2aab8e3a, type: 3}
+  sortingLayer: Default
+  underGroundTilePrefab: {fileID: 5242337658903041165, guid: 8d6d9ab99a4b14bcfbb233d2a92491c0, type: 3}
+  topTilePrefab: {fileID: 5242337658903041165, guid: 73d483bfee62445d3a3ec1989fb90a3c, type: 3}
   item: {fileID: 11400000, guid: e91ad1affa47f4123b49d7a4a46e1c82, type: 2}

@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Wood
   m_EditorClassIdentifier: 
   tileName: wood
-  tileSprite: {fileID: 1096840357, guid: 2aafe21edcfe8486195ce41a2aab8e3a, type: 3}
-  topTileSprite: {fileID: 2019820943, guid: 2aafe21edcfe8486195ce41a2aab8e3a, type: 3}
+  sortingLayer: Default
+  underGroundTilePrefab: {fileID: 5242337658903041165, guid: c840ab8e6ad9047d692f5f03fc1ce359, type: 3}
+  topTilePrefab: {fileID: 5242337658903041165, guid: 75fb4e01fe76740089d114e3cc49000f, type: 3}
   item: {fileID: 11400000, guid: 95758610dbe5149f5872d3022ec93b83, type: 2}

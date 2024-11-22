@@ -13,9 +13,7 @@ MonoBehaviour:
   m_Name: Belt
   m_EditorClassIdentifier: 
   tileName: belt
-  solid: 0
   sortingLayer: Belts
-  tileSprite: {fileID: 0}
-  animator: {fileID: 1160356261127867848, guid: 27ffe3e34dbb14f0da98e617e16ad045, type: 3}
-  topTileSprite: {fileID: 3398102164135434293, guid: 27ffe3e34dbb14f0da98e617e16ad045, type: 3}
+  underGroundTilePrefab: {fileID: 0}
+  topTilePrefab: {fileID: 5242337658903041165, guid: 8bfdfcc341e9f457eb0505d93e243260, type: 3}
   item: {fileID: 11400000, guid: 1e3dfec64f5d944d4813c37964a2a76c, type: 2}
