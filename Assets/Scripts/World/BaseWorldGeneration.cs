@@ -1,11 +1,9 @@
 using System.Collections.Generic;
-using Minefactory.Storage;
 using Minefactory.World.Tiles;
 using Minefactory.Storage.Items;
 using Minefactory.Common;
 using Minefactory.Player.Inventory;
 using Minefactory.World.Tiles.Behaviour;
-using UnityEditor;
 using UnityEngine;
 
 namespace Minefactory.World
@@ -18,7 +16,7 @@ namespace Minefactory.World
         public int worldSize = 100;
 
         public TileData backgroundTileData;
-        
+
         protected float seed;
         protected readonly List<Vector2> tiles = new();
 
@@ -108,10 +106,10 @@ namespace Minefactory.World
             {
                 if (collider.CompareTag("Solid"))
                 {
-                    return false; 
+                    return false;
                 }
             }
-            return true; 
+            return true;
         }
 
 
