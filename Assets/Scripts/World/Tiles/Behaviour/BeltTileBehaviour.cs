@@ -10,7 +10,7 @@ namespace Minefactory.World.Tiles.Behaviour
 
         void OnTriggerStay2D(Collider2D collider)
         {
-            if (collider.gameObject.CompareTag("Player"))
+            if (collider.gameObject.CompareTag("Player") || collider.gameObject.CompareTag("Item"))
             {
                 Rigidbody2D rb = collider.gameObject.GetComponent<Rigidbody2D>();
                 var velocity = orientation switch

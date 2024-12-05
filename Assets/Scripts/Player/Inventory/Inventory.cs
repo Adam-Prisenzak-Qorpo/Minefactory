@@ -34,23 +34,19 @@ namespace Minefactory.Player.Inventory
                 }
             }
             useItem += RemoveItemFromInventory;
+            var item = itemRegistry.GetItem("belt");
+            for (int i = 0; i < 20; i++)
+            {
+                inventoryData.AddItem(item);
+            }
+            var furnace = itemRegistry.GetItem("furnace");
+            inventoryData.AddItem(furnace);
+            UpdateUI();
         }
-
-        private bool inventoryInitialized = false;
 
         // Update is called once per frame
         void Update()
         {
-            if (!inventoryInitialized)
-            {
-                inventoryInitialized = true;
-                var item = itemRegistry.GetItem("belt");
-                for (int i = 0; i < 20; i++)
-                {
-                    inventoryData.AddItem(item);
-                }
-                UpdateUI();
-            }
             var toggleInventory = Input.GetKeyDown(KeyCode.I);
             if (toggleInventory)
             {
