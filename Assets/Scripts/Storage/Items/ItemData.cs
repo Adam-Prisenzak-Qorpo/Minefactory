@@ -1,4 +1,5 @@
 using Minefactory.Common;
+using UnityEditor;
 using UnityEngine;
 
 namespace Minefactory.Storage.Items
@@ -7,6 +8,7 @@ namespace Minefactory.Storage.Items
     public class ItemData : ScriptableObject, IWithName
     {
         public Sprite sprite;
+        public GameObject prefab;
         public string itemName;
 
         public string GetName()

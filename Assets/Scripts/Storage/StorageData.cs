@@ -20,6 +20,7 @@ namespace Minefactory.Storage
                 {
                     stack = new ItemStack(item, 0);
                     items.Add(stack);
+                    Debug.Log("Added new item: " + item.itemName);
                 }
                 stack.amount++;
             }
