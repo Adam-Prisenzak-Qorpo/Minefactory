@@ -16,6 +16,8 @@ namespace Minefactory.Player.Inventory
 
         private bool isHovered = false;
 
+        private bool isHovered = false;
+
         void OnMouseDown()
         {
             // Check if the player is not in place mode
@@ -57,6 +59,38 @@ namespace Minefactory.Player.Inventory
                     return;
                 }
                 prefab.GetComponent<ItemBehaviour>().item = item;
+
+                Instantiate(prefab, transform.position, Quaternion.identity);
+            }
+        }
+
+        void OnMouseEnter()
+        {
+            isHovered = true;
+        }
+
+
+        void OnMouseExit()
+        {
+            isHovered = false;
+        }
+
+        // Check if Q is pressed and the player is hovering over the item
+        void Update()
+        {
+            if (Input.GetKeyDown(KeyCode.Q) && isHovered && stack != null)
+            {
+                // Remove the item from the inventory
+                Inventory.useItem(stack.item);
+                // Put item on ground with prefab "Item"
+                var prefab = stack.item.prefab;
+
+                if (!prefab)
+                {
+                    Debug.LogError($"Item prefab for {stack.item.name} not found.");
+                    return;
+                }
+                prefab.GetComponent<ItemBehaviour>().item = stack.item;
 
                 Instantiate(prefab, transform.position, Quaternion.identity);
             }

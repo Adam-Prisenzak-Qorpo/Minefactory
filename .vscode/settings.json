@@ -56,7 +56,7 @@
         "temp/": true,
         "Temp/": true
     },
-    "dotnet.defaultSolution": "Minefactory.sln",
+    "dotnet.defaultSolution": "NAVPH.sln",
     "cSpell.words": [
         "Behaviour",
         "Mathf",
