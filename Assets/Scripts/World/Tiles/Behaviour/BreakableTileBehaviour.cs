@@ -1,6 +1,7 @@
 using Minefactory.Storage;
 using Minefactory.Storage.Items;
 using UnityEngine;
+using Minefactory.Game;
 namespace Minefactory.World.Tiles.Behaviour
 {
     public class BreakableTileBehaviour : BaseTileBehaviour
@@ -9,10 +10,10 @@ namespace Minefactory.World.Tiles.Behaviour
         {
             if (item != null)
             {
-                playerInventory.AddItem(item);
+                WorldManager.activeBaseWorld.playerInventory.AddItem(item);
             }
             Destroy(gameObject);
-            BaseWorldGeneration.onTileRemoved(transform.position);
+            WorldManager.activeBaseWorld.onTileRemoved(transform.position);
         }
     }
 }

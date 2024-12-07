@@ -1,5 +1,8 @@
 using UnityEngine;
 using Minefactory.World.Tiles;
+using Minefactory.World.Ores;
+using System.Collections.Generic;
+using Minefactory.Save;
 
 namespace Minefactory.World
 {
@@ -10,43 +13,38 @@ namespace Minefactory.World
         public float woodFrequency = 0.05f;
         public float stoneFrequency = 0.05f;
 
-        private Texture2D woodNoiseTexture;
-        private Texture2D stoneNoiseTexture;
+        private Vector2 spawnPoint = Vector2.zero;
 
-        private Vector2 MapCenter => new Vector2(worldSize / 2, worldSize / 2);
-
-        protected override void GenerateNoiseTextures()
+        public override void InitializeWorld(float seed, List<ChunkData> modifications = null)
         {
-            woodNoiseTexture = GenerateNoiseTexture(0.25f, woodFrequency);
-            stoneNoiseTexture = GenerateNoiseTexture(0.5f, stoneFrequency);
+            base.InitializeWorld(seed, modifications);
         }
 
-        protected override GameObject GetTilePrefab(TileData tileData) => tileData.topTilePrefab;
+        public override GameObject GetTilePrefab(TileData tileData) => tileData.topTilePrefab;
 
-        protected override void GenerateWorld()
+        protected override void GenerateDefaultTerrain(Vector2 chunkWorldPos, int localX, int localY)
         {
-            for (int x = 0; x < worldSize; x++)
+            Vector2 worldPos = chunkWorldPos + new Vector2(localX, localY);
+            Vector2Int chunkPos = WorldToChunkPosition(worldPos);
+
+            PlaceTile(backgroundTileData, worldPos);
+
+            if (Vector2.Distance(worldPos, spawnPoint) < safeRadius)
             {
-                for (int y = 0; y < worldSize; y++)
-                {
-                    var position = new Vector2(x, y);
-                    
-                    PlaceTile(backgroundTileData, position);
+                return;
+            }
 
-                    if (Vector2.Distance(position, MapCenter) < safeRadius)
-                        continue;
+            float woodNoise = GetPerlinNoiseValue(worldPos, woodFrequency);
+            if (woodNoise > 0.75f)
+            {
+                PlaceTile(tileRegistry.GetItem("wood"), worldPos);
+                return;
+            }
 
-                    if (woodNoiseTexture.GetPixel(x, y).grayscale < 0.5f)
-                    {
-                        PlaceTile(tileRegistry.GetItem("wood"), position);
-                        continue;
-                    }
-
-                    if (stoneNoiseTexture.GetPixel(x, y).grayscale < 0.5f)
-                    {
-                        PlaceTile(tileRegistry.GetItem("stone"), position);
-                    }
-                }
+            float stoneNoise = GetPerlinNoiseValue(worldPos, stoneFrequency);
+            if (stoneNoise > 0.5f)
+            {
+                PlaceTile(tileRegistry.GetItem("stone"), worldPos);
             }
         }
     }

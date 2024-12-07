@@ -1217,8 +1217,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerInventory: {fileID: 2048797216}
   tileRegistry: {fileID: 11400000, guid: 04762c43388674ed099d2ef4714b21ef, type: 2}
-  worldSize: 100
   backgroundTileData: {fileID: 11400000, guid: 8234e8ee9c3bf4abb8866ec408817298, type: 2}
+  playerTransform: {fileID: 0}
+  chunkSize: 16
+  renderDistance: 3
   heightMultiplier: 5
   dirtHeight: 2
   generateCaves: 1

@@ -1,86 +1,143 @@
-using Minefactory.World.Ores;
-using Minefactory.World.Tiles;
 using UnityEngine;
+using Minefactory.World.Tiles;
+using Minefactory.World.Ores;
+using System.Collections.Generic;
+using Minefactory.Save;
+using System.IO;
+using System.Linq;
 
 namespace Minefactory.World
 {
     public class UndergroundWorldGeneration : BaseWorldGeneration
     {
         [Header("Underground Settings")]
-        public float heightMultiplier = 2f;
-        public float dirtHeight = 10f;
+        public float dirtLevel = 50f;
         public bool generateCaves = true;
         public float caveFrequency = 0.05f;
-        public float terrainFrequency = 0.05f;
         
+        [Header("Spawn Settings")]
+        public Vector2 spawnPoint = Vector2.zero;
+        public float spawnAreaRadius = 2f;
+
         [Header("Ore Settings")]
         public OreRegistry oreRegistry;
+        
+        private Dictionary<string, float> oreSeeds = new Dictionary<string, float>();
 
-        private Texture2D caveNoiseTexture;
-
-        protected override void GenerateNoiseTextures()
+        public override void InitializeWorld(float seed, List<ChunkData> modifications = null)
         {
-            if (generateCaves)
+            base.InitializeWorld(seed, modifications);
+            InitializeOreSeeds();
+        }
+
+        private void InitializeOreSeeds()
+        {
+            if (oreRegistry == null || oreRegistry.list == null) return;
+
+            foreach (var ore in oreRegistry.list)
             {
-                caveNoiseTexture = GenerateNoiseTexture(0.25f, caveFrequency);
-                if (oreRegistry != null)
-                {
-                    foreach (var ore in oreRegistry.list)
-                    {
-                        ore.SetNoiseTexture(GenerateNoiseTexture(ore.rarity, ore.size));
-                    }
-                }
+                float oreSeed = GenerateOreSeed(ore.GetName());
+                oreSeeds[ore.GetName()] = oreSeed;
             }
         }
-        protected override GameObject GetTilePrefab(TileData tileData) => tileData.underGroundTilePrefab;
 
-        protected override void GenerateWorld()
+        private float GenerateOreSeed(string oreName)
         {
-            for (int x = 0; x < worldSize; x++)
+            // Create a unique seed based on the ore name
+            float nameSeed = 0;
+            for (int i = 0; i < oreName.Length; i++)
             {
-                var height = Mathf.PerlinNoise((x + seed) * terrainFrequency, seed * terrainFrequency) 
-                    * heightMultiplier + dirtHeight;
-                
-                for (int y = 0; y < worldSize; y++)
+                nameSeed += oreName[i] * Mathf.Pow(31, i);
+            }
+            return nameSeed;
+        }
+
+        protected float GetOreNoiseValue(Vector2 worldPosition, OreData ore)
+        {
+            float oreSeed = oreSeeds.GetValueOrDefault(ore.GetName(), 0f);
+            float combinedSeed = seed + oreSeed;
+            
+            return Mathf.PerlinNoise(
+                (worldPosition.x + combinedSeed) * ore.frequency,
+                (worldPosition.y + combinedSeed) * ore.frequency
+            );
+        }
+
+        public override GameObject GetTilePrefab(TileData tileData) => tileData.underGroundTilePrefab;
+
+        protected override void GenerateDefaultTerrain(Vector2 chunkWorldPos, int localX, int localY)
+        {
+            Vector2 worldPos = chunkWorldPos + new Vector2(localX, localY);
+
+            PlaceTile(backgroundTileData, worldPos);
+
+            if (IsSpawnArea(worldPos))
+            {
+                return;
+            }
+
+            if (generateCaves)
+            {
+                float caveNoise = GetPerlinNoiseValue(worldPos, caveFrequency);
+                if (caveNoise < 0.25f)
                 {
-                    var position = new Vector2(x, y);
-                    
-                    PlaceTile(backgroundTileData, position);
-                    
-                    if (IsSpawnArea(position)) continue;
-
-                    if (y > (worldSize - height))
-                    {
-                        PlaceTile(tileRegistry.GetItem("dirt"), position);
-                        continue;
-                    }
-
-                    if (generateCaves && caveNoiseTexture.GetPixel(x, y).r < 0.5f)
-                        continue;
-
-                    bool orePlaced = false;
-                    if (oreRegistry != null)
-                    {
-                        foreach (var ore in oreRegistry.list)
-                        {
-                            if (ore.CanPlace(worldSize, x, y))
-                            {
-                                PlaceTile(ore.tile, position);
-                                orePlaced = true;
-                                break;
-                            }
-                        }
-                    }
-
-                    if (!orePlaced)
-                        PlaceTile(tileRegistry.GetItem("stone"), position);
+                    return;
                 }
+            }
+
+            if (worldPos.y >= dirtLevel)
+            {
+                PlaceTile(tileRegistry.GetItem("dirt"), worldPos);
+                return;
+            }
+            GenerateOreOrStone(worldPos);
+        }
+
+        private void GenerateOreOrStone(Vector2 worldPos)
+        {
+            if (oreRegistry == null || oreRegistry.list == null)
+            {
+                PlaceTile(tileRegistry.GetItem("stone"), worldPos);
+                return;
+            }
+
+            // Sort ores by rarity (most rare first) to ensure rare ores have priority
+            var sortedOres = oreRegistry.list
+                .Where(ore => ore.depth > worldPos.y) 
+                .OrderBy(ore => ore.rarity)          
+                .ToList();
+
+            bool orePlaced = false;
+
+            foreach (var ore in sortedOres)
+            {
+                float depthDifference = ore.depth - worldPos.y;
+                float depthFactor = Mathf.Clamp01(depthDifference / ore.depthFalloff);
+                
+                float noise = GetOreNoiseValue(worldPos, ore);
+                
+                // Calculate spawn threshold based on rarity and depth influence
+                float threshold = ore.rarity + (depthFactor * ore.depthInfluence);
+                
+                if (noise < threshold)
+                {
+                    PlaceTile(ore.tile, worldPos);
+                    orePlaced = true;
+                    break;
+                }
+            }
+
+            // Place stone if no ore was placed
+            if (!orePlaced)
+            {
+                PlaceTile(tileRegistry.GetItem("stone"), worldPos);
             }
         }
 
         private bool IsSpawnArea(Vector2 position)
         {
-            return position.y >= 90 && position.y <= 92 && position.x >= 49 && position.x <= 51;
+            float distance = Vector2.Distance(position, spawnPoint);
+            return distance < spawnAreaRadius;
         }
     }
 }
