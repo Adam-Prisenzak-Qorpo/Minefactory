@@ -144,5 +144,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerInventory: {fileID: 0}
-  item: {fileID: 0}
+  item: {fileID: 11400000, guid: 9541d12a278d77545b9063e92764dbad, type: 2}
   orientation: 0

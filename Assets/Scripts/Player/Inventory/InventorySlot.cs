@@ -1,3 +1,4 @@
+using System;
 using Minefactory.Common;
 using Minefactory.Storage;
 using Minefactory.Storage.Items;
@@ -12,25 +13,33 @@ namespace Minefactory.Player.Inventory
     {
         public StorageData inventory;
         public int slotIndex;
-        public TileRegistry tileRegistry;
+        public GameObject textContainer;
+        public GameObject itemContainer;
+        
+        private SpriteRenderer itemRenderer;
+        private InventoryItem itemScript;
+        private TextMesh text;
+
+        public void Start()
+        {
+            itemRenderer = itemContainer.GetComponent<SpriteRenderer>();
+            itemScript = itemContainer.GetComponent<InventoryItem>();
+            text = textContainer.GetComponent<TextMesh>();
+        }
 
         public void UpdateItem()
         {
-            var itemObject = transform.Find("item");
-            var itemRenderer = itemObject.GetComponent<SpriteRenderer>();
-            var itemScript = itemObject.GetComponent<InventoryItem>();
-            var text = transform.Find("text").GetComponent<TextMesh>();
 
-            itemScript.stack = inventory.GetItemStack(slotIndex);
-            if (itemScript.stack == null)
+            itemScript.itemStack = inventory.GetItemStack(slotIndex);
+            if (itemScript.itemStack is null)
             {
                 itemRenderer.sprite = null;
                 text.text = "";
                 return;
             }
 
-            itemRenderer.sprite = itemScript.stack.item.sprite;
-            text.text = itemScript.stack.amount.ToString();
+            itemRenderer.sprite = itemScript.itemStack.item.sprite;
+            text.text = itemScript.itemStack.amount.ToString();
         }
     }
 }

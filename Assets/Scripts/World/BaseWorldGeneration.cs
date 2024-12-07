@@ -41,6 +41,9 @@ namespace Minefactory.World
 
         private bool initialized = false;
 
+        public GameObject furnaceUI;
+
+
         protected virtual void Awake()
         {
             onItemSelect = SpawnGhostTile;
