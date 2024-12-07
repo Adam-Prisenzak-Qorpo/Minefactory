@@ -105,7 +105,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   inventory: {fileID: 11400000, guid: d2046fd92d8b74c4ab7e37c98ea1d610, type: 2}
   slotIndex: 0
-  tileRegistry: {fileID: 11400000, guid: 04762c43388674ed099d2ef4714b21ef, type: 2}
+  textContainer: {fileID: 4036607005026715597}
+  itemContainer: {fileID: 4501562819501961064}
 --- !u!1 &4036607005026715597
 GameObject:
   m_ObjectHideFlags: 0
@@ -364,5 +365,3 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameState: {fileID: 11400000, guid: e81cc04d0172d4f7296a95419546d17d, type: 2}
-  inventory: {fileID: 11400000, guid: d2046fd92d8b74c4ab7e37c98ea1d610, type: 2}
-  tileRegistry: {fileID: 11400000, guid: 04762c43388674ed099d2ef4714b21ef, type: 2}

@@ -13,7 +13,7 @@ namespace Minefactory.World
         private Texture2D woodNoiseTexture;
         private Texture2D stoneNoiseTexture;
 
-        private Vector2 MapCenter => new Vector2(worldSize / 2, worldSize / 2);
+        private Vector2 MapCenter => new(worldSize / 2, worldSize / 2);
 
         protected override void GenerateNoiseTextures()
         {
@@ -30,7 +30,7 @@ namespace Minefactory.World
                 for (int y = 0; y < worldSize; y++)
                 {
                     var position = new Vector2(x, y);
-                    
+
                     PlaceTile(backgroundTileData, position);
 
                     if (Vector2.Distance(position, MapCenter) < safeRadius)

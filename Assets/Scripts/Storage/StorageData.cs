@@ -7,41 +7,39 @@ namespace Minefactory.Storage
     [CreateAssetMenu(fileName = "StorageData", menuName = "Storage/Storage Data")]
     public class StorageData : ScriptableObject
     {
-        public List<ItemStack> items = new();
         public int maxItems = 20;
+        private List<ItemStack> storageItems = new();
 
 
         public void AddItem(ItemData item)
         {
-            if (items.Count < maxItems)
+            if (storageItems.Count >= maxItems) return;
+            var stack = storageItems.Find(i => i.item == item);
+            if (stack == null)
             {
-                var stack = items.Find(i => i.item == item);
-                if (stack == null)
-                {
-                    stack = new ItemStack(item, 0);
-                    items.Add(stack);
-                }
-                stack.amount++;
+                stack = new ItemStack(item, 0);
+                storageItems.Add(stack);
+                Debug.Log("Added new item: " + item.itemName);
             }
+            stack.amount++;
         }
 
         public int RemoveItem(ItemData item)
         {
-            var stack = items.Find(i => i.item == item);
-            if (stack != null)
+            var stack = storageItems.Find(i => i.item == item);
+            if (stack == null) return 0;
+            stack.amount--;
+            if (stack.amount <= 0)
             {
-                stack.amount--;
-                if (stack.amount <= 0)
-                {
-                    items.Remove(stack);
-                }
+                storageItems.Remove(stack);
             }
+
             return stack.amount;
         }
 
         public ItemStack GetItemStack(int index)
         {
-            return items.Count > index ? items[index] : null;
+            return storageItems.Count > index ? storageItems[index] : null;
         }
     }
 }

@@ -35,6 +35,9 @@ namespace Minefactory.World
         public delegate bool OnTileRemoved(Vector2 position);
         public static OnTileRemoved onTileRemoved;
 
+
+        public GameObject furnaceUI;
+
         protected virtual void Start()
         {
             InitializeWorld();
@@ -140,6 +143,12 @@ namespace Minefactory.World
             {
                 tileBehaviour.orientation = orientation;
                 tileBehaviour.playerInventory = playerInventory;
+            }
+
+            if (tileBehaviour is FurnaceTileBehaviour furnaceTileBehaviour)
+            {
+                furnaceTileBehaviour.furnaceUI = furnaceUI;
+                
             }
 
             return true;
