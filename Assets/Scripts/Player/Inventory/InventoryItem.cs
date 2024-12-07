@@ -23,6 +23,8 @@ namespace Minefactory.Player.Inventory
             {
                 return;
             }
+
+            // Spawn a ghost tile
             WorldManager.activeBaseWorld.onItemSelect(stack.item);
         }
 
