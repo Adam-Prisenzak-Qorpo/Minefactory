@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 98299d65cb5e242858403d871242da80
+guid: e94d47cb730afc84cbff0b453c0254b7
 ScriptedImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -97,7 +97,7 @@ ScriptedImporter:
     addSortingGroup: 1
     addShadowCasters: 0
   importFileNodeState: 1
-  platformSettingsDirtyTick: 638691650057109564
+  platformSettingsDirtyTick: 638691650103027019
   textureAssetName: 
   singleSpriteImportData:
   - name: 
@@ -121,18 +121,18 @@ ScriptedImporter:
     tessellationDetail: 0
     uvTransform: {x: 0, y: 0}
   animatedSpriteImportData:
-  - name: wood
+  - name: iron_raw
     originalName: 
-    pivot: {x: 0.5, y: -0.071428575}
-    alignment: 9
+    pivot: {x: 0.5, y: 0.5}
+    alignment: 0
     border: {x: 0, y: 0, z: 0, w: 0}
     rect:
       serializedVersion: 2
       x: 4
       y: 4
-      width: 14
-      height: 14
-    spriteID: 858dbb22794a246c9b48f7dbef045d27
+      width: 12
+      height: 10
+    spriteID: 51334a81e5b3acb4fb417a2dc205eb06
     spriteBone: []
     spriteOutline: []
     vertices: []
@@ -144,21 +144,21 @@ ScriptedImporter:
   spriteSheetImportData: []
   asepriteLayers:
   - layerIndex: 0
-    guid: -150339577
-    name: wood
+    guid: -1077709899
+    name: iron_raw
     layerFlags: 0
     layerType: 0
     blendMode: 0
     cells:
-    - name: wood
+    - name: iron_raw
       frameIndex: 0
       additiveSortOrder: 0
       cellRect:
-        x: 1
-        y: 1
-        width: 14
-        height: 14
-      spriteId: 858dbb22794a246c9b48f7dbef045d27
+        x: 2
+        y: 3
+        width: 12
+        height: 10
+      spriteId: 51334a81e5b3acb4fb417a2dc205eb06
     linkedCells: []
     parentIndex: -1
   platformSettings:

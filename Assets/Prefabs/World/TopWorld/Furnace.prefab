@@ -238,6 +238,8 @@ MonoBehaviour:
   playerInventory: {fileID: 5460361312489632515, guid: 6d973a24c603940d9b98e0b70351e893, type: 3}
   item: {fileID: 11400000, guid: 8ea3ed1f2c59a476db2be0bb3e8a36e8, type: 2}
   orientation: 0
+  furnaceUI: {fileID: 0}
+  itemRegistry: {fileID: 11400000, guid: 3ab5254fe788b4a7f866da9ec9ded5e2, type: 2}
 --- !u!1 &6906081580845769829
 GameObject:
   m_ObjectHideFlags: 0
