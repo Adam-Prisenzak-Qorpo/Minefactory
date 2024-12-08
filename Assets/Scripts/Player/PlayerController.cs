@@ -82,5 +82,11 @@ namespace Minefactory.Player
             
         }
         
+        public void IncreaseJumpHeight(float multiplier)
+        {
+            jumpForce *= multiplier;
+            Debug.Log("Jump height increased! New jump force: " + jumpForce);
+        }
+        
     }
 }
