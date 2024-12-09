@@ -9,25 +9,35 @@ namespace Minefactory.Player
         [Header("Oxygen Settings")]
         public int totalOxygenMinutes = 10;  // Total oxygen in minutes
         private int currentOxygen;  // Current oxygen level in minutes
-        
+
         [Header("UI Settings")]
         public GameObject oxygenBarContainer;  // Parent container with Grid Layout
         public GameObject oxygenSegmentPrefab;  // Prefab representing one oxygen segment
         private Image[] oxygenSegments;  // Array for storing segment Image components
-        
+
+
         private void Start()
         {
-            currentOxygen = totalOxygenMinutes;
+            CurrentOxygen = totalOxygenMinutes;
             InitializeOxygenBar();
             StartCoroutine(OxygenDepletionRoutine());
+        }
+
+        public int CurrentOxygen
+        {
+            get { return currentOxygen; }
+            set
+            {
+                currentOxygen = value;
+                UpdateOxygenBar();
+            }
         }
 
         private void InitializeOxygenBar()
         {
             oxygenSegments = new Image[totalOxygenMinutes];
-
             for (int i = 0; i < totalOxygenMinutes; i++)
-            {
+            {   
                 // Instantiate a new segment and set its parent to the container
                 GameObject segment = Instantiate(oxygenSegmentPrefab, oxygenBarContainer.transform);
                 Image segmentImage = segment.GetComponent<Image>();
@@ -41,13 +51,13 @@ namespace Minefactory.Player
 
         private IEnumerator OxygenDepletionRoutine()
         {
-            while (currentOxygen > 0)
+            while (CurrentOxygen > 0)
             {
                 yield return new WaitForSeconds(5);  
-                currentOxygen--;
+                CurrentOxygen--;
                 UpdateOxygenBar();
 
-                if (currentOxygen <= 0)
+                if (CurrentOxygen <= 0)
                 {
                     PlayerDeath();
                 }
@@ -56,11 +66,14 @@ namespace Minefactory.Player
 
         private void UpdateOxygenBar()
         {
-            // Update the visual state of the oxygen bar
+            if (oxygenSegments == null)
+            {
+                return;
+            }
             for (int i = 0; i < oxygenSegments.Length; i++)
             {
                 // Set active or inactive based on current oxygen level
-                oxygenSegments[i].color = i < currentOxygen ? Color.white : new Color(1, 1, 1, 0.3f);  // Adjust color to show depletion
+                oxygenSegments[i].color = i < CurrentOxygen ? Color.white : new Color(1, 1, 1, 0.3f);  // Adjust color to show depletion
             }
         }
 
@@ -73,7 +86,7 @@ namespace Minefactory.Player
         // Template method for future oxygen replenishment
         public void ReplenishOxygen(int amount)
         {
-            currentOxygen = Mathf.Min(currentOxygen + amount, totalOxygenMinutes);
+            CurrentOxygen = Mathf.Min(CurrentOxygen + amount, totalOxygenMinutes);
             UpdateOxygenBar();
         }
     }

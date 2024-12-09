@@ -1,12 +1,12 @@
+using UnityEngine;
 using System.Collections.Generic;
-using Minefactory.Storage;
 using Minefactory.World.Tiles;
-using Minefactory.Storage.Items;
 using Minefactory.Common;
+using Minefactory.Storage.Items;
 using Minefactory.Player.Inventory;
 using Minefactory.World.Tiles.Behaviour;
-using UnityEditor;
-using UnityEngine;
+using System.Linq;
+using Minefactory.Save;
 
 namespace Minefactory.World
 {
@@ -15,67 +15,86 @@ namespace Minefactory.World
         [Header("Base Settings")]
         public Inventory playerInventory;
         public TileRegistry tileRegistry;
-        public int worldSize = 100;
-
         public TileData backgroundTileData;
         
+        [Header("Chunk Settings")]
+        public Transform playerTransform;
+        [SerializeField] protected int chunkSize = 16;
+        [SerializeField] protected int renderDistance = 1;
+
         protected float seed;
-        protected readonly List<Vector2> tiles = new();
+        protected Dictionary<Vector2Int, Chunk> loadedChunks = new Dictionary<Vector2Int, Chunk>();
+        protected WorldModificationManager modificationManager;
 
         // Event delegates for tile placement
         public delegate bool CanPlace(Vector2 position);
-        public static CanPlace canPlace;
+        public CanPlace canPlace;
 
         public delegate void OnItemSelect(ItemData item);
-        public static OnItemSelect onItemSelect;
+        public OnItemSelect onItemSelect;
 
         public delegate bool OnPlaceTile(Vector2 position, ItemData item, Orientation orientation);
-        public static OnPlaceTile onPlaceTile;
+        public OnPlaceTile onPlaceTile;
 
         public delegate bool OnTileRemoved(Vector2 position);
-        public static OnTileRemoved onTileRemoved;
-
+        public OnTileRemoved onTileRemoved;
 
         public GameObject furnaceUI;
 
-        protected virtual void Start()
-        {
-            InitializeWorld();
-            GenerateWorld();
-        }
+        private bool initialized = false;
 
-        protected virtual void InitializeWorld()
+        protected virtual void Awake()
         {
-            seed = Random.Range(-10_000, 10_000);
             onItemSelect = SpawnGhostTile;
-            onPlaceTile = OnPlaceTileHandler;
+            onPlaceTile = HandlePlaceTile;
             canPlace = CanPlaceOnTile;
             onTileRemoved = OnRemoveTile;
-            GenerateNoiseTextures();
         }
 
-        protected abstract void GenerateNoiseTextures();
-        protected abstract void GenerateWorld();
-
-        protected Texture2D GenerateNoiseTexture(float limit, float noiseFrequency)
+        public  virtual void InitializeWorld(float seed, List<ChunkData> modifications = null)
         {
-            var noiseTexture = new Texture2D(worldSize, worldSize) { filterMode = FilterMode.Point };
-            for (int x = 0; x < noiseTexture.width; x++)
+            this.seed = seed;
+            modificationManager = gameObject.AddComponent<WorldModificationManager>();
+            modificationManager.Initialize(tileRegistry, chunkSize);
+            modificationManager.LoadModifications(modifications);
+            Debug.Log("World Initialized with seed: " + this.seed);
+            initialized = true;
+            UpdateChunks();
+        }
+
+        public float getSeed()
+        {
+            return seed;
+        }
+
+        protected void FixedUpdate()
+        {
+            if (!initialized) return;
+            if (playerTransform == null)
             {
-                for (int y = 0; y < noiseTexture.height; y++)
+                playerTransform = GameObject.FindGameObjectWithTag("Player").transform;
+                if (playerTransform == null)
                 {
-                    float noiseValue = Mathf.PerlinNoise(
-                        (x + seed) * noiseFrequency,
-                        (y + seed) * noiseFrequency
-                    );
-                    noiseTexture.SetPixel(x, y, noiseValue > limit ? Color.white : Color.black);
+                    Debug.LogError("No player found! Make sure your player has the 'Player' tag.");
                 }
             }
-            noiseTexture.Apply();
-            return noiseTexture;
+            UpdateChunks();
         }
 
-        private bool OnPlaceTileHandler(Vector2 position, ItemData item, Orientation orientation)
+        protected bool CanPlaceOnTile(Vector2 mousePosition)
+        {
+            Collider2D[] colliders = Physics2D.OverlapPointAll(mousePosition);
+            foreach (Collider2D collider in colliders)
+            {
+                if (collider.CompareTag("Solid"))
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        protected bool HandlePlaceTile(Vector2 position, ItemData item, Orientation orientation)
         {
             var tile = tileRegistry.GetTileByItem(item);
             if (tile && CanPlaceOnTile(position))
@@ -85,91 +104,242 @@ namespace Minefactory.World
             return false;
         }
 
-        // private void RotateSpriteByOrientation(SpriteRenderer spriteRenderer, rotation=)
-        // {
-        //     spriteRenderer.transform.Rotate(0, 0, (int)orientation * -90);
-        // }
+        private void RecordTileModification(Vector2 position)
+        {
+            Collider2D collider = Physics2D.OverlapPoint(position);
+            if (collider != null)
+            {
+                var tileBehaviour = collider.GetComponent<BaseTileBehaviour>();
+                if (tileBehaviour != null && tileBehaviour.item != null)
+                {
+                    TileData tileData = tileRegistry.GetTileByItem(tileBehaviour.item);
+                    if (tileData != null)
+                    {
+                        modificationManager.SetModification(position, tileData, tileBehaviour.orientation);
+                    }
+                }
+            }
+            else
+            {
+                // If no tile is present, record a null modification to indicate removal
+                modificationManager.SetModification(position, null, Orientation.Up);
+            }
+        }
 
         protected bool OnRemoveTile(Vector2 position)
         {
-            foreach (var tile in tiles)
+            Vector2Int chunkPos = WorldToChunkPosition(position);
+            if (loadedChunks.TryGetValue(chunkPos, out Chunk chunk))
             {
-                if (tile.x == Mathf.Round(position.x) && tile.y == Mathf.Round(position.y))
+                GameObject tileObject = chunk.GetTileAtPosition(position);
+                if (tileObject != null)
                 {
-                    tiles.Remove(tile);
-                    return true;
+                    string sortingLayer = tileObject.GetComponent<SpriteRenderer>().sortingLayerName;
+                    if (chunk.RemoveTile(position, sortingLayer))
+                    {
+                        RecordTileModification(position);
+                        return true;
+                    }
                 }
             }
             return false;
         }
-
-        protected bool CanPlaceOnTile(Vector2 mousePosition)
-        {
-            Collider2D[] colliders = Physics2D.OverlapPointAll(mousePosition);
-
-            foreach (Collider2D collider in colliders)
-            {
-                if (collider.CompareTag("Solid"))
-                {
-                    return false; 
-                }
-            }
-            return true; 
-        }
-
-
-
-        private Quaternion GetRotationByOrientation(Orientation orientation)
-        {
-            return Quaternion.Euler(0, 0, (int)orientation * -90);
-        }
-
-        protected virtual bool PlaceTile(TileData tileData, Vector2 position, Orientation orientation = Orientation.Up)
-        {
-            GameObject tilePrefab = GetTilePrefab(tileData);
-            if (!tilePrefab)
-            {
-                Debug.LogError($"Tile prefab for {tileData.GetName()} not found.");
-                return false;
-            }
-            GameObject newTile = Instantiate(
-                tilePrefab,
-                new Vector2(Mathf.Round(position.x), Mathf.Round(position.y)),
-                GetRotationByOrientation(orientation)
-            );
-            BaseTileBehaviour tileBehaviour = newTile.GetComponent<BaseTileBehaviour>();
-            newTile.transform.parent = transform;
-            if (tileBehaviour)
-            {
-                tileBehaviour.orientation = orientation;
-                tileBehaviour.playerInventory = playerInventory;
-            }
-
-            if (tileBehaviour is FurnaceTileBehaviour furnaceTileBehaviour)
-            {
-                furnaceTileBehaviour.furnaceUI = furnaceUI;
-                
-            }
-
-            return true;
-        }
-        protected abstract GameObject GetTilePrefab(TileData tileData);
 
         private void SpawnGhostTile(ItemData item)
         {
             TileData tileData = tileRegistry.GetTileByItem(item);
             GameObject tilePrefab = Instantiate(GetTilePrefab(tileData), Vector3.zero, Quaternion.identity);
             tilePrefab.tag = "Ghost";
+            
             var tileGhost = tilePrefab.AddComponent<TileGhost>();
             tileGhost.tileData = tileData;
             tileGhost.transform.parent = transform;
+            
             var sr = tilePrefab.GetComponent<SpriteRenderer>();
             sr.sortingLayerID = SortingLayer.NameToID("GhostTile");
             var color = sr.color;
             color.a = 0.5f;
             sr.color = color;
+            
             tilePrefab.GetComponent<BoxCollider2D>().isTrigger = true;
             Destroy(tilePrefab.GetComponent<BaseTileBehaviour>());
         }
+
+        protected virtual void UpdateChunks()
+        {
+            if (playerTransform == null) return;
+
+            Vector2Int playerChunkPos = WorldToChunkPosition(playerTransform.position);
+            
+            // Calculate actual squared distance once
+            float maxDistanceSquared = (renderDistance + 1) * (renderDistance + 1);
+
+            // First, unload distant chunks
+            List<Vector2Int> chunksToUnload = new List<Vector2Int>();
+            foreach (var chunk in loadedChunks)
+            {
+                // Convert to Vector2 for distance calculation
+                Vector2 offset = new Vector2(
+                    playerChunkPos.x - chunk.Key.x,
+                    playerChunkPos.y - chunk.Key.y
+                );
+                float distanceSquared = offset.sqrMagnitude;
+                
+                if (distanceSquared > maxDistanceSquared)
+                {
+                    chunksToUnload.Add(chunk.Key);
+                }
+            }
+
+            foreach (var pos in chunksToUnload)
+            {
+                UnloadChunk(pos);
+            }
+
+            // Then load nearby chunks if needed
+            int renderDistanceInt = Mathf.FloorToInt(renderDistance);
+            for (int x = -renderDistanceInt; x <= renderDistanceInt; x++)
+            {
+                for (int y = -renderDistanceInt; y <= renderDistanceInt; y++)
+                {
+                    // Convert offset to Vector2 for distance check
+                    Vector2 offset = new Vector2(x, y);
+                    Vector2Int checkPos = playerChunkPos + new Vector2Int(x, y);
+                    
+                    // Check if this chunk is within our circular render distance
+                    if (offset.sqrMagnitude <= maxDistanceSquared && !loadedChunks.ContainsKey(checkPos))
+                    {
+                        GenerateChunk(checkPos);
+                    }
+                }
+            }
+        }
+
+        protected Vector2Int WorldToChunkPosition(Vector2 worldPosition)
+        {
+            return new Vector2Int(
+                Mathf.FloorToInt(worldPosition.x / chunkSize),
+                Mathf.FloorToInt(worldPosition.y / chunkSize)
+            );
+        }
+
+        protected Vector2 ChunkToWorldPosition(Vector2Int chunkPos)
+        {
+            return new Vector2(
+                chunkPos.x * chunkSize,
+                chunkPos.y * chunkSize
+            );
+        }
+
+        protected virtual void GenerateChunk(Vector2Int chunkPos)
+        {
+            GameObject chunkObj = new GameObject($"Chunk_{chunkPos.x}_{chunkPos.y}");
+            chunkObj.transform.parent = transform;
+            
+            Vector2 worldPos = ChunkToWorldPosition(chunkPos);
+            chunkObj.transform.position = worldPos;
+
+            Chunk chunk = chunkObj.AddComponent<Chunk>();
+            loadedChunks.Add(chunkPos, chunk);
+            chunk.Initialize(this, chunkPos, chunkSize);
+        }
+
+        protected virtual void UnloadChunk(Vector2Int chunkPos)
+        {
+            if (loadedChunks.TryGetValue(chunkPos, out Chunk chunk))
+            {
+                Destroy(chunk.gameObject);
+                loadedChunks.Remove(chunkPos);
+            }
+        }
+
+        public virtual bool PlaceTile(TileData tileData, Vector2 worldPosition, Orientation orientation = Orientation.Up, bool recordModification = true)
+        {
+            Vector2Int chunkPos = WorldToChunkPosition(worldPosition);
+            if (!loadedChunks.TryGetValue(chunkPos, out Chunk chunk))
+            {
+                Debug.LogWarning($"Trying to place tile at {worldPosition} but chunk {chunkPos} not loaded");
+                return false;
+            }
+
+            GameObject tilePrefab = GetTilePrefab(tileData);
+            if (!tilePrefab)
+            {
+                Debug.LogError($"Tile prefab for {tileData.GetName()} not found.");
+                return false;
+            }
+
+            Vector2 roundedPosition = new Vector2(
+                Mathf.Round(worldPosition.x), 
+                Mathf.Round(worldPosition.y)
+            );
+            
+            GameObject newTile = Instantiate(
+                tilePrefab,
+                roundedPosition,
+                Quaternion.Euler(0, 0, (int)orientation * -90),
+                chunk.transform
+            );
+            
+            BaseTileBehaviour tileBehaviour = newTile.GetComponent<BaseTileBehaviour>();
+            if (tileBehaviour)
+            {
+                tileBehaviour.orientation = orientation;
+            }
+            if (tileBehaviour is FurnaceTileBehaviour furnaceTileBehaviour)
+            {
+                furnaceTileBehaviour.furnaceUI = furnaceUI;
+            }
+
+            chunk.RegisterTile(roundedPosition, newTile);
+            
+            if (recordModification)
+            {
+                RecordTileModification(roundedPosition);
+            }
+            
+            return true;
+        }
+
+        protected float GetPerlinNoiseValue(Vector2 worldPosition, float frequency)
+        {
+            return Mathf.PerlinNoise(
+                (worldPosition.x + seed) * frequency,
+                (worldPosition.y + seed) * frequency
+            );
+        }
+
+        public virtual void GenerateTerrainAt(Vector2 chunkWorldPos, int localX, int localY)
+        {
+            Vector2 worldPos = chunkWorldPos + new Vector2(localX, localY);
+            
+            // Always place background tile first
+            PlaceTile(backgroundTileData, worldPos, Orientation.Up, false);
+
+            bool hasModification = modificationManager.HasModification(worldPos, out TileModification modification);
+
+            if (hasModification)
+            {
+                if (!string.IsNullOrEmpty(modification.tileDataName))
+                {
+                    // Place the modified tile
+                    TileData tileData = tileRegistry.GetItem(modification.tileDataName);
+                    if (tileData != null)
+                    {
+                        PlaceTile(tileData, worldPos, modification.orientation, false);
+                    }
+                }
+                // If modification exists but tileDataName is empty string, it means the tile was explicitly removed
+                // In this case, we only keep the background tile and don't generate default terrain
+            }
+            else
+            {
+                // Generate default terrain if no modifications exist
+                GenerateDefaultTerrain(chunkWorldPos, localX, localY);
+            }
+        }
+
+        protected abstract void GenerateDefaultTerrain(Vector2 chunkWorldPos, int localX, int localY);
+        public abstract GameObject GetTilePrefab(TileData tileData);
     }
 }

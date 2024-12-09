@@ -13,6 +13,9 @@ MonoBehaviour:
   m_Name: Iron
   m_EditorClassIdentifier: 
   tile: {fileID: 11400000, guid: 72e2f124abdea48648fabca3135656db, type: 2}
-  rarity: 0.8
-  size: 0.1
-  depth: 14
+  rarity: 0.1
+  depth: 10
+  depthInfluence: 0.2
+  depthFalloff: 500
+  frequency: 0.2
+  worldSeed: 0
