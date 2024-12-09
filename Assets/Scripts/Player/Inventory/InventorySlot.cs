@@ -20,7 +20,7 @@ namespace Minefactory.Player.Inventory
         private InventoryItem itemScript;
         private TextMesh text;
 
-        public void Start()
+        public void Awake()
         {
             itemRenderer = itemContainer.GetComponent<SpriteRenderer>();
             itemScript = itemContainer.GetComponent<InventoryItem>();

@@ -25,7 +25,7 @@ namespace Minefactory.Player.Inventory
             }
 
             // Spawn a ghost tile
-            WorldManager.activeBaseWorld.onItemSelect(stack.item);
+            WorldManager.activeBaseWorld.onItemSelect(itemStack.item);
         }
 
         void OnMouseEnter()
