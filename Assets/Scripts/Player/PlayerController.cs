@@ -41,12 +41,6 @@ namespace Minefactory.Player
 
         private void FixedUpdate()
         {
-            bool worldChange = Input.GetKey(KeyCode.N);
-            if (worldChange)
-            {
-                SceneManager.LoadScene(topWorld ? "Underground" : "TopWorld");
-                return;
-            }
             horizontal = Input.GetAxis("Horizontal");
             float vertical = Input.GetAxis("Vertical");
 

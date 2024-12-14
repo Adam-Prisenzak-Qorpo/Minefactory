@@ -9,6 +9,7 @@ TagManager:
   - Background
   - InventoryCell
   - Ghost
+  - Item
   layers:
   - Default
   - TransparentFX

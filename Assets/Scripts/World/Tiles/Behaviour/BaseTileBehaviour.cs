@@ -7,7 +7,6 @@ namespace Minefactory.World.Tiles.Behaviour
 {
     public class BaseTileBehaviour : MonoBehaviour
     {
-        public Inventory playerInventory;
         public ItemData item;
         public Orientation orientation = Orientation.Up;
     }

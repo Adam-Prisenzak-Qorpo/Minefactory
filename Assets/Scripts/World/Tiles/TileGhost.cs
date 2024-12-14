@@ -2,6 +2,7 @@ using System;
 using Minefactory.Common;
 using Minefactory.Player.Inventory;
 using UnityEngine;
+using Minefactory.Game;
 
 namespace Minefactory.World.Tiles
 {
@@ -47,7 +48,7 @@ namespace Minefactory.World.Tiles
         void OnMouseOver()
         {
             var sprite = GetComponent<SpriteRenderer>();
-            canPlace = BaseWorldGeneration.canPlace(transform.position);
+            canPlace = WorldManager.activeBaseWorld.canPlace(transform.position);
             var currentAlpha = sprite.color.a;
             if (!canPlace)
             {
@@ -65,7 +66,7 @@ namespace Minefactory.World.Tiles
             {
                 return;
             }
-            var placed = BaseWorldGeneration.onPlaceTile(transform.position, tileData.item, orientation);
+            var placed = WorldManager.activeBaseWorld.onPlaceTile(transform.position, tileData.item, orientation);
             if (placed)
             {
                 Inventory.useItem(tileData.item);

@@ -13,6 +13,9 @@ MonoBehaviour:
   m_Name: Gold
   m_EditorClassIdentifier: 
   tile: {fileID: 11400000, guid: bc74655512a4a4435902187eec5132c5, type: 2}
-  rarity: 0.9
-  size: 0.8
-  depth: 50
+  rarity: 0.005
+  depth: -100
+  depthInfluence: 0.2
+  depthFalloff: 600
+  frequency: 0.3
+  worldSeed: 0

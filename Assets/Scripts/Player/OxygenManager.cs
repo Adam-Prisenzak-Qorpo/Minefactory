@@ -11,17 +11,31 @@ namespace Minefactory.Player
 
         public float timePerSegment = 5; //Time per oxygen segment in seconds
         private int currentOxygen;  // Current oxygen level in minutes
-        
+
         [Header("UI Settings")]
         public GameObject oxygenBarContainer;  // Parent container with Grid Layout
         public GameObject oxygenSegmentPrefab;  // Prefab representing one oxygen segment
         private Image[] oxygenSegments;  // Array for storing segment Image components
-        
+
+
         private void Start()
         {
+
             currentOxygen = totalOxygenSegments;
+            
+
             InitializeOxygenBar();
             StartCoroutine(OxygenDepletionRoutine());
+        }
+
+        public int CurrentOxygen
+        {
+            get { return currentOxygen; }
+            set
+            {
+                currentOxygen = value;
+                UpdateOxygenBar();
+            }
         }
 
         private void InitializeOxygenBar()
@@ -43,13 +57,13 @@ namespace Minefactory.Player
 
         private IEnumerator OxygenDepletionRoutine()
         {
-            while (currentOxygen > 0)
+            while (CurrentOxygen > 0)
             {
                 yield return new WaitForSeconds(timePerSegment);  
                 currentOxygen--;
                 UpdateOxygenBar();
 
-                if (currentOxygen <= 0)
+                if (CurrentOxygen <= 0)
                 {
                     PlayerDeath();
                 }
