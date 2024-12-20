@@ -8,9 +8,9 @@ using UnityEngine;
 using Minefactory.Factories;
 namespace Minefactory.World.Tiles.Behaviour
 {
-    public class FurnaceTileBehaviour : BreakableTileBehaviour
+    public class CrafterTileBehaviour : BreakableTileBehaviour
     {
-        public GameObject furnaceUI;
+        public GameObject crafterUI;
         public ItemRegistry itemRegistry;
 
         private StorageData storage;
@@ -51,15 +51,15 @@ namespace Minefactory.World.Tiles.Behaviour
         void Update()
         {
             var mouseDown = Input.GetMouseButtonDown(1);
-            if (mouseDown && isHovered && !furnaceUI.activeSelf)
+            if (mouseDown && isHovered && !crafterUI.activeSelf)
             {
-                var script = furnaceUI.GetComponent<FurnaceBehaviour>();
+                var script = crafterUI.GetComponent<FurnaceBehaviour>();
                 if (recipe is not null)
                 {
                     script.SelectRecipe(recipe);
                 }
                 script.selectRecipeEvent.AddListener(OnSelectRecipe);
-                furnaceUI.SetActive(true);
+                crafterUI.SetActive(true);
             }
 
         }

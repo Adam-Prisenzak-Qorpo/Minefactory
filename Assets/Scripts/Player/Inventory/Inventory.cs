@@ -35,17 +35,13 @@ namespace Minefactory.Player.Inventory
             }
             useItem += RemoveItemFromInventory;
             var item = itemRegistry.GetItem("belt");
-            for (int i = 0; i < 20; i++)
-            {
-                inventoryData.AddItem(item);
-            }
+            inventoryData.AddItems(item, 20);
             var furnace = itemRegistry.GetItem("furnace");
             inventoryData.AddItem(furnace);
             var rawIron = itemRegistry.GetItem("iron_raw");
-            for (int i = 0; i < 3; i++)
-            {
-                inventoryData.AddItem(rawIron);
-            }
+            inventoryData.AddItems(rawIron, 6);
+            var crafter = itemRegistry.GetItem("crafter");
+            inventoryData.AddItem(crafter);
 
             UpdateUI();
             ToggleVisibility(null);
@@ -59,7 +55,7 @@ namespace Minefactory.Player.Inventory
             {
                 ToggleVisibility(null);
             }
-            
+
             var closeInventory = Input.GetKeyDown(KeyCode.Escape);
             if (closeInventory)
             {
@@ -68,17 +64,17 @@ namespace Minefactory.Player.Inventory
         }
 
         private void ToggleVisibility(bool? visibility)
-        {  
+        {
             var inventorySprite = GetComponent<SpriteRenderer>();
             visibility ??= !inventorySprite.enabled;
-            
+
 
             inventorySprite.enabled = (bool)visibility;
             foreach (var cell in cells)
             {
                 cell.SetActive((bool)visibility);
             }
-            
+
         }
 
         public void AddItem(ItemData item)
