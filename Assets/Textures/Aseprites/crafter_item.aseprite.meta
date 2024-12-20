@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: e99ea75d117be43368fc200e6d7b90d5
+guid: bce75a9ea84d042f9ad895dd2a78df17
 ScriptedImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -97,7 +97,7 @@ ScriptedImporter:
     addSortingGroup: 1
     addShadowCasters: 0
   importFileNodeState: 1
-  platformSettingsDirtyTick: 638691650302568236
+  platformSettingsDirtyTick: 638700551188974750
   textureAssetName: 
   singleSpriteImportData:
   - name: 
@@ -121,7 +121,7 @@ ScriptedImporter:
     tessellationDetail: 0
     uvTransform: {x: 0, y: 0}
   animatedSpriteImportData:
-  - name: belt-item
+  - name: crafter_item
     originalName: 
     pivot: {x: 0.5, y: 0.5}
     alignment: 0
@@ -130,9 +130,9 @@ ScriptedImporter:
       serializedVersion: 2
       x: 4
       y: 4
-      width: 16
-      height: 16
-    spriteID: 4ab43c864da704516ae06b502093f5be
+      width: 14
+      height: 10
+    spriteID: 97a2ac67867784b7db31774b083f7592
     spriteBone: []
     spriteOutline: []
     vertices: []
@@ -144,21 +144,21 @@ ScriptedImporter:
   spriteSheetImportData: []
   asepriteLayers:
   - layerIndex: 0
-    guid: -1544572117
-    name: belt-item
+    guid: -892619333
+    name: crafter_item
     layerFlags: 0
     layerType: 0
     blendMode: 0
     cells:
-    - name: belt-item
+    - name: crafter_item
       frameIndex: 0
       additiveSortOrder: 0
       cellRect:
-        x: 0
-        y: 0
-        width: 16
-        height: 16
-      spriteId: 4ab43c864da704516ae06b502093f5be
+        x: 1
+        y: 3
+        width: 14
+        height: 10
+      spriteId: 97a2ac67867784b7db31774b083f7592
     linkedCells: []
     parentIndex: -1
   platformSettings:
@@ -187,6 +187,18 @@ ScriptedImporter:
     allowsAlphaSplitting: 0
     androidETC2FallbackOverride: 0
   - name: Standalone
+    overridden: 0
+    ignorePlatformSupport: 0
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    androidETC2FallbackOverride: 0
+  - name: WebGL
     overridden: 0
     ignorePlatformSupport: 0
     maxTextureSize: 2048

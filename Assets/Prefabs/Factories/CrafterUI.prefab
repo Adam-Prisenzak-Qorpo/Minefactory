@@ -89,7 +89,7 @@ GameObject:
   - component: {fileID: 1416830816795828353}
   - component: {fileID: 5188902571861455608}
   m_Layer: 5
-  m_Name: FurnaceUI
+  m_Name: CrafterUI
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -372,7 +372,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: -7.0221214}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &8143618528743568325
@@ -388,7 +388,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameState: {fileID: 11400000, guid: e81cc04d0172d4f7296a95419546d17d, type: 2}
-  type: 1
+  type: 0
   listContainerPrefab: {fileID: 7812706064708071874, guid: 324a285cb0b486e428b543c67657850d, type: 3}
   materialListContainer: {fileID: 6381964309509447240}
   selectRecipeEvent:
