@@ -3,16 +3,16 @@ using Minefactory.Common;
 using Minefactory.Storage;
 using Minefactory.Storage.Items;
 using Minefactory.Common.Behaviour;
-using Minefactory.Factories;
 using Minefactory.Factories.Recipes;
 using UnityEngine;
+using Minefactory.Factories;
 namespace Minefactory.World.Tiles.Behaviour
 {
     public class FurnaceTileBehaviour : BreakableTileBehaviour
     {
         public GameObject furnaceUI;
         public ItemRegistry itemRegistry;
-        
+
         private StorageData storage;
         private Collision2DProxy inputCollider;
         private Collision2DProxy outputCollider;
@@ -35,7 +35,7 @@ namespace Minefactory.World.Tiles.Behaviour
             if (outputCollider is not null) return;
             Debug.LogError("Output collider is null");
         }
-        
+
         private bool isHovered = false;
 
         private void OnMouseEnter()
@@ -59,9 +59,9 @@ namespace Minefactory.World.Tiles.Behaviour
                     script.SelectRecipe(recipe);
                 }
                 script.selectRecipeEvent.AddListener(OnSelectRecipe);
-                furnaceUI.SetActive(true); 
+                furnaceUI.SetActive(true);
             }
-            
+
         }
 
         private void OnSelectRecipe(ItemRecipe newRecipe)
@@ -156,7 +156,7 @@ namespace Minefactory.World.Tiles.Behaviour
 
             // Assuming 'outputItemName' is in a format that can be used to create or fetch an ItemData instance
             var craftedItemData = itemRegistry.GetItem(recipe.outputItemName);
-    
+
             // Spawn the crafted item, on the output (top) of the furnace, look out for rotation
             var prefab = craftedItemData.prefab;
             if (prefab is null)

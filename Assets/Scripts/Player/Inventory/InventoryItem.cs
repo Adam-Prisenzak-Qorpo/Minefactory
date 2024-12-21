@@ -58,7 +58,7 @@ namespace Minefactory.Player.Inventory
                 }
                 prefab.GetComponent<ItemBehaviour>().item = item;
 
-                Instantiate(prefab, transform.position, Quaternion.identity);
+                Instantiate(prefab, gameState.player.transform.position + new Vector3(1, 0), Quaternion.identity);
             }
         }
     }

@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7b55ce94dd6da4eaa85c1d269153ea20, type: 3}
-  m_Name: Wood
+  m_Name: Crafter
   m_EditorClassIdentifier: 
-  tileName: wood
+  tileName: crafter
   sortingLayer: Default
-  underGroundTilePrefab: {fileID: 5242337658903041165, guid: c840ab8e6ad9047d692f5f03fc1ce359, type: 3}
-  topTilePrefab: {fileID: 5242337658903041165, guid: 75fb4e01fe76740089d114e3cc49000f, type: 3}
-  item: {fileID: 11400000, guid: 95758610dbe5149f5872d3022ec93b83, type: 2}
+  underGroundTilePrefab: {fileID: 0}
+  topTilePrefab: {fileID: 5242337658903041165, guid: d82bcdbc03f754446a167507171363c4, type: 3}
+  item: {fileID: 11400000, guid: ecab5b639e69b40959b8d0b52374a715, type: 2}

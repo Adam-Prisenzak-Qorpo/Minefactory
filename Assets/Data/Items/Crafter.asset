@@ -10,7 +10,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6c1d201c5fc744b0ebf2e384d4ce86bc, type: 3}
-  m_Name: Wood
+  m_Name: Crafter
   m_EditorClassIdentifier: 
-  sprite: {fileID: 21300000, guid: 4f0e8addde4b3479c9265e8ecfd680dc, type: 3}
-  itemName: wood
+  sprite: {fileID: -7189115547304452760, guid: bce75a9ea84d042f9ad895dd2a78df17, type: 3}
+  prefab: {fileID: 0}
+  itemName: crafter
