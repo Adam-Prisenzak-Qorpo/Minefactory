@@ -13,7 +13,6 @@ namespace Minefactory.Factories.Mining
         public TextMeshProUGUI totalGoldProductionText;
         public TextMeshProUGUI totalGoldOutputText;
 
-        
         [Header("Output Configuration")]
         public Slider ironOutputSlider;
         public Slider goldOutputSlider;
@@ -21,52 +20,81 @@ namespace Minefactory.Factories.Mining
         public TextMeshProUGUI thisGoldOutputText;
 
         [Header("UI Elements")]
-        public Button closeButton; // Reference to close button
+        public Button closeButton;
         
         private MinerOutputBehaviour minerOutput;
+        private bool isInitializing = false;
 
         public void Initialize(MinerOutputBehaviour output)
         {
             minerOutput = output;
-            
-            // Set initial slider values to match current output rates
-            ironOutputSlider.value = minerOutput.GetIronOutputRate();
-            goldOutputSlider.value = minerOutput.GetGoldOutputRate();
-            
-            UpdateUI();
+            SetupUI(true);
         }
 
         private void OnEnable()
         {
             Debug.Log("MinerOutputUI OnEnable called");
+            SetupUI(false);
+        }
+
+        private void SetupUI(bool isFirstTime)
+        {
+            isInitializing = true;
+
+            // Find and setup references
             totalIronProductionText = transform.Find("Production Panel/Total Iron Production").GetComponent<TextMeshProUGUI>();
             totalIronOutputText = transform.Find("Production Panel/Total Iron Output").GetComponent<TextMeshProUGUI>();
             totalGoldProductionText = transform.Find("Production Panel/Total Gold Production").GetComponent<TextMeshProUGUI>();
             totalGoldOutputText = transform.Find("Production Panel/Total Gold Output").GetComponent<TextMeshProUGUI>();
             closeButton = transform.Find("CloseButton").GetComponent<Button>();
-            if (closeButton != null)
-            {
-                closeButton.onClick.RemoveAllListeners();
-                closeButton.onClick.AddListener(Close);
-            }
+            
             if (ironOutputSlider == null)
                 ironOutputSlider = transform.Find("Output Panel/Iron Slider").GetComponent<Slider>();
             if (goldOutputSlider == null)
                 goldOutputSlider = transform.Find("Output Panel/Gold Slider").GetComponent<Slider>();
+            
             thisIronOutputText = transform.Find("Output Panel/Iron Slider/Iron Output Text").GetComponent<TextMeshProUGUI>();
             thisGoldOutputText = transform.Find("Output Panel/Gold Slider/Gold Output Text").GetComponent<TextMeshProUGUI>();
-            
-            ironOutputSlider.onValueChanged.AddListener((value) => OnIronSliderChanged(value));
-            goldOutputSlider.onValueChanged.AddListener((value) => OnGoldSliderChanged(value));
-            var manager = MiningProductionManager.Instance;
-            ironOutputSlider.maxValue = ((manager.GetAvailableOutputRate("iron"))+ironOutputSlider.value);
-            goldOutputSlider.maxValue = ((manager.GetAvailableOutputRate("gold"))+goldOutputSlider.value);
-        }
 
+            // Setup button
+            closeButton.onClick.RemoveAllListeners();
+            closeButton.onClick.AddListener(Close);
+
+            // Remove old listeners before adding new ones
+            ironOutputSlider.onValueChanged.RemoveAllListeners();
+            goldOutputSlider.onValueChanged.RemoveAllListeners();
+
+            var manager = MiningProductionManager.Instance;
+            if (minerOutput != null)
+            {
+                float currentIronRate = minerOutput.GetIronOutputRate();
+                float currentGoldRate = minerOutput.GetGoldOutputRate();
+
+                // Set max values first
+                ironOutputSlider.maxValue = manager.GetAvailableOutputRate("iron") + currentIronRate;
+                goldOutputSlider.maxValue = manager.GetAvailableOutputRate("gold") + currentGoldRate;
+
+                // Set values without triggering events (because isInitializing is true)
+                ironOutputSlider.value = currentIronRate;
+                goldOutputSlider.value = currentGoldRate;
+
+                // Update text displays
+                thisIronOutputText.text = $"Iron Output: {currentIronRate:F1}/min";
+                thisGoldOutputText.text = $"Gold Output: {currentGoldRate:F1}/min";
+            }
+
+            // Add listeners after setting initial values
+            ironOutputSlider.onValueChanged.AddListener(OnIronSliderChanged);
+            goldOutputSlider.onValueChanged.AddListener(OnGoldSliderChanged);
+
+            // Update the rest of the UI
+            UpdateUI();
+
+            isInitializing = false;
+        }
 
         private void Update()
         {
-            // Check for ESC key
             if (Input.GetKeyDown(KeyCode.Escape))
             {
                 Close();
@@ -75,7 +103,6 @@ namespace Minefactory.Factories.Mining
 
         public void UpdateUI()
         {
-            Debug.Log("UpdateUI called");
             var manager = MiningProductionManager.Instance;
             
             if (manager != null)
@@ -87,26 +114,28 @@ namespace Minefactory.Factories.Mining
                 totalGoldProductionText.text = $"Total Gold Production: {goldProduction:F1}/min";
                 totalIronOutputText.text = $"Total Iron Output: {manager.GetCurrentOutputRate("iron"):F1}/min";
                 totalGoldOutputText.text = $"Total Gold Output: {manager.GetCurrentOutputRate("gold"):F1}/min";
-                Debug.Log("Max output rates: " + manager.GetAvailableOutputRate("iron"));
-                thisIronOutputText.text = $"Iron Output: {ironOutputSlider.value:F1}/min";
-                thisGoldOutputText.text = $"Gold Output: {goldOutputSlider.value:F1}/min";
             }
         }
 
         private void OnIronSliderChanged(float value)
         {
-
-            minerOutput.SetOutputRate("iron", value);
-            this.thisIronOutputText.text = $"Iron Output: {value:F1}/min";
-            this.totalIronOutputText.text = $"Total Iron Output: {MiningProductionManager.Instance.GetCurrentOutputRate("iron"):F1}/min";
+            if (!isInitializing)
+            {
+                minerOutput.SetOutputRate("iron", value);
+                thisIronOutputText.text = $"Iron Output: {value:F1}/min";
+                totalIronOutputText.text = $"Total Iron Output: {MiningProductionManager.Instance.GetCurrentOutputRate("iron"):F1}/min";
+            }
         }
 
         private void OnGoldSliderChanged(float value)
         {
-            minerOutput.SetOutputRate("gold", value);
-            UpdateUI();
+            if (!isInitializing)
+            {
+                minerOutput.SetOutputRate("gold", value);
+                thisGoldOutputText.text = $"Gold Output: {value:F1}/min";
+                totalGoldOutputText.text = $"Total Gold Output: {MiningProductionManager.Instance.GetCurrentOutputRate("gold"):F1}/min";
+            }
         }
-
 
         public void Close()
         {

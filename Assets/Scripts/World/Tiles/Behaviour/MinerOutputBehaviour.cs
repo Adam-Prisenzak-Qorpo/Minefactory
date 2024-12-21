@@ -6,12 +6,11 @@ using Minefactory.Storage.Items;
 using Minefactory.Storage;
 using Minefactory.Factories;
 using Minefactory.Factories.Mining;
-
-using System.Collections;
+using System.Collections.Generic;
 
 namespace Minefactory.World.Tiles.Behaviour
 {
-    public class MinerOutputBehaviour : BreakableTileBehaviour
+    public class MinerOutputBehaviour : PersistentTileBehaviour
     {
         [Header("References")]
         public GameObject configUIPrefab;
@@ -27,20 +26,59 @@ namespace Minefactory.World.Tiles.Behaviour
         private GameObject activeConfigUI;
         private MinerOutputUI uiScript;
 
-        public override bool CanBePlaced(Vector2 position)
-        {
-            // var worldManager = WorldManager.Instance;
-            // if (!worldManager.GetActiveWorld().name.Contains("Top"))
-            // {
-            //     Debug.Log("Miner output can only be placed in top world");
-            //     return false;
-            // }
-            return true;
-        }
-
         protected override void Start()
         {
             base.Start();
+
+            if (!isGhostTile)
+            {
+                var modManager = WorldManager.activeBaseWorld.GetComponent<WorldModificationManager>();
+                var savedMetadata = modManager.GetModificationMetadata(transform.position);
+
+                if (savedMetadata != null)
+                {
+                    if (savedMetadata.TryGetValue("ironOutputRate", out string ironRate))
+                    {
+                        SetOutputRate("iron", float.Parse(ironRate));
+                    }
+                    if (savedMetadata.TryGetValue("goldOutputRate", out string goldRate))
+                    {
+                        SetOutputRate("gold", float.Parse(goldRate));
+                    }
+                }
+            }
+        }
+
+        public override void OnActivate()
+        {
+            base.OnActivate();
+            var manager = MiningProductionManager.Instance;
+            
+            if (ironOutputRate > 0)
+            {
+                manager.SetOutputRate("iron", manager.GetCurrentOutputRate("iron") + ironOutputRate);
+            }
+            if (goldOutputRate > 0)
+            {
+                manager.SetOutputRate("gold", manager.GetCurrentOutputRate("gold") + goldOutputRate);
+            }
+        }
+
+        public override void OnDeactivate()
+        {
+            var manager = MiningProductionManager.Instance;
+            if (manager != null)
+            {
+                if (ironOutputRate > 0)
+                {
+                    manager.SetOutputRate("iron", manager.GetCurrentOutputRate("iron") - ironOutputRate);
+                }
+                if (goldOutputRate > 0)
+                {
+                    manager.SetOutputRate("gold", manager.GetCurrentOutputRate("gold") - goldOutputRate);
+                }
+            }
+            base.OnDeactivate();
         }
 
         private void Update()
@@ -68,11 +106,8 @@ namespace Minefactory.World.Tiles.Behaviour
 
         private void ShowConfigUI()
         {
-            Debug.Log("ShowConfigUI called");
             if (configUIPrefab != null && activeConfigUI == null)
             {
-                Debug.Log("Attempting to create UI");
-                // Find the Canvas in the scene
                 Canvas canvas = FindObjectOfType<Canvas>();
                 if (canvas == null)
                 {
@@ -80,13 +115,8 @@ namespace Minefactory.World.Tiles.Behaviour
                     return;
                 }
 
-                // Instantiate the UI
                 activeConfigUI = Instantiate(configUIPrefab, canvas.transform);
-                Debug.Log($"UI instantiated: {activeConfigUI != null}");
-                
                 uiScript = activeConfigUI.GetComponent<MinerOutputUI>();
-                Debug.Log($"UI script found: {uiScript != null}");
-                
                 if (uiScript != null)
                 {
                     uiScript.Initialize(this);
@@ -98,7 +128,6 @@ namespace Minefactory.World.Tiles.Behaviour
                 activeConfigUI.SetActive(true);
                 if (uiScript != null)
                 {
-                    Debug.Log("Updating UI");
                     uiScript.UpdateUI();
                 }
             }
@@ -126,7 +155,7 @@ namespace Minefactory.World.Tiles.Behaviour
             if (goldOutputRate > 0 && Time.time >= nextGoldSpawnTime)
             {
                 SpawnResource("gold");
-                lastIronSpawnTime = Time.time;
+                lastGoldSpawnTime = Time.time;
             }
         }
 
@@ -148,44 +177,43 @@ namespace Minefactory.World.Tiles.Behaviour
         public void SetOutputRate(string resourceType, float rate)
         {
             var manager = MiningProductionManager.Instance;
-            
-            // Get the current rate for this specific miner
             float currentRate = (resourceType == "iron") ? ironOutputRate : goldOutputRate;
-            
-            // Calculate total production and current total output
             float totalProduction = manager.GetTotalProductionRate(resourceType);
             float currentTotalOutput = manager.GetCurrentOutputRate(resourceType);
-            
-            // Calculate the maximum allowed rate by considering the total production
-            // and subtracting all output except this miner's current output
             float maxAllowedRate = totalProduction - (currentTotalOutput - currentRate);
-            
-            // Clamp the new rate
             float newRate = Mathf.Min(rate, maxAllowedRate);
-
-            // Update the manager with the rate difference
             manager.SetOutputRate(resourceType, currentTotalOutput - currentRate + newRate);
 
-            // Update local rate
             if (resourceType == "iron")
                 ironOutputRate = newRate;
             else if (resourceType == "gold")
                 goldOutputRate = newRate;
+
+            SaveRatesToMetadata();
+        }
+
+        private void SaveRatesToMetadata()
+        {
+            var modManager = WorldManager.activeBaseWorld.GetComponent<WorldModificationManager>();
+            var existingMetadata = modManager.GetModificationMetadata(transform.position) 
+                ?? new Dictionary<string, string>();
+
+            existingMetadata["ironOutputRate"] = ironOutputRate.ToString();
+            existingMetadata["goldOutputRate"] = goldOutputRate.ToString();
+
+            var tileRegistry = WorldManager.activeBaseWorld.tileRegistry;
+            var tileData = tileRegistry.GetTileByItem(item);
+            modManager.SetModification(transform.position, tileData, orientation, existingMetadata);
         }
 
         protected override void OnDestroy()
         {
-            var manager = MiningProductionManager.Instance;
-            if (manager != null)
-            {
-                manager.SetOutputRate("iron", manager.GetCurrentOutputRate("iron") - ironOutputRate);
-                manager.SetOutputRate("gold", manager.GetCurrentOutputRate("gold") - goldOutputRate);
-            }
-
             if (activeConfigUI != null)
             {
                 Destroy(activeConfigUI);
             }
+
+            base.OnDestroy();
         }
     }
 }

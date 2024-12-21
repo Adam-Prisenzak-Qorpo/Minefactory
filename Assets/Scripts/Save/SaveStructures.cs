@@ -7,6 +7,35 @@ using Minefactory.Common;
 namespace Minefactory.Save
 {
     [Serializable]
+    public class PlayerSaveData
+    {
+        public float positionX;
+        public float positionY;
+        public bool isInTopWorld;
+    }
+
+    [Serializable]
+    public class WorldSaveData
+    {
+        public float seed;
+        public List<ChunkData> topWorldModifications = new List<ChunkData>();
+        public List<ChunkData> undergroundWorldModifications = new List<ChunkData>();
+    }
+
+
+    [Serializable]
+    public class GameSaveData
+    {
+        public PlayerSaveData playerData;
+        public WorldSaveData worldData;
+        
+        public InventoryData inventoryData;
+        public string saveDateTime;
+    }
+
+
+
+    [Serializable]
     public struct MetadataEntry
     {
         public string key;
@@ -81,6 +110,25 @@ namespace Minefactory.Save
         }
 
         public Vector2 Position => new Vector2(x, y);
+    }
+
+    [Serializable]
+    public class InventoryItemData
+    {
+        public string itemName;
+        public int amount;
+
+        public InventoryItemData(string itemName, int amount)
+        {
+            this.itemName = itemName;
+            this.amount = amount;
+        }
+    }
+
+    [Serializable]
+    public class InventoryData
+    {
+        public List<InventoryItemData> items = new List<InventoryItemData>();
     }
 
     [Serializable]

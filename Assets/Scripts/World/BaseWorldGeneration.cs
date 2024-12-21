@@ -173,24 +173,41 @@ namespace Minefactory.World
             tilePrefab.GetComponent<BaseTileBehaviour>().isGhostTile = true;
         }
 
-        protected virtual void UpdateChunks()
+        public virtual void UpdateChunks()
         {
+
             if (playerTransform == null) return;
 
             Vector2Int playerChunkPos = WorldToChunkPosition(playerTransform.position);
             float maxDistanceSquared = (renderDistance + 1) * (renderDistance + 1);
 
-            // First, unload distant chunks
+
+            HashSet<Vector2Int> chunksToKeep = new HashSet<Vector2Int>();
+
+            for (int x = -renderDistance; x <= renderDistance; x++)
+            {
+                for (int y = -renderDistance; y <= renderDistance; y++)
+                {
+                    Vector2 offset = new Vector2(x, y);
+                    if (offset.sqrMagnitude <= maxDistanceSquared)
+                    {
+                        chunksToKeep.Add(playerChunkPos + new Vector2Int(x, y));
+                    }
+                }
+            }
+
+            var persistentChunks = modificationManager.GetPersistentChunks();
+            
+            foreach (var persistentChunk in persistentChunks)
+            {
+                chunksToKeep.Add(persistentChunk);
+            }
+
+
             List<Vector2Int> chunksToUnload = new List<Vector2Int>();
             foreach (var chunk in loadedChunks)
             {
-                Vector2 offset = new Vector2(
-                    playerChunkPos.x - chunk.Key.x,
-                    playerChunkPos.y - chunk.Key.y
-                );
-                float distanceSquared = offset.sqrMagnitude;
-                
-                if (distanceSquared > maxDistanceSquared)
+                if (!chunksToKeep.Contains(chunk.Key))
                 {
                     chunksToUnload.Add(chunk.Key);
                 }
@@ -201,22 +218,14 @@ namespace Minefactory.World
                 UnloadChunk(pos);
             }
 
-            // Then load nearby chunks if needed
-            int renderDistanceInt = Mathf.FloorToInt(renderDistance);
-            for (int x = -renderDistanceInt; x <= renderDistanceInt; x++)
+            foreach (var chunkPos in chunksToKeep)
             {
-                for (int y = -renderDistanceInt; y <= renderDistanceInt; y++)
+                if (!loadedChunks.ContainsKey(chunkPos))
                 {
-                    Vector2 offset = new Vector2(x, y);
-                    Vector2Int checkPos = playerChunkPos + new Vector2Int(x, y);
-                    
-                    if (offset.sqrMagnitude <= maxDistanceSquared && !loadedChunks.ContainsKey(checkPos))
-                    {
-                        GenerateChunk(checkPos);
-                    }
+                    GenerateChunk(chunkPos);
                 }
             }
-        }
+        }                   
 
         protected Vector2Int WorldToChunkPosition(Vector2 worldPosition)
         {
@@ -301,7 +310,6 @@ namespace Minefactory.World
 
             chunk.RegisterTile(roundedPosition, newTile);
             
-            // Only set modification if recordModification is true AND metadata wasn't already set by the tile behaviour
             if (recordModification && !modificationManager.HasModification(roundedPosition, out _))
             {
                 modificationManager.SetModification(roundedPosition, tileData, orientation);

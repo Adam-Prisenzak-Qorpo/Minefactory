@@ -93,6 +93,13 @@ namespace Minefactory.Game
             topWorld.SetActive(!isTopWorld);
             undergroundWorld.SetActive(isTopWorld);
 
+            var canvasComp = canvas.GetComponent<Canvas>();
+            if (canvasComp != null)
+            {
+                canvasComp.worldCamera = GetActiveWorld().GetComponentInChildren<Camera>();
+            }
+            
+
             lastSwitchTime = Time.time;
 
             isInputLocked = false;

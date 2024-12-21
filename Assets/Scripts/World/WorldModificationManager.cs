@@ -4,6 +4,7 @@ using Minefactory.World.Tiles;
 using Minefactory.Common;
 using Minefactory.Save;
 using System.Linq;
+using Minefactory.World.Tiles.Behaviour;
 
 namespace Minefactory.World
 {
@@ -12,6 +13,11 @@ namespace Minefactory.World
         private Dictionary<Vector2Int, Dictionary<Vector2, TileModification>> chunkModifications = 
             new Dictionary<Vector2Int, Dictionary<Vector2, TileModification>>();
         
+        // Tracking for persistent chunks and tiles
+        private HashSet<Vector2Int> persistentChunks = new HashSet<Vector2Int>();
+        private Dictionary<Vector2, PersistentTileBehaviour> persistentTiles = 
+            new Dictionary<Vector2, PersistentTileBehaviour>();
+
         private TileRegistry tileRegistry;
         private int chunkSize;
 
@@ -22,10 +28,112 @@ namespace Minefactory.World
             Debug.Log("WorldModificationManager initialized");
         }
 
+        public void RegisterPersistentTile(Vector2 position, PersistentTileBehaviour tile)
+        {
+            Debug.Log($"Registering persistent tile at {position}");
+            Vector2Int chunkPos = WorldToChunkPosition(position);
+            persistentTiles[position] = tile;
+            persistentChunks.Add(chunkPos);
+
+            // Check if we're near a chunk boundary (within 0.1 units)
+            float epsilon = 0.1f;
+            
+            // Calculate position within chunk
+            float xInChunk = position.x - (chunkPos.x * chunkSize);
+            float yInChunk = position.y - (chunkPos.y * chunkSize);
+
+            // Check boundaries and add adjacent chunks if necessary
+            if (xInChunk < epsilon) // Near left boundary
+            {
+                persistentChunks.Add(new Vector2Int(chunkPos.x - 1, chunkPos.y));
+            }
+            else if (xInChunk > (chunkSize - epsilon)) // Near right boundary
+            {
+                persistentChunks.Add(new Vector2Int(chunkPos.x + 1, chunkPos.y));
+            }
+
+            if (yInChunk < epsilon) // Near bottom boundary
+            {
+                persistentChunks.Add(new Vector2Int(chunkPos.x, chunkPos.y - 1));
+            }
+            else if (yInChunk > (chunkSize - epsilon)) // Near top boundary
+            {
+                persistentChunks.Add(new Vector2Int(chunkPos.x, chunkPos.y + 1));
+            }
+
+            Debug.Log($"Registered persistent tile at position {position} in chunk {chunkPos}");
+        }
+
+        public void UnregisterPersistentTile(Vector2 position)
+        {
+            if (persistentTiles.Remove(position))
+            {
+                // Recalculate all needed chunks
+                persistentChunks.Clear();
+                
+                // Rebuild the persistent chunks set from remaining tiles
+                foreach (var kvp in persistentTiles)
+                {
+                    Vector2Int chunkPos = WorldToChunkPosition(kvp.Key);
+                    persistentChunks.Add(chunkPos);
+                    
+                    // Re-apply boundary checks for remaining tiles
+                    float xInChunk = kvp.Key.x - (chunkPos.x * chunkSize);
+                    float yInChunk = kvp.Key.y - (chunkPos.y * chunkSize);
+                    float epsilon = 0.1f;
+
+                    if (xInChunk < epsilon)
+                    {
+                        persistentChunks.Add(new Vector2Int(chunkPos.x - 1, chunkPos.y));
+                    }
+                    else if (xInChunk > (chunkSize - epsilon))
+                    {
+                        persistentChunks.Add(new Vector2Int(chunkPos.x + 1, chunkPos.y));
+                    }
+
+                    if (yInChunk < epsilon)
+                    {
+                        persistentChunks.Add(new Vector2Int(chunkPos.x, chunkPos.y - 1));
+                    }
+                    else if (yInChunk > (chunkSize - epsilon))
+                    {
+                        persistentChunks.Add(new Vector2Int(chunkPos.x, chunkPos.y + 1));
+                    }
+                }
+            }
+        }
+
+        public bool IsPersistentChunk(Vector2Int chunkPos)
+        {
+            return persistentChunks.Contains(chunkPos);
+        }
+
+        public HashSet<Vector2Int> GetPersistentChunks()
+        {
+            return persistentChunks;
+        }
+
         public void SetModification(Vector2 worldPos, TileData tile, Orientation orientation, Dictionary<string, string> metadata = null)
         {
             Vector2Int chunkPos = WorldToChunkPosition(worldPos);
-            Debug.Log($"Setting modification at {worldPos} with metadata: {(metadata != null ? string.Join(", ", metadata.Select(kvp => $"{kvp.Key}={kvp.Value}")) : "null")}");
+            
+            // Create a clean copy of the metadata
+            Dictionary<string, string> cleanMetadata = new Dictionary<string, string>();
+            if (metadata != null)
+            {
+                foreach (var kvp in metadata)
+                {
+                    cleanMetadata[kvp.Key] = kvp.Value;
+                }
+            }
+
+            // Only add isPersistent if it's not already there
+            if (persistentTiles.ContainsKey(worldPos) && !cleanMetadata.ContainsKey("isPersistent"))
+            {
+                cleanMetadata["isPersistent"] = "true";
+            }
+
+            Debug.Log($"Setting modification at {worldPos} with metadata: {string.Join(", ", cleanMetadata.Select(kvp => $"{kvp.Key}={kvp.Value}"))}");
 
             if (!chunkModifications.ContainsKey(chunkPos))
             {
@@ -38,32 +146,46 @@ namespace Minefactory.World
                 return;
             }
 
-            var modification = new TileModification(tile.tileName, orientation, metadata);
+            var modification = new TileModification(tile.tileName, orientation, cleanMetadata);
             chunkModifications[chunkPos][worldPos] = modification;
-            
-            // Verify the metadata was set correctly
-            var savedMod = chunkModifications[chunkPos][worldPos];
-            Debug.Log($"Verification - Metadata list count: {savedMod.metadataList?.Count ?? 0}");
-            if (savedMod.metadataList != null)
-            {
-                foreach (var entry in savedMod.metadataList)
-                {
-                    Debug.Log($"Saved metadata entry: {entry.key}={entry.value}");
-                }
-            }
         }
 
         public void UpdateModificationMetadata(Vector2 worldPos, Dictionary<string, string> metadata)
         {
             Vector2Int chunkPos = WorldToChunkPosition(worldPos);
             Debug.Log($"Updating metadata at {worldPos}");
+            
             if (chunkModifications.TryGetValue(chunkPos, out var modifications) &&
                 modifications.TryGetValue(worldPos, out var modification))
             {
-                modification.SetMetadata(metadata);
+                // Create a clean copy of the metadata
+                Dictionary<string, string> cleanMetadata = new Dictionary<string, string>();
+                if (metadata != null)
+                {
+                    foreach (var kvp in metadata)
+                    {
+                        cleanMetadata[kvp.Key] = kvp.Value;
+                    }
+                }
+
+                // Preserve isPersistent flag if the tile is persistent
+                if (persistentTiles.ContainsKey(worldPos))
+                {
+                    cleanMetadata["isPersistent"] = "true";
+                }
+
+                modification.SetMetadata(cleanMetadata);
                 modifications[worldPos] = modification;
-                Debug.Log($"Updated metadata: {string.Join(", ", metadata.Select(kvp => $"{kvp.Key}={kvp.Value}"))}");
+                Debug.Log($"Updated metadata: {string.Join(", ", cleanMetadata.Select(kvp => $"{kvp.Key}={kvp.Value}"))}");
             }
+        }
+
+        private Vector2Int WorldToChunkPosition(Vector2 worldPosition)
+        {
+            return new Vector2Int(
+                Mathf.FloorToInt(worldPosition.x / chunkSize),
+                Mathf.FloorToInt(worldPosition.y / chunkSize)
+            );
         }
 
         public bool HasModification(Vector2 worldPos, out TileModification modification)
@@ -89,14 +211,6 @@ namespace Minefactory.World
             return new Dictionary<string, string>();
         }
 
-        private Vector2Int WorldToChunkPosition(Vector2 worldPosition)
-        {
-            return new Vector2Int(
-                Mathf.FloorToInt(worldPosition.x / chunkSize),
-                Mathf.FloorToInt(worldPosition.y / chunkSize)
-            );
-        }
-
         public List<ChunkData> GetModifications()
         {
             var chunkDataList = new List<ChunkData>();
@@ -114,7 +228,11 @@ namespace Minefactory.World
                     chunkData.modifications.Add(posMod);
                 }
 
-                chunkDataList.Add(chunkData);
+                // Only add chunks that actually have modifications
+                if (chunkData.modifications.Count > 0)
+                {
+                    chunkDataList.Add(chunkData);
+                }
             }
 
             return chunkDataList;
@@ -124,6 +242,8 @@ namespace Minefactory.World
         {
             if (chunks == null) return;
             chunkModifications.Clear();
+            persistentChunks.Clear();
+            persistentTiles.Clear();
 
             foreach (var chunkData in chunks)
             {
@@ -133,9 +253,7 @@ namespace Minefactory.World
                 if (coords.Length != 2) continue;
 
                 if (!int.TryParse(coords[0], out int x) || !int.TryParse(coords[1], out int y))
-                {
                     continue;
-                }
 
                 Vector2Int chunkPos = new Vector2Int(x, y);
                 var modifications = new Dictionary<Vector2, TileModification>();
@@ -143,6 +261,12 @@ namespace Minefactory.World
                 foreach (var mod in chunkData.modifications)
                 {
                     modifications[mod.Position] = mod.tile;
+                    
+                    // Check if this is a persistent tile
+                    if (mod.tile.metadataList?.Any(m => m.key == "isPersistent" && m.value == "true") ?? false)
+                    {
+                        persistentChunks.Add(chunkPos);
+                    }
                 }
 
                 if (modifications.Count > 0)
@@ -152,28 +276,26 @@ namespace Minefactory.World
             }
         }
 
-        public void LogAllModifications()
-        {
-            Debug.Log("Current modifications state:");
-            foreach (var chunkKvp in chunkModifications)
-            {
-                foreach (var tileKvp in chunkKvp.Value)
-                {
-                    Debug.Log($"Position: {tileKvp.Key}, TileName: {tileKvp.Value.tileDataName}, MetadataCount: {tileKvp.Value.metadataList?.Count ?? 0}");
-                    if (tileKvp.Value.metadataList != null)
-                    {
-                        foreach (var entry in tileKvp.Value.metadataList)
-                        {
-                            Debug.Log($"  Metadata: {entry.key}={entry.value}");
-                        }
-                    }
-                }
-            }
-        }
-
         public void ClearModifications()
         {
             chunkModifications.Clear();
+            persistentChunks.Clear();
+            persistentTiles.Clear();
         }
+
+        public void ClearModification(Vector2 worldPos)
+        {
+            Vector2Int chunkPos = WorldToChunkPosition(worldPos);
+            if (chunkModifications.TryGetValue(chunkPos, out var modifications))
+            {
+                modifications.Remove(worldPos);
+                if (modifications.Count == 0)
+                {
+                    chunkModifications.Remove(chunkPos);
+                }
+            }
+            Debug.Log($"Cleared modification at position {worldPos}");
+        }
+
     }
 }
