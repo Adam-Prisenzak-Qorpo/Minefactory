@@ -39,6 +39,7 @@ namespace Minefactory.Factories
         }
         public void SelectRecipe(ItemRecipe newRecipe)
         {
+            
             recipe = newRecipe;
             var script = materialListContainer.GetComponent<MaterialListBehaviour>();
             script.SetRecipe(recipe);

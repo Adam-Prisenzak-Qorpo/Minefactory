@@ -8,6 +8,10 @@ namespace Minefactory.World.Tiles.Behaviour
     {
         public void OnMouseDown()
         {
+            if (isGhostTile)
+            {
+                return;
+            }
             if (item != null)
             {
                 WorldManager.activeBaseWorld.playerInventory.AddItem(item);
