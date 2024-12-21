@@ -540,6 +540,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1078138000}
     m_Modifications:
+    - target: {fileID: 229819247906611442, guid: 64b7ec548aea24b76a43810e080ae788, type: 3}
+      propertyPath: inventory
+      value: 
+      objectReference: {fileID: 11400000, guid: d2046fd92d8b74c4ab7e37c98ea1d610, type: 2}
     - target: {fileID: 6950665080087343781, guid: 64b7ec548aea24b76a43810e080ae788, type: 3}
       propertyPath: m_BodyType
       value: 0
@@ -736,6 +740,7 @@ MonoBehaviour:
   chunkSize: 16
   renderDistance: 3
   furnaceUI: {fileID: 0}
+  crafterUI: {fileID: 0}
   dirtLevel: 50
   generateCaves: 1
   caveFrequency: 0.05
@@ -798,8 +803,9 @@ MonoBehaviour:
   chunkSize: 16
   renderDistance: 1
   furnaceUI: {fileID: 1644203589}
+  crafterUI: {fileID: 0}
   safeRadius: 10
-  woodFrequency: 0.05
+  siliconeFrequency: 0.05
   stoneFrequency: 0.05
 --- !u!1 &1233042602
 GameObject:
@@ -1914,8 +1920,9 @@ MonoBehaviour:
   chunkSize: 16
   renderDistance: 3
   furnaceUI: {fileID: 0}
+  crafterUI: {fileID: 0}
   safeRadius: 10
-  woodFrequency: 0.05
+  siliconeFrequency: 0.05
   stoneFrequency: 0.05
 --- !u!4 &1960920687 stripped
 Transform:
@@ -1979,6 +1986,7 @@ MonoBehaviour:
   chunkSize: 16
   renderDistance: 1
   furnaceUI: {fileID: 0}
+  crafterUI: {fileID: 0}
   dirtLevel: 50
   generateCaves: 1
   caveFrequency: 0.05
