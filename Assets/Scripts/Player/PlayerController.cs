@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using System.Collections;
 
 namespace Minefactory.Player
 {
@@ -14,6 +15,7 @@ namespace Minefactory.Player
         private SpriteRenderer[] srs;
         private Animator anim;
         private float horizontal;
+        private bool isJumpForceApplied = false;
 
 
         private void Start()
@@ -82,11 +84,25 @@ namespace Minefactory.Player
             
         }
         
-        public void IncreaseJumpHeight(float multiplier)
+        private void OnEnable()
         {
-            jumpForce *= multiplier;
-            Debug.Log("Jump height increased! New jump force: " + jumpForce);
+            StartCoroutine(WaitForGameStateManager());
         }
-        
+
+        private IEnumerator WaitForGameStateManager()
+        {
+            while (GameStateManager.Instance == null)
+            {
+                yield return null; // Wait until the next frame
+            }
+            if (!isJumpForceApplied){
+                float extraJumpForce = GameStateManager.Instance.GetSharedState("JumpForce", 0.0f);
+                jumpForce += extraJumpForce;
+                isJumpForceApplied = true;
+
+                Debug.Log($"Extra jump force applied: {extraJumpForce}");
+            }
+        }
+
     }
 }

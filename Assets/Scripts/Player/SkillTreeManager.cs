@@ -1,26 +1,42 @@
-using System.Collections;
 using System.Collections.Generic;
 using Minefactory.Player;
 using UnityEngine;
 using UnityEngine.UI;
 using System.Collections.Generic;
+using System;
 
 public class SkillTreeManager : MonoBehaviour
 {
+    public static SkillTreeManager Instance { get; private set; }
+
+    public event Action<float> OnOxygenSkillPurchased;
+    public event Action<float> OnJumpForceSkillPurchased;
     [Header("UI Elements")]
     public GameObject skillTreePanel;
     public Button[] skillButtons;
     public Text populationText; // UI text displaying the player's population
 
     [Header("Game Variables")]
-    public int population = 100;
     public int[] skillCosts;          // Costs for each skill, in order
     private List<List<int>> requiredSkills;  // Array of arrays for prerequisites
 
     private bool[] skillsPurchased;
 
+    private void Awake()
+    {
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
+
     private void Start()
     {
+        
         // Initialize the requiredSkills list
         requiredSkills = new List<List<int>>
         {
@@ -33,6 +49,7 @@ public class SkillTreeManager : MonoBehaviour
         };
         
         skillsPurchased = new bool[requiredSkills.Count]; // Initialize purchase state for all skills
+        GameStateManager.Instance.OnPopulationChanged += UpdateUI;
         UpdateUI(); // Update the skill tree to reflect the initial state
     }
     
@@ -48,7 +65,7 @@ public class SkillTreeManager : MonoBehaviour
     public void PurchaseSkill(int skillIndex)
     {
         if (skillsPurchased[skillIndex]) return; // Check if the skill is already purchased
-        if (population < skillCosts[skillIndex]) return; // Check if there is enough population
+        if (GameStateManager.Instance.Population < skillCosts[skillIndex]) return; // Check if there is enough population
 
         // Check if any skill in the same row has already been purchased
         int rowStartIndex = (skillIndex / 2) * 2; // Calculate the start index of the row
@@ -90,7 +107,7 @@ public class SkillTreeManager : MonoBehaviour
         }
 
         // Purchase the skill
-        population -= skillCosts[skillIndex];
+        GameStateManager.Instance.Population -= skillCosts[skillIndex];
         skillsPurchased[skillIndex] = true;
 
         // Disable the other skill in the same row
@@ -165,7 +182,6 @@ public class SkillTreeManager : MonoBehaviour
     
     private void UpdateUI()
     {
-        populationText.text = "Population: " + population;
 
         for (int i = 0; i < skillButtons.Length; i++)
         {
@@ -182,7 +198,7 @@ public class SkillTreeManager : MonoBehaviour
                 skillButtons[i].GetComponent<Image>().color = Color.gray;  // Disabled skill
             }
             // If the skill is locked (prerequisites or population)
-            else if (population < skillCosts[i] || !IsSkillUnlocked(i))
+            else if (GameStateManager.Instance.Population < skillCosts[i] || !IsSkillUnlocked(i))
             {
                 skillButtons[i].interactable = false;
                 skillButtons[i].GetComponent<Image>().color = Color.gray;  // Locked skill
@@ -206,10 +222,13 @@ public class SkillTreeManager : MonoBehaviour
         switch (skillIndex)
         {
             case 0:  // Skill 1A
-                FindObjectOfType<OxygenManager>().IncreaseOxygenSegmentDuration(10);
+                float newOxygenDuration = 10f;
+                GameStateManager.Instance.SetSharedState("OxygenIncrease", newOxygenDuration);
+                OnOxygenSkillPurchased?.Invoke(newOxygenDuration);
                 break;
             case 1:  // Skill 1B
-                FindObjectOfType<PlayerController>().IncreaseJumpHeight(1.5f);
+                float additionalJumpForce = 10f;
+                GameStateManager.Instance.SetSharedState("JumpForce", additionalJumpForce);
                 // Add effect for Skill 1B if necessary
                 break;
             case 2:  // Skill 2A

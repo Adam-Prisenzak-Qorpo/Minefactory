@@ -47,6 +47,9 @@ namespace Minefactory.Player.Inventory
                 inventoryData.AddItem(rawIron);
             }
 
+            var colony = itemRegistry.GetItem("colony");
+            inventoryData.AddItem(colony);
+
             UpdateUI();
             ToggleVisibility(null);
         }

@@ -290,6 +290,12 @@ namespace Minefactory.World
             {
                 furnaceTileBehaviour.furnaceUI = furnaceUI;
             }
+            if (tileBehaviour is ColonyTileBehaviour colonyTileBehaviour){
+                if (recordModification){
+                    colonyTileBehaviour.OnTilePlaced();
+                }
+                
+            }
 
             chunk.RegisterTile(roundedPosition, newTile);
             
