@@ -4,6 +4,7 @@ using Minefactory.Player.Inventory;
 using UnityEngine;
 using Minefactory.Game;
 using Minefactory.World.Tiles.Behaviour;
+using Minefactory.Storage;
 
 namespace Minefactory.World.Tiles
 {
