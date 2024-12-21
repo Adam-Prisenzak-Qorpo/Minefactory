@@ -12,14 +12,19 @@ namespace Minefactory.World
         private Vector2Int chunkPosition;
         private int size;
         private Dictionary<Vector2, GameObject> tiles = new Dictionary<Vector2, GameObject>();
+        private WorldModificationManager modificationManager;
+
 
         public void Initialize(BaseWorldGeneration generator, Vector2Int pos, int chunkSize)
         {
             worldGenerator = generator;
             chunkPosition = pos;
             size = chunkSize;
+            modificationManager = worldGenerator.GetComponent<WorldModificationManager>();
             GenerateChunk();
+
         }
+        
 
         private void GenerateChunk()
         {
@@ -39,7 +44,6 @@ namespace Minefactory.World
 
         public void RegisterTile(Vector2 worldPosition, GameObject tile)
         {
-            // If there's already a tile with the same sorting layer, remove it first
             var existingTile = GetTileAtPosition(worldPosition);
             if (existingTile != null)
             {
@@ -67,7 +71,6 @@ namespace Minefactory.World
             {
                 if (sortingLayer != null)
                 {
-                    // Only remove if sorting layer matches
                     var tileLayer = tile.GetComponent<SpriteRenderer>().sortingLayerName;
                     if (tileLayer != sortingLayer) return false;
                 }
@@ -81,6 +84,7 @@ namespace Minefactory.World
 
         private void OnDestroy()
         {
+
             foreach (var tile in tiles.Values)
             {
                 if (tile != null)

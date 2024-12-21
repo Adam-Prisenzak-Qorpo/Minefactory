@@ -2,6 +2,7 @@ using UnityEngine;
 using Minefactory.Common;
 using Minefactory.Save;
 using Minefactory.World;
+using Minefactory.Factories.Mining;
 
 namespace Minefactory.Game
 {
@@ -10,6 +11,8 @@ namespace Minefactory.Game
         [SerializeField] private GameObject topWorld;
         [SerializeField] private GameObject undergroundWorld;
         [SerializeField] private GameObject canvas;
+        [SerializeField] private UIManager uIManager;
+
 
         // Static reference to the instance for global access
         private static WorldManager instance;
@@ -58,6 +61,7 @@ namespace Minefactory.Game
             }
 
             saveManager = SaveManager.Instance;
+            var miningManager = MiningProductionManager.Instance;
             saveManager.LoadGame(topWorld, undergroundWorld);
             lastSwitchTime = Time.time;
         }
@@ -70,6 +74,11 @@ namespace Minefactory.Game
                 return topWorld;
             else
                 return undergroundWorld;
+        }
+
+        public UIManager GetUIManager()
+        {
+            return uIManager;
         }
 
         private void Update()
@@ -90,6 +99,13 @@ namespace Minefactory.Game
             bool isTopWorld = topWorld.activeSelf;
             topWorld.SetActive(!isTopWorld);
             undergroundWorld.SetActive(isTopWorld);
+
+            var canvasComp = canvas.GetComponent<Canvas>();
+            if (canvasComp != null)
+            {
+                canvasComp.worldCamera = GetActiveWorld().GetComponentInChildren<Camera>();
+            }
+            
 
             lastSwitchTime = Time.time;
 

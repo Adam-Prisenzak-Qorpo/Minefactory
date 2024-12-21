@@ -20,10 +20,7 @@ namespace Minefactory.Player
 
         private void Start()
         {
-
             currentOxygen = totalOxygenSegments;
-            
-
             InitializeOxygenBar();
             StartCoroutine(OxygenDepletionRoutine());
         }

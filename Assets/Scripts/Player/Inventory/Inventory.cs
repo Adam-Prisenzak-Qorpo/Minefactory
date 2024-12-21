@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Minefactory.Game;
 using Minefactory.Storage;
 using Minefactory.Storage.Items;
 using Minefactory.World.Tiles;
@@ -39,43 +40,22 @@ namespace Minefactory.Player.Inventory
             var furnace = itemRegistry.GetItem("furnace");
             inventoryData.AddItem(furnace);
             var rawIron = itemRegistry.GetItem("iron_raw");
+            var minerOutput = itemRegistry.GetItem("miner_output");
+            var autoMiner = itemRegistry.GetItem("auto_miner");
+            for (int i = 0; i < 20; i++)
+            {
+                inventoryData.AddItem(rawIron);
+                inventoryData.AddItem(minerOutput);
+                inventoryData.AddItem(autoMiner);
+            }
+            
             inventoryData.AddItems(rawIron, 6);
             var crafter = itemRegistry.GetItem("crafter");
             inventoryData.AddItem(crafter);
 
             UpdateUI();
-            ToggleVisibility(null);
         }
 
-        // Update is called once per frame
-        void Update()
-        {
-            var toggleInventory = Input.GetKeyDown(KeyCode.I);
-            if (toggleInventory)
-            {
-                ToggleVisibility(null);
-            }
-
-            var closeInventory = Input.GetKeyDown(KeyCode.Escape);
-            if (closeInventory)
-            {
-                ToggleVisibility(false);
-            }
-        }
-
-        private void ToggleVisibility(bool? visibility)
-        {
-            var inventorySprite = GetComponent<SpriteRenderer>();
-            visibility ??= !inventorySprite.enabled;
-
-
-            inventorySprite.enabled = (bool)visibility;
-            foreach (var cell in cells)
-            {
-                cell.SetActive((bool)visibility);
-            }
-
-        }
 
         public void AddItem(ItemData item)
         {

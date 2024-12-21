@@ -6,11 +6,11 @@ using Minefactory.Common.Behaviour;
 using Minefactory.Factories.Recipes;
 using UnityEngine;
 using Minefactory.Factories;
+using Minefactory.Game;
 namespace Minefactory.World.Tiles.Behaviour
 {
     public class FurnaceTileBehaviour : BreakableTileBehaviour
     {
-        public GameObject furnaceUI;
         public ItemRegistry itemRegistry;
 
         private StorageData storage;
@@ -50,16 +50,14 @@ namespace Minefactory.World.Tiles.Behaviour
 
         void Update()
         {
+            var furnaceUI = WorldManager.Instance.GetUIManager().furnaceUI;
             var mouseDown = Input.GetMouseButtonDown(1);
             if (mouseDown && isHovered && !furnaceUI.activeSelf)
             {
                 var script = furnaceUI.GetComponent<FurnaceBehaviour>();
-                if (recipe is not null)
-                {
-                    script.SelectRecipe(recipe);
-                }
+                script.SelectRecipe(recipe);
                 script.selectRecipeEvent.AddListener(OnSelectRecipe);
-                furnaceUI.SetActive(true);
+                WorldManager.Instance.GetUIManager().OpenFurnaceUI();
             }
 
         }
@@ -71,6 +69,7 @@ namespace Minefactory.World.Tiles.Behaviour
 
         private void Input_OnTriggerStay2D(Collider2D collider)
         {
+            Debug.Log("Input_OnTriggerStay2D");
             if (collider.gameObject.CompareTag("Item"))
             {
                 var collidedItem = collider.gameObject.GetComponent<ItemBehaviour>().item;
