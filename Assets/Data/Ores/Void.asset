@@ -9,8 +9,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6c1d201c5fc744b0ebf2e384d4ce86bc, type: 3}
-  m_Name: Wood
+  m_Script: {fileID: 11500000, guid: 66bac05611ab3437bb62b9247bc7d13e, type: 3}
+  m_Name: Void
   m_EditorClassIdentifier: 
-  sprite: {fileID: 21300000, guid: 4f0e8addde4b3479c9265e8ecfd680dc, type: 3}
-  itemName: wood
+  tile: {fileID: 11400000, guid: 5acf1935acb644a8b99e3613a6e9a653, type: 2}
+  rarity: 0.05
+  depth: 10
+  depthInfluence: 0.2
+  depthFalloff: 500
+  frequency: 0.2
+  worldSeed: 0
