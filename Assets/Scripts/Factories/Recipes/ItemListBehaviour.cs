@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using Factories.Recipes;
 using Minefactory.Factories.Recipes;
 using Minefactory.Game;
@@ -8,20 +9,21 @@ using UnityEngine.Events;
 namespace Minefactory.Factories
 {
     [Serializable]
-    public class SelectRecipeEvent: UnityEvent<ItemRecipe> { }
+    public class SelectRecipeEvent : UnityEvent<ItemRecipe> { }
 
-    public class ItemListBehaviour: MonoBehaviour
+    public class ItemListBehaviour : MonoBehaviour
     {
         public GameState gameState;
+        public RecipeType type;
         public GameObject listContainerPrefab;
         public GameObject materialListContainer;
-        
+
         public SelectRecipeEvent selectRecipeEvent;
-        
+
         void Start()
         {
             selectRecipeEvent ??= new SelectRecipeEvent();
-            foreach (var item in gameState.itemRecipes)
+            foreach (var item in gameState.itemRecipes.Where(recipe => recipe.type == type))
             {
                 var recipeContainer = Instantiate(listContainerPrefab, transform);
                 // Fit to parent scale
@@ -29,10 +31,10 @@ namespace Minefactory.Factories
 
                 var script = recipeContainer.GetComponent<ItemRowBehaviour>();
                 script.SetRecipe(item);
-                script.selectRecipeEvent.AddListener(OnSelectRecipe); 
+                script.selectRecipeEvent.AddListener(OnSelectRecipe);
             }
         }
-        
+
         private void OnSelectRecipe(ItemRecipe recipe)
         {
             selectRecipeEvent?.Invoke(recipe);

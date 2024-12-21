@@ -3,6 +3,7 @@ using Minefactory.Common;
 using Minefactory.Player.Inventory;
 using UnityEngine;
 using Minefactory.Game;
+using Minefactory.Storage;
 
 namespace Minefactory.World.Tiles
 {
@@ -30,8 +31,32 @@ namespace Minefactory.World.Tiles
             {
                 Rotate();
             }
+            bool drop = Input.GetKeyDown(KeyCode.Q);
+            if (drop)
+            {
+                DropItem();
+            }
         }
 
+        private void DropItem()
+        {
+
+            var item = tileData.item;
+            // Remove the item from the inventory
+            Inventory.useItem(item);
+            // Put item on ground with prefab "Item"
+            var prefab = item.prefab;
+
+            if (!prefab)
+            {
+                Debug.LogError($"Item prefab for {item.name} not found.");
+                return;
+            }
+            prefab.GetComponent<ItemBehaviour>().item = item;
+
+            Instantiate(prefab, transform.position, Quaternion.identity);
+            Destroy(gameObject);
+        }
         public void Rotate()
         {
             transform.Rotate(0, 0, -90);

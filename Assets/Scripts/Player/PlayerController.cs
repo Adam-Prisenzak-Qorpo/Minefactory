@@ -1,4 +1,6 @@
 using System;
+using Minefactory.Game;
+using Minefactory.Storage;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using System.Collections;
@@ -19,6 +21,7 @@ namespace Minefactory.Player
         private float horizontal;
 
 
+
         private void Start()
         {
             rb = GetComponent<Rigidbody2D>();
@@ -26,11 +29,22 @@ namespace Minefactory.Player
             anim = GetComponent<Animator>();
         }
 
-        private void OnTriggerStay2D(Collider2D collision)
+        private void OnTriggerStay2D(Collider2D collider)
         {
-            if (collision.CompareTag("Solid"))
+            if (collider.CompareTag("Solid"))
             {
                 isGrounded = true;
+            }
+            if (collider.CompareTag("Item"))
+            {
+                var collidedItem = collider.gameObject.GetComponent<ItemBehaviour>().item;
+                if (collidedItem is null)
+                {
+                    Debug.LogError("Item on ground is null");
+                    return;
+                }
+                WorldManager.activeBaseWorld.playerInventory.AddItem(collidedItem);
+                Destroy(collider.gameObject);
             }
         }
 
@@ -55,7 +69,7 @@ namespace Minefactory.Player
             }
             else if (horizontal > 0)
             {
-               transform.localScale = new Vector3(1, 1, 1);
+                transform.localScale = new Vector3(1, 1, 1);
             }
             if (topWorld)
             {
@@ -79,10 +93,11 @@ namespace Minefactory.Player
 
         private void Update()
         {
-            if(anim){
+            if (anim)
+            {
                 anim.SetFloat("horizontal", horizontal);
             }
-            
+
         }
 
 
@@ -93,6 +108,8 @@ namespace Minefactory.Player
         }
         
         private void OnEnable()
+
+        public void IncreaseJumpHeight(float multiplier)
         {
             StartCoroutine(WaitForSkillTreeManager());
             StartCoroutine(WaitForGameStateManager());

@@ -138,6 +138,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemListContainer: {fileID: 8566663632862769269}
   materialListContainer: {fileID: 6381964309509447240}
+  selectRecipeEvent:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!114 &5188902571861455608
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -385,6 +388,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameState: {fileID: 11400000, guid: e81cc04d0172d4f7296a95419546d17d, type: 2}
+  type: 1
   listContainerPrefab: {fileID: 7812706064708071874, guid: 324a285cb0b486e428b543c67657850d, type: 3}
   materialListContainer: {fileID: 6381964309509447240}
   selectRecipeEvent:
