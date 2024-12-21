@@ -39,9 +39,6 @@ namespace Minefactory.World
         public delegate bool OnTileRemoved(Vector2 position);
         public OnTileRemoved onTileRemoved;
 
-        public GameObject furnaceUI;
-        public GameObject crafterUI;
-
         private bool initialized = false;
 
         protected virtual void Awake()
@@ -180,8 +177,6 @@ namespace Minefactory.World
             if (playerTransform == null) return;
 
             Vector2Int playerChunkPos = WorldToChunkPosition(playerTransform.position);
-
-            // Calculate actual squared distance once
             float maxDistanceSquared = (renderDistance + 1) * (renderDistance + 1);
 
 
@@ -228,8 +223,7 @@ namespace Minefactory.World
                     GenerateChunk(chunkPos);
                 }
             }
-        }                   
-
+        }    
         protected Vector2Int WorldToChunkPosition(Vector2 worldPosition)
         {
             return new Vector2Int(
@@ -305,15 +299,6 @@ namespace Minefactory.World
                     Destroy(newTile);
                     return false;
                 }
-            }
-            if (tileBehaviour is FurnaceTileBehaviour furnaceTileBehaviour)
-            {
-                furnaceTileBehaviour.furnaceUI = furnaceUI;
-            }
-
-            if (tileBehaviour is CrafterTileBehaviour crafterTileBehaviour)
-            {
-                crafterTileBehaviour.crafterUI = crafterUI;
             }
 
             chunk.RegisterTile(roundedPosition, newTile);

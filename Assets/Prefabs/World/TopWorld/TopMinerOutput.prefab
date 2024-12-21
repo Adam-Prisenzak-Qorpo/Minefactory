@@ -70,7 +70,7 @@ BoxCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 1, y: 1}
+    oldSize: {x: 0.75, y: 0.875}
     newSize: {x: 1, y: 1}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
@@ -120,7 +120,7 @@ SpriteRenderer:
   m_SortingLayerID: -1058633471
   m_SortingLayer: 1
   m_SortingOrder: 0
-  m_Sprite: {fileID: -1649865036, guid: 2aafe21edcfe8486195ce41a2aab8e3a, type: 3}
+  m_Sprite: {fileID: 3307139994931271271, guid: 179ef634af63d4658bd57832e6fc5b66, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -146,5 +146,6 @@ MonoBehaviour:
   item: {fileID: 11400000, guid: 9affb158209e8471ebdc359dfe9d8d8d, type: 2}
   orientation: 0
   gameState: {fileID: 0}
+  isGhostTile: 0
   configUIPrefab: {fileID: 3770495134304662029, guid: f93915e27091f44e78fbeec23e0526dd, type: 3}
   itemRegistry: {fileID: 11400000, guid: 3ab5254fe788b4a7f866da9ec9ded5e2, type: 2}

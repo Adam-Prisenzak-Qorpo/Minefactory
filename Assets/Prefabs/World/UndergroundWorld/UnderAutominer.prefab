@@ -120,7 +120,7 @@ SpriteRenderer:
   m_SortingLayerID: -1058633471
   m_SortingLayer: 1
   m_SortingOrder: 0
-  m_Sprite: {fileID: -1649865036, guid: 2aafe21edcfe8486195ce41a2aab8e3a, type: 3}
+  m_Sprite: {fileID: 8741177323937699950, guid: e97d4ac87237b4e0e86434d3a4184b16, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -146,3 +146,5 @@ MonoBehaviour:
   item: {fileID: 11400000, guid: 54ca2c6130cb74c40b0afae7efa73382, type: 2}
   orientation: 0
   gameState: {fileID: 0}
+  isGhostTile: 0
+  baseMiningRate: 1

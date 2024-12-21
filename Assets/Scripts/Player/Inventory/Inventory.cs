@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Minefactory.Game;
 using Minefactory.Storage;
 using Minefactory.Storage.Items;
 using Minefactory.World.Tiles;
@@ -53,38 +54,8 @@ namespace Minefactory.Player.Inventory
             inventoryData.AddItem(crafter);
 
             UpdateUI();
-            ToggleVisibility(null);
         }
 
-        // Update is called once per frame
-        void Update()
-        {
-            var toggleInventory = Input.GetKeyDown(KeyCode.I);
-            if (toggleInventory)
-            {
-                ToggleVisibility(null);
-            }
-
-            var closeInventory = Input.GetKeyDown(KeyCode.Escape);
-            if (closeInventory)
-            {
-                ToggleVisibility(false);
-            }
-        }
-
-        private void ToggleVisibility(bool? visibility)
-        {
-            var inventorySprite = GetComponent<SpriteRenderer>();
-            visibility ??= !inventorySprite.enabled;
-
-
-            inventorySprite.enabled = (bool)visibility;
-            foreach (var cell in cells)
-            {
-                cell.SetActive((bool)visibility);
-            }
-
-        }
 
         public void AddItem(ItemData item)
         {

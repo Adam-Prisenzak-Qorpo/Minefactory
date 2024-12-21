@@ -6,11 +6,11 @@ using Minefactory.Common.Behaviour;
 using Minefactory.Factories.Recipes;
 using UnityEngine;
 using Minefactory.Factories;
+using Minefactory.Game;
 namespace Minefactory.World.Tiles.Behaviour
 {
     public class CrafterTileBehaviour : BreakableTileBehaviour
     {
-        public GameObject crafterUI;
         public ItemRegistry itemRegistry;
 
         private StorageData storage;
@@ -50,16 +50,14 @@ namespace Minefactory.World.Tiles.Behaviour
 
         void Update()
         {
+            var crafterUI = WorldManager.Instance.GetUIManager().crafterUI;
             var mouseDown = Input.GetMouseButtonDown(1);
             if (mouseDown && isHovered && !crafterUI.activeSelf)
             {
                 var script = crafterUI.GetComponent<FurnaceBehaviour>();
-                if (recipe is not null)
-                {
-                    script.SelectRecipe(recipe);
-                }
+                script.SelectRecipe(recipe);
                 script.selectRecipeEvent.AddListener(OnSelectRecipe);
-                crafterUI.SetActive(true);
+                WorldManager.Instance.GetUIManager().OpenCrafterUI();
             }
 
         }

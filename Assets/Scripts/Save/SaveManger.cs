@@ -146,11 +146,15 @@ namespace Minefactory.Save
                     }
                 }
 
+                
+
                 topWorld.SetActive(true);
-                BaseWorldGeneration topWorldGen = topWorld.GetComponentInChildren<BaseWorldGeneration>();
+                TopWorldGeneration topWorldGen = topWorld.GetComponentInChildren<TopWorldGeneration>();
                 topWorldGen.InitializeWorld(saveData.worldData.seed, saveData.worldData.topWorldModifications);
 
-                LoadInventory(saveData, topWorld, undergroundWorld);
+                Inventory inventory = topWorldGen.playerInventory;
+
+                LoadInventory(saveData, inventory);
 
                 PlayerController player = null;
                 if (saveData.playerData.isInTopWorld)
@@ -179,21 +183,11 @@ namespace Minefactory.Save
             }
         }
 
-        private void LoadInventory(GameSaveData saveData, GameObject topWorld, GameObject undergroundWorld)
+        private void LoadInventory(GameSaveData saveData, Inventory inventory)
         {
             if (saveData.inventoryData == null)
             {
                 return;
-            }
-
-            Inventory inventory = null;
-            if (saveData.playerData.isInTopWorld)
-            {
-                inventory = topWorld.GetComponentInChildren<Inventory>();
-            }
-            else
-            {
-                inventory = undergroundWorld.GetComponentInChildren<Inventory>();
             }
 
             if (inventory == null || inventory.inventoryData == null)

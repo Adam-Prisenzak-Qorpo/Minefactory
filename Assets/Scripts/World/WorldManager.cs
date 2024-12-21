@@ -11,6 +11,8 @@ namespace Minefactory.Game
         [SerializeField] private GameObject topWorld;
         [SerializeField] private GameObject undergroundWorld;
         [SerializeField] private GameObject canvas;
+        [SerializeField] private UIManager uIManager;
+
 
         // Static reference to the instance for global access
         private static WorldManager instance;
@@ -72,6 +74,11 @@ namespace Minefactory.Game
                 return topWorld;
             else
                 return undergroundWorld;
+        }
+
+        public UIManager GetUIManager()
+        {
+            return uIManager;
         }
 
         private void Update()

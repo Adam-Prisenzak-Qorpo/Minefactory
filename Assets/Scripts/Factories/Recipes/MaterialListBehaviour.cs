@@ -14,6 +14,7 @@ namespace Factories.Recipes
             {
                 Destroy(child.gameObject);
             }
+            if (recipe is null) return;
             foreach (var item in recipe.parts)
             {
                 var recipeContainer = Instantiate(materialRowPrefab, transform);

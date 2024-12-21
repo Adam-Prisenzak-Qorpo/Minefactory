@@ -56,11 +56,9 @@ namespace Minefactory.Factories.Mining
             thisIronOutputText = transform.Find("Output Panel/Iron Slider/Iron Output Text").GetComponent<TextMeshProUGUI>();
             thisGoldOutputText = transform.Find("Output Panel/Gold Slider/Gold Output Text").GetComponent<TextMeshProUGUI>();
 
-            // Setup button
             closeButton.onClick.RemoveAllListeners();
             closeButton.onClick.AddListener(Close);
 
-            // Remove old listeners before adding new ones
             ironOutputSlider.onValueChanged.RemoveAllListeners();
             goldOutputSlider.onValueChanged.RemoveAllListeners();
 
@@ -70,24 +68,19 @@ namespace Minefactory.Factories.Mining
                 float currentIronRate = minerOutput.GetIronOutputRate();
                 float currentGoldRate = minerOutput.GetGoldOutputRate();
 
-                // Set max values first
                 ironOutputSlider.maxValue = manager.GetAvailableOutputRate("iron") + currentIronRate;
                 goldOutputSlider.maxValue = manager.GetAvailableOutputRate("gold") + currentGoldRate;
 
-                // Set values without triggering events (because isInitializing is true)
                 ironOutputSlider.value = currentIronRate;
                 goldOutputSlider.value = currentGoldRate;
 
-                // Update text displays
                 thisIronOutputText.text = $"Iron Output: {currentIronRate:F1}/min";
                 thisGoldOutputText.text = $"Gold Output: {currentGoldRate:F1}/min";
             }
 
-            // Add listeners after setting initial values
             ironOutputSlider.onValueChanged.AddListener(OnIronSliderChanged);
             goldOutputSlider.onValueChanged.AddListener(OnGoldSliderChanged);
 
-            // Update the rest of the UI
             UpdateUI();
 
             isInitializing = false;
