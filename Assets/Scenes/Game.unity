@@ -2601,7 +2601,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   totalOxygenSegments: 10
-  timePerSegment: 5
+  timePerSegment: 1
   oxygenBarContainer: {fileID: 27661892}
   oxygenSegmentPrefab: {fileID: 3526274062190667094, guid: e721693e23d1f2b43aa9e81ae96c2273, type: 3}
 --- !u!224 &1498165412 stripped
@@ -3257,7 +3257,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 36bc8d3901b61354386028307d99051d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  population: 100
+  currentOxygenTime: 0
+  currentOxygenSegments: 0
+  population: 600
   populationText: {fileID: 1070104578}
 --- !u!1001 &1730900317
 PrefabInstance:

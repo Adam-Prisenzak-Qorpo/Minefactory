@@ -38,10 +38,29 @@ namespace Minefactory.Player
 
         private void Start()
         {
+            Debug.Log($"[OxygenManager] Starting in {gameObject.scene.name}");
+            
+            if (GameStateManager.Instance == null) // Check if GameStateManager exists
+            {
+                Debug.LogError("[OxygenManager] GameStateManager.Instance is null!");
+                return;
+            }
+            
+            var (savedSegments, savedTime) = GameStateManager.Instance.GetOxygenState();
+            Debug.Log($"[OxygenManager] Got saved state: segments={savedSegments}, time={savedTime}");
+            if (savedTime > 0)
+            {
+                currentOxygen = savedSegments;
+                timePerSegment = savedTime;
+            }
+            else
+            {
+                currentOxygen = totalOxygenSegments;
+            }
 
-            currentOxygen = totalOxygenSegments;
             InitializeOxygenBar();
             depletionCoroutine = StartCoroutine(OxygenDepletionRoutine());
+            GameStateManager.Instance.OnOxygenChanged += OnOxygenStateChanged;
         }
 
         public void SetOxygenZoneState(bool state)
@@ -75,6 +94,7 @@ namespace Minefactory.Player
             set
             {
                 currentOxygen = value;
+                GameStateManager.Instance.UpdateOxygenState(currentOxygen, timePerSegment); // Update the shared state whenever oxygen changes
                 UpdateOxygenBar();
             }
         }
@@ -145,10 +165,18 @@ namespace Minefactory.Player
             UpdateOxygenBar();
         }
         
+        private IEnumerator WaitForSkillTreeManager()
+        {
+            while (SkillTreeManager.Instance == null)
+            {
+                yield return null; // Wait until the next frame
+            }
+            SkillTreeManager.Instance.OnOxygenSkillPurchased += ApplyOxygenUpgrade;
+        }
+
         private void OnEnable()
         {
-            SkillTreeManager.Instance.OnOxygenSkillPurchased += ApplyOxygenUpgrade;
-            Debug.Log("OxygenManager OnEnable triggered.");
+            StartCoroutine(WaitForSkillTreeManager());
         }
 
         private void OnDisable()
@@ -156,9 +184,24 @@ namespace Minefactory.Player
             SkillTreeManager.Instance.OnOxygenSkillPurchased -= ApplyOxygenUpgrade;
         }
 
+        private void OnDestroy()
+        {
+            if (GameStateManager.Instance != null)
+            {
+                GameStateManager.Instance.OnOxygenChanged -= OnOxygenStateChanged;
+            }
+        }
+
+        private void OnOxygenStateChanged(int newSegments)
+        {
+            CurrentOxygen = newSegments;
+            UpdateOxygenBar();
+        }
+
         private void ApplyOxygenUpgrade(float extraOxygen)
         {
             timePerSegment += extraOxygen;
+            GameStateManager.Instance.UpdateOxygenState(currentOxygen, timePerSegment);
             Debug.Log($"Additional oxygen added: {extraOxygen}. New time per segment: {timePerSegment}");
         }
 

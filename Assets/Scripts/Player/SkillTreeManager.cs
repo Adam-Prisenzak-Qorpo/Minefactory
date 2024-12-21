@@ -10,7 +10,8 @@ public class SkillTreeManager : MonoBehaviour
     public static SkillTreeManager Instance { get; private set; }
 
     public event Action<float> OnOxygenSkillPurchased;
-    public event Action<float> OnJumpForceSkillPurchased;
+    public event Action<float> OnMovementSpeedPurchased;
+
     [Header("UI Elements")]
     public GameObject skillTreePanel;
     public Button[] skillButtons;
@@ -74,7 +75,6 @@ public class SkillTreeManager : MonoBehaviour
         {
             if (skillsPurchased[i])
             {
-                Debug.Log($"You can only purchase one skill per row. Skill {i} is already purchased.");
                 return; // Block the purchase
             }
         }
@@ -83,7 +83,6 @@ public class SkillTreeManager : MonoBehaviour
         if (requiredSkills[skillIndex] == null || requiredSkills[skillIndex].Count == 0)
         {
             // No prerequisites, allow purchase
-            Debug.Log($"Skill {skillIndex} has no prerequisites and can be purchased.");
         }
         else
         {
@@ -101,7 +100,6 @@ public class SkillTreeManager : MonoBehaviour
 
             if (!prerequisiteMet)
             {
-                Debug.Log("You need to purchase a prerequisite skill first!");
                 return;
             }
         }
@@ -146,7 +144,6 @@ public class SkillTreeManager : MonoBehaviour
         // If no prerequisites, the skill is unlocked by default
         if (requiredSkills[skillIndex] == null || requiredSkills[skillIndex].Count == 0)
         {
-            Debug.Log($"Skill {skillIndex} has no prerequisites and is unlocked.");
             return true;
         }
 
@@ -155,11 +152,9 @@ public class SkillTreeManager : MonoBehaviour
         {
             if (skillsPurchased[prerequisite])
             {
-                Debug.Log($"Skill {skillIndex} is unlocked because prerequisite Skill {prerequisite} is purchased.");
                 return true;
             }
         }
-        Debug.Log($"Skill {skillIndex} is locked. No prerequisites are purchased.");
         return false;  // None of the prerequisites are purchased
     }
     
@@ -223,18 +218,20 @@ public class SkillTreeManager : MonoBehaviour
         {
             case 0:  // Skill 1A
                 float newOxygenDuration = 10f;
-                GameStateManager.Instance.SetSharedState("OxygenIncrease", newOxygenDuration);
                 OnOxygenSkillPurchased?.Invoke(newOxygenDuration);
                 break;
             case 1:  // Skill 1B
-                float additionalJumpForce = 10f;
-                GameStateManager.Instance.SetSharedState("JumpForce", additionalJumpForce);
-                // Add effect for Skill 1B if necessary
+                float newFlashlightRadius = 10f;
+                GameStateManager.Instance.SetSharedState("Flashlight", newFlashlightRadius);
                 break;
             case 2:  // Skill 2A
-                // Example for another skill
+                float newMovementSpeed = 7f;
+                GameStateManager.Instance.SetSharedState("Speed", newMovementSpeed);
+                OnMovementSpeedPurchased?.Invoke(newMovementSpeed);
                 break;
             case 3:  // Skill 2B
+                float newJumpForce = 10f;
+                GameStateManager.Instance.SetSharedState("JumpForce", newJumpForce);
                 break;
             case 4:  // Skill 3A
                 // Example for another skill

@@ -8,6 +8,11 @@ public class GameStateManager : MonoBehaviour
 {
     public static GameStateManager Instance { get; private set; }
     public event System.Action OnPopulationChanged;
+    public event System.Action<int> OnOxygenChanged;
+
+    [SerializeField] private float currentOxygenTime;
+    [SerializeField] private int currentOxygenSegments;
+    
 
     private Dictionary<string, object> sharedState = new Dictionary<string, object>();
     [SerializeField] private int population;
@@ -22,6 +27,19 @@ public class GameStateManager : MonoBehaviour
             UpdatePopulationText();
             OnPopulationChanged?.Invoke();
         }
+    }
+
+    public void UpdateOxygenState(int segments, float timePerSegment)
+    {
+        Debug.Log($"[GameStateManager] Updating oxygen state: segments={segments}, time={timePerSegment}");
+        currentOxygenSegments = segments;
+        currentOxygenTime = timePerSegment;
+        OnOxygenChanged?.Invoke(segments);
+    }
+
+    public (int segments, float time) GetOxygenState()
+    {
+        return (currentOxygenSegments, currentOxygenTime);
     }
 
     private void Start()
