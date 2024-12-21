@@ -1,10 +1,10 @@
 using System;
-using Minefactory.Game;
-using Minefactory.Storage;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using System.Collections;
 using UnityEngine.Rendering.Universal;
+using Minefactory.Game;
+using Minefactory.Storage;
 
 namespace Minefactory.Player
 {
@@ -19,7 +19,6 @@ namespace Minefactory.Player
         private Light2D light2D;
         private Animator anim;
         private float horizontal;
-
 
 
         private void Start()
@@ -69,7 +68,7 @@ namespace Minefactory.Player
             }
             else if (horizontal > 0)
             {
-                transform.localScale = new Vector3(1, 1, 1);
+               transform.localScale = new Vector3(1, 1, 1);
             }
             if (topWorld)
             {
@@ -93,11 +92,10 @@ namespace Minefactory.Player
 
         private void Update()
         {
-            if (anim)
-            {
+            if(anim){
                 anim.SetFloat("horizontal", horizontal);
             }
-
+            
         }
 
 
@@ -108,8 +106,6 @@ namespace Minefactory.Player
         }
         
         private void OnEnable()
-
-        public void IncreaseJumpHeight(float multiplier)
         {
             StartCoroutine(WaitForSkillTreeManager());
             StartCoroutine(WaitForGameStateManager());
