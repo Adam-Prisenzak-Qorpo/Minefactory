@@ -51,7 +51,7 @@ namespace Minefactory.World
             onTileRemoved = OnRemoveTile;
         }
 
-        public  virtual void InitializeWorld(float seed, List<ChunkData> modifications = null)
+        public virtual void InitializeWorld(float seed, List<ChunkData> modifications = null)
         {
             this.seed = seed;
             modificationManager = gameObject.AddComponent<WorldModificationManager>();
@@ -97,10 +97,12 @@ namespace Minefactory.World
         protected bool HandlePlaceTile(Vector2 position, ItemData item, Orientation orientation)
         {
             var tile = tileRegistry.GetTileByItem(item);
-            if (tile && CanPlaceOnTile(position))
+
+            if (tile)
             {
-                return PlaceTile(tile, position, orientation);
+                return PlaceTile(tile, position, orientation, true);
             }
+            Debug.LogWarning("Tile not found for item: " + item.itemName);
             return false;
         }
 
@@ -115,7 +117,13 @@ namespace Minefactory.World
                     TileData tileData = tileRegistry.GetTileByItem(tileBehaviour.item);
                     if (tileData != null)
                     {
-                        modificationManager.SetModification(position, tileData, tileBehaviour.orientation);
+                        // Get any existing metadata before recording the modification
+                        Dictionary<string, string> existingMetadata = null;
+                        if (modificationManager.HasModification(position, out TileModification existingMod))
+                        {
+                            existingMetadata = existingMod.GetMetadata();
+                        }
+                        modificationManager.SetModification(position, tileData, tileBehaviour.orientation, existingMetadata);
                     }
                 }
             }
@@ -162,7 +170,7 @@ namespace Minefactory.World
             sr.color = color;
             
             tilePrefab.GetComponent<BoxCollider2D>().isTrigger = true;
-            Destroy(tilePrefab.GetComponent<BaseTileBehaviour>());
+            tilePrefab.GetComponent<BaseTileBehaviour>().isGhostTile = true;
         }
 
         protected virtual void UpdateChunks()
@@ -170,15 +178,12 @@ namespace Minefactory.World
             if (playerTransform == null) return;
 
             Vector2Int playerChunkPos = WorldToChunkPosition(playerTransform.position);
-            
-            // Calculate actual squared distance once
             float maxDistanceSquared = (renderDistance + 1) * (renderDistance + 1);
 
             // First, unload distant chunks
             List<Vector2Int> chunksToUnload = new List<Vector2Int>();
             foreach (var chunk in loadedChunks)
             {
-                // Convert to Vector2 for distance calculation
                 Vector2 offset = new Vector2(
                     playerChunkPos.x - chunk.Key.x,
                     playerChunkPos.y - chunk.Key.y
@@ -202,11 +207,9 @@ namespace Minefactory.World
             {
                 for (int y = -renderDistanceInt; y <= renderDistanceInt; y++)
                 {
-                    // Convert offset to Vector2 for distance check
                     Vector2 offset = new Vector2(x, y);
                     Vector2Int checkPos = playerChunkPos + new Vector2Int(x, y);
                     
-                    // Check if this chunk is within our circular render distance
                     if (offset.sqrMagnitude <= maxDistanceSquared && !loadedChunks.ContainsKey(checkPos))
                     {
                         GenerateChunk(checkPos);
@@ -253,7 +256,7 @@ namespace Minefactory.World
             }
         }
 
-        public virtual bool PlaceTile(TileData tileData, Vector2 worldPosition, Orientation orientation = Orientation.Up, bool recordModification = true)
+        public virtual bool PlaceTile(TileData tileData, Vector2 worldPosition, Orientation orientation = Orientation.Up, bool recordModification = false)
         {
             Vector2Int chunkPos = WorldToChunkPosition(worldPosition);
             if (!loadedChunks.TryGetValue(chunkPos, out Chunk chunk))
@@ -285,6 +288,11 @@ namespace Minefactory.World
             if (tileBehaviour)
             {
                 tileBehaviour.orientation = orientation;
+                if (tileBehaviour.CanBePlaced(worldPosition) == false)
+                {
+                    Destroy(newTile);
+                    return false;
+                }
             }
             if (tileBehaviour is FurnaceTileBehaviour furnaceTileBehaviour)
             {
@@ -293,13 +301,15 @@ namespace Minefactory.World
 
             chunk.RegisterTile(roundedPosition, newTile);
             
-            if (recordModification)
+            // Only set modification if recordModification is true AND metadata wasn't already set by the tile behaviour
+            if (recordModification && !modificationManager.HasModification(roundedPosition, out _))
             {
-                RecordTileModification(roundedPosition);
+                modificationManager.SetModification(roundedPosition, tileData, orientation);
             }
             
             return true;
         }
+
 
         protected float GetPerlinNoiseValue(Vector2 worldPosition, float frequency)
         {
@@ -329,12 +339,9 @@ namespace Minefactory.World
                         PlaceTile(tileData, worldPos, modification.orientation, false);
                     }
                 }
-                // If modification exists but tileDataName is empty string, it means the tile was explicitly removed
-                // In this case, we only keep the background tile and don't generate default terrain
             }
             else
             {
-                // Generate default terrain if no modifications exist
                 GenerateDefaultTerrain(chunkWorldPos, localX, localY);
             }
         }

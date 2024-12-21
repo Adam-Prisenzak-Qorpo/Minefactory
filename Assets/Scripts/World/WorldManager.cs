@@ -2,6 +2,7 @@ using UnityEngine;
 using Minefactory.Common;
 using Minefactory.Save;
 using Minefactory.World;
+using Minefactory.Factories.Mining;
 
 namespace Minefactory.Game
 {
@@ -58,6 +59,7 @@ namespace Minefactory.Game
             }
 
             saveManager = SaveManager.Instance;
+            var miningManager = MiningProductionManager.Instance;
             saveManager.LoadGame(topWorld, undergroundWorld);
             lastSwitchTime = Time.time;
         }

@@ -105,6 +105,7 @@ namespace Minefactory.Save
                 };
 
                 string json = JsonUtility.ToJson(saveData, true);
+                worldGen.GetComponentInChildren<WorldModificationManager>().LogAllModifications();
                 File.WriteAllText(SavePath, json);
                 Debug.Log($"Game saved successfully to {SavePath}");
             }
@@ -140,6 +141,14 @@ namespace Minefactory.Save
                     saveData.playerData.positionX,
                     saveData.playerData.positionY
                 );
+                // for top world modifications
+                for (int i = 0; i < saveData.worldData.topWorldModifications.Count; i++)
+                {
+                    for (int j = 0; j < saveData.worldData.topWorldModifications[i].modifications.Count; j++)
+                    {
+                        Debug.Log("Top World Modifications: " + saveData.worldData.topWorldModifications[i].modifications[j].tile.tileDataName);
+                    }
+                }
                 BaseWorldGeneration topWorldGen = topWorld.GetComponentInChildren<BaseWorldGeneration>();
                 BaseWorldGeneration underWorldGen = undergroundWorld.GetComponentInChildren<BaseWorldGeneration>();
                 topWorldGen.InitializeWorld(saveData.worldData.seed, saveData.worldData.topWorldModifications);

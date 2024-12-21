@@ -42,10 +42,15 @@ namespace Minefactory.Player.Inventory
             var furnace = itemRegistry.GetItem("furnace");
             inventoryData.AddItem(furnace);
             var rawIron = itemRegistry.GetItem("iron_raw");
-            for (int i = 0; i < 3; i++)
+            var minerOutput = itemRegistry.GetItem("miner_output");
+            var autoMiner = itemRegistry.GetItem("auto_miner");
+            for (int i = 0; i < 20; i++)
             {
                 inventoryData.AddItem(rawIron);
+                inventoryData.AddItem(minerOutput);
+                inventoryData.AddItem(autoMiner);
             }
+            
 
             UpdateUI();
             ToggleVisibility(null);
