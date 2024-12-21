@@ -10,7 +10,7 @@ namespace Minefactory.World
     {
         [Header("Surface Settings")]
         public int safeRadius = 10;
-        public float woodFrequency = 0.05f;
+        public float siliconeFrequency = 0.05f;
         public float stoneFrequency = 0.05f;
 
         private Vector2 spawnPoint = Vector2.zero;
@@ -34,10 +34,10 @@ namespace Minefactory.World
                 return;
             }
 
-            float woodNoise = GetPerlinNoiseValue(worldPos, woodFrequency);
-            if (woodNoise > 0.75f)
+            float siliconeNoise = GetPerlinNoiseValue(worldPos, siliconeFrequency);
+            if (siliconeNoise > 0.75f)
             {
-                PlaceTile(tileRegistry.GetItem("wood"), worldPos);
+                PlaceTile(tileRegistry.GetItem("silicone"), worldPos);
                 return;
             }
 

@@ -13,4 +13,5 @@ MonoBehaviour:
   m_Name: Belt
   m_EditorClassIdentifier: 
   sprite: {fileID: 21300000, guid: 380bd604d2f3e4ee3a25ecd72dbf713b, type: 3}
+  prefab: {fileID: 8769634307742190171, guid: 5944e9f7c0223476e909cde30ace5a6c, type: 3}
   itemName: belt

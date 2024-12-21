@@ -101,7 +101,7 @@ GameObject:
   - component: {fileID: 7468090504334244591}
   - component: {fileID: 5404738973993601546}
   - component: {fileID: -2483993299749228120}
-  - component: {fileID: -914202257875445270}
+  - component: {fileID: -693322713409822670}
   m_Layer: 0
   m_Name: Furnace
   m_TagString: Solid
@@ -223,7 +223,7 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
---- !u!114 &-914202257875445270
+--- !u!114 &-693322713409822670
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -235,8 +235,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c0d19ece45f0e4406a34995214db43cc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerInventory: {fileID: 5460361312489632515, guid: 6d973a24c603940d9b98e0b70351e893, type: 3}
-  item: {fileID: 11400000, guid: 8ea3ed1f2c59a476db2be0bb3e8a36e8, type: 2}
+  item: {fileID: 0}
   orientation: 0
   furnaceUI: {fileID: 0}
   itemRegistry: {fileID: 11400000, guid: 3ab5254fe788b4a7f866da9ec9ded5e2, type: 2}

@@ -24,6 +24,13 @@ namespace Minefactory.Storage
             stack.amount++;
         }
 
+        public void AddItems(ItemData item, int amount)
+        {
+            for (int i = 0; i < amount; i++)
+            {
+                AddItem(item);
+            }
+        }
         public int RemoveItem(ItemData item)
         {
             var stack = storageItems.Find(i => i.item == item);

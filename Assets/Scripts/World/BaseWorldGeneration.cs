@@ -16,7 +16,7 @@ namespace Minefactory.World
         public Inventory playerInventory;
         public TileRegistry tileRegistry;
         public TileData backgroundTileData;
-        
+
         [Header("Chunk Settings")]
         public Transform playerTransform;
         [SerializeField] protected int chunkSize = 16;
@@ -40,6 +40,7 @@ namespace Minefactory.World
         public OnTileRemoved onTileRemoved;
 
         public GameObject furnaceUI;
+        public GameObject crafterUI;
 
         private bool initialized = false;
 
@@ -51,7 +52,7 @@ namespace Minefactory.World
             onTileRemoved = OnRemoveTile;
         }
 
-        public  virtual void InitializeWorld(float seed, List<ChunkData> modifications = null)
+        public virtual void InitializeWorld(float seed, List<ChunkData> modifications = null)
         {
             this.seed = seed;
             modificationManager = gameObject.AddComponent<WorldModificationManager>();
@@ -150,17 +151,17 @@ namespace Minefactory.World
             TileData tileData = tileRegistry.GetTileByItem(item);
             GameObject tilePrefab = Instantiate(GetTilePrefab(tileData), Vector3.zero, Quaternion.identity);
             tilePrefab.tag = "Ghost";
-            
+
             var tileGhost = tilePrefab.AddComponent<TileGhost>();
             tileGhost.tileData = tileData;
             tileGhost.transform.parent = transform;
-            
+
             var sr = tilePrefab.GetComponent<SpriteRenderer>();
             sr.sortingLayerID = SortingLayer.NameToID("GhostTile");
             var color = sr.color;
             color.a = 0.5f;
             sr.color = color;
-            
+
             tilePrefab.GetComponent<BoxCollider2D>().isTrigger = true;
             Destroy(tilePrefab.GetComponent<BaseTileBehaviour>());
         }
@@ -170,7 +171,7 @@ namespace Minefactory.World
             if (playerTransform == null) return;
 
             Vector2Int playerChunkPos = WorldToChunkPosition(playerTransform.position);
-            
+
             // Calculate actual squared distance once
             float maxDistanceSquared = (renderDistance + 1) * (renderDistance + 1);
 
@@ -184,7 +185,7 @@ namespace Minefactory.World
                     playerChunkPos.y - chunk.Key.y
                 );
                 float distanceSquared = offset.sqrMagnitude;
-                
+
                 if (distanceSquared > maxDistanceSquared)
                 {
                     chunksToUnload.Add(chunk.Key);
@@ -205,7 +206,7 @@ namespace Minefactory.World
                     // Convert offset to Vector2 for distance check
                     Vector2 offset = new Vector2(x, y);
                     Vector2Int checkPos = playerChunkPos + new Vector2Int(x, y);
-                    
+
                     // Check if this chunk is within our circular render distance
                     if (offset.sqrMagnitude <= maxDistanceSquared && !loadedChunks.ContainsKey(checkPos))
                     {
@@ -235,7 +236,7 @@ namespace Minefactory.World
         {
             GameObject chunkObj = new GameObject($"Chunk_{chunkPos.x}_{chunkPos.y}");
             chunkObj.transform.parent = transform;
-            
+
             Vector2 worldPos = ChunkToWorldPosition(chunkPos);
             chunkObj.transform.position = worldPos;
 
@@ -270,17 +271,17 @@ namespace Minefactory.World
             }
 
             Vector2 roundedPosition = new Vector2(
-                Mathf.Round(worldPosition.x), 
+                Mathf.Round(worldPosition.x),
                 Mathf.Round(worldPosition.y)
             );
-            
+
             GameObject newTile = Instantiate(
                 tilePrefab,
                 roundedPosition,
                 Quaternion.Euler(0, 0, (int)orientation * -90),
                 chunk.transform
             );
-            
+
             BaseTileBehaviour tileBehaviour = newTile.GetComponent<BaseTileBehaviour>();
             if (tileBehaviour)
             {
@@ -297,13 +298,18 @@ namespace Minefactory.World
                 
             }
 
+            if (tileBehaviour is CrafterTileBehaviour crafterTileBehaviour)
+            {
+                crafterTileBehaviour.crafterUI = crafterUI;
+            }
+
             chunk.RegisterTile(roundedPosition, newTile);
-            
+
             if (recordModification)
             {
                 RecordTileModification(roundedPosition);
             }
-            
+
             return true;
         }
 
@@ -318,7 +324,7 @@ namespace Minefactory.World
         public virtual void GenerateTerrainAt(Vector2 chunkWorldPos, int localX, int localY)
         {
             Vector2 worldPos = chunkWorldPos + new Vector2(localX, localY);
-            
+
             // Always place background tile first
             PlaceTile(backgroundTileData, worldPos, Orientation.Up, false);
 
