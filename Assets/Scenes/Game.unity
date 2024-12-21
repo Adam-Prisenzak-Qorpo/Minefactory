@@ -796,8 +796,6 @@ MonoBehaviour:
   playerTransform: {fileID: 1042778647}
   chunkSize: 16
   renderDistance: 3
-  furnaceUI: {fileID: 0}
-  crafterUI: {fileID: 0}
   dirtLevel: 50
   generateCaves: 1
   caveFrequency: 0.05
@@ -859,8 +857,6 @@ MonoBehaviour:
   playerTransform: {fileID: 1960920687}
   chunkSize: 16
   renderDistance: 1
-  furnaceUI: {fileID: 1644203589}
-  crafterUI: {fileID: 656484932}
   safeRadius: 10
   siliconeFrequency: 0.05
   stoneFrequency: 0.05
@@ -896,7 +892,7 @@ MonoBehaviour:
   topWorld: {fileID: 1078137999}
   undergroundWorld: {fileID: 2021988898}
   canvas: {fileID: 1514989428}
-  uIManager: {fileID: 0}
+  uIManager: {fileID: 513580762}
 --- !u!4 &1233042604
 Transform:
   m_ObjectHideFlags: 0
@@ -1982,8 +1978,6 @@ MonoBehaviour:
   playerTransform: {fileID: 1960920687}
   chunkSize: 16
   renderDistance: 3
-  furnaceUI: {fileID: 0}
-  crafterUI: {fileID: 0}
   safeRadius: 10
   siliconeFrequency: 0.05
   stoneFrequency: 0.05
@@ -2048,8 +2042,6 @@ MonoBehaviour:
   playerTransform: {fileID: 1042778647}
   chunkSize: 16
   renderDistance: 1
-  furnaceUI: {fileID: 0}
-  crafterUI: {fileID: 0}
   dirtLevel: 50
   generateCaves: 1
   caveFrequency: 0.05
