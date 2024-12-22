@@ -16,4 +16,4 @@ MonoBehaviour:
   sortingLayer: Default
   underGroundTilePrefab: {fileID: 5242337658903041165, guid: fb1416ff9df3647ed86dca54027bb3b0, type: 3}
   topTilePrefab: {fileID: 5242337658903041165, guid: c36f7ab4164834946bae40315aed8e6e, type: 3}
-  item: {fileID: 0}
+  item: {fileID: 11400000, guid: d69c67c12d85448e6a4402678a0d5ce5, type: 2}

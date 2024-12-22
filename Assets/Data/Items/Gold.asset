@@ -10,8 +10,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6c1d201c5fc744b0ebf2e384d4ce86bc, type: 3}
-  m_Name: AutoMiner
+  m_Name: Gold
   m_EditorClassIdentifier: 
-  sprite: {fileID: -3634848148184516906, guid: 5d09d99ab9dcf4e1f98791ce908f0d7a, type: 3}
-  prefab: {fileID: 8769634307742190171, guid: e44e669a343c74fc1a11422a0593c5ea, type: 3}
-  itemName: auto_miner
+  sprite: {fileID: -4779216895368739808, guid: a312383928de746ada515702594e1cdd, type: 3}
+  prefab: {fileID: 8769634307742190171, guid: ca894982547da48608e6b7b1e2e28939, type: 3}
+  itemName: gold

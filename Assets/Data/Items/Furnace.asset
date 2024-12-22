@@ -13,4 +13,5 @@ MonoBehaviour:
   m_Name: Furnace
   m_EditorClassIdentifier: 
   sprite: {fileID: 1694910375481020223, guid: 72c09655db7ce43f291a807c2a0f46ea, type: 3}
+  prefab: {fileID: 8769634307742190171, guid: db89cf56f2ad54b88aaadd5da5163e9b, type: 3}
   itemName: furnace

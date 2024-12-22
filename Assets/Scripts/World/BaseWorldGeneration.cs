@@ -30,7 +30,7 @@ namespace Minefactory.World
         public delegate bool CanPlace(Vector2 position);
         public CanPlace canPlace;
 
-        public delegate void OnItemSelect(ItemData item);
+        public delegate bool OnItemSelect(ItemData item);
         public OnItemSelect onItemSelect;
 
         public delegate bool OnPlaceTile(Vector2 position, ItemData item, Orientation orientation);
@@ -151,14 +151,27 @@ namespace Minefactory.World
             return false;
         }
 
-        private void SpawnGhostTile(ItemData item)
+        private bool SpawnGhostTile(ItemData item)
         {
+            var placeable = true;
             TileData tileData = tileRegistry.GetTileByItem(item);
-            GameObject tilePrefab = Instantiate(GetTilePrefab(tileData), Vector3.zero, Quaternion.identity);
+            GameObject baseTilePrefab;
+            if (tileData == null)
+            {
+                baseTilePrefab = item.prefab;
+                placeable = false;
+            }
+            else
+            {
+                baseTilePrefab = GetTilePrefab(tileData);
+            }
+            GameObject tilePrefab = Instantiate(baseTilePrefab, Vector3.zero, Quaternion.identity);
             tilePrefab.tag = "Ghost";
 
             var tileGhost = tilePrefab.AddComponent<TileGhost>();
+            tileGhost.placeable = placeable;
             tileGhost.tileData = tileData;
+            tileGhost.itemData = item;
             tileGhost.transform.parent = transform;
 
             var sr = tilePrefab.GetComponent<SpriteRenderer>();
@@ -168,7 +181,11 @@ namespace Minefactory.World
             sr.color = color;
 
             tilePrefab.GetComponent<BoxCollider2D>().isTrigger = true;
-            tilePrefab.GetComponent<BaseTileBehaviour>().isGhostTile = true;
+            if (placeable)
+            {
+                tilePrefab.GetComponent<BaseTileBehaviour>().isGhostTile = true;
+            }
+            return true;
         }
 
         public virtual void UpdateChunks()
@@ -195,7 +212,7 @@ namespace Minefactory.World
             }
 
             var persistentChunks = modificationManager.GetPersistentChunks();
-            
+
             foreach (var persistentChunk in persistentChunks)
             {
                 chunksToKeep.Add(persistentChunk);
@@ -223,7 +240,7 @@ namespace Minefactory.World
                     GenerateChunk(chunkPos);
                 }
             }
-        }    
+        }
         protected Vector2Int WorldToChunkPosition(Vector2 worldPosition)
         {
             return new Vector2Int(
@@ -302,7 +319,7 @@ namespace Minefactory.World
             }
 
             chunk.RegisterTile(roundedPosition, newTile);
-            
+
             if (recordModification && !modificationManager.HasModification(roundedPosition, out _))
             {
                 modificationManager.SetModification(roundedPosition, tileData, orientation);

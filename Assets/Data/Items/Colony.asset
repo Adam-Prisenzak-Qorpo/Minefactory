@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: Colony
   m_EditorClassIdentifier: 
   sprite: {fileID: -5467005465785407225, guid: 53c524c959a9bee4da4576ffeee8d8f5, type: 3}
-  prefab: {fileID: 0}
+  prefab: {fileID: 8769634307742190171, guid: 0f4aecaa8bbb64e3aa58bf029eac32e9, type: 3}
   itemName: colony

@@ -53,6 +53,12 @@ namespace Minefactory.Player.Inventory
             var crafter = itemRegistry.GetItem("crafter");
             inventoryData.AddItem(crafter);
 
+            var rawGold = itemRegistry.GetItem("gold_raw");
+            inventoryData.AddItems(rawGold, 6);
+
+            var gold = itemRegistry.GetItem("gold");
+            inventoryData.AddItem(gold);
+
             var colony = itemRegistry.GetItem("colony");
             inventoryData.AddItem(colony);
 

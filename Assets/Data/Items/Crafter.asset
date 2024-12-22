@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: Crafter
   m_EditorClassIdentifier: 
   sprite: {fileID: -7189115547304452760, guid: bce75a9ea84d042f9ad895dd2a78df17, type: 3}
-  prefab: {fileID: 0}
+  prefab: {fileID: 8769634307742190171, guid: 552ec668ee47f47878834f4060e864e4, type: 3}
   itemName: crafter
