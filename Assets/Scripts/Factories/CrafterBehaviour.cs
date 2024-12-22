@@ -2,6 +2,7 @@ using Factories.Recipes;
 using Minefactory.Factories.Recipes;
 using Minefactory.Game;
 using UnityEngine;
+using Minefactory.World.Tiles.Behaviour;
 
 namespace Minefactory.Factories
 {
@@ -10,15 +11,18 @@ namespace Minefactory.Factories
         public GameObject itemListContainer;
         public GameObject materialListContainer;
         public SelectRecipeEvent selectRecipeEvent;
-
+        
+        [HideInInspector]
+        public CrafterTileBehaviour currentCrafter;
+        
         private ItemRecipe recipe;
-        // Start is called before the first frame update
+
         void Start()
         {
             selectRecipeEvent ??= new SelectRecipeEvent();
             gameObject.SetActive(!gameObject.activeSelf);
-
-            var script = itemListContainer.GetComponent<ItemListBehaviour>();
+            
+            var script = itemListContainer.GetComponent<ItemListBehaviour>(); 
             script.selectRecipeEvent.AddListener(OnSelectRecipe);
         }
 
@@ -28,21 +32,36 @@ namespace Minefactory.Factories
             if (escPressed && gameObject.activeSelf)
             {
                 gameObject.SetActive(false);
+                ClearListeners();
             }
+        }
+
+        void OnDisable()
+        {
+            ClearListeners();
+        }
+
+        public void ClearListeners()
+        {
+            selectRecipeEvent.RemoveAllListeners();
+            currentCrafter = null;
         }
 
         public void OnSelectRecipe(ItemRecipe newRecipe)
         {
-            Debug.Log("SelectRecipe event");
-            SelectRecipe(newRecipe);
-            selectRecipeEvent?.Invoke(recipe);
+            if (currentCrafter != null)
+            {
+                Debug.Log($"Setting recipe {newRecipe.outputItemName} for crafter at {currentCrafter.transform.position}");
+                SelectRecipe(newRecipe);
+                selectRecipeEvent?.Invoke(recipe);
+            }
         }
+
         public void SelectRecipe(ItemRecipe newRecipe)
         {
             recipe = newRecipe;
             var script = materialListContainer.GetComponent<MaterialListBehaviour>();
             script.SetRecipe(recipe);
         }
-
     }
 }

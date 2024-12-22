@@ -122,6 +122,11 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &2356988 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6381964309509447240, guid: 154db50e1bbf14f0bb6191a6882ec7f9, type: 3}
+  m_PrefabInstance: {fileID: 238402466}
+  m_PrefabAsset: {fileID: 0}
 --- !u!114 &8916575 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 2563802969593380629, guid: 7186e98363504499aa1f0c4f1da6178b, type: 3}
@@ -352,10 +357,14 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 1416830816795828353, guid: 154db50e1bbf14f0bb6191a6882ec7f9, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 4324945770238498151, guid: 154db50e1bbf14f0bb6191a6882ec7f9, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 656484936}
   m_SourcePrefab: {fileID: 100100000, guid: 154db50e1bbf14f0bb6191a6882ec7f9, type: 3}
 --- !u!224 &238402467 stripped
 RectTransform:
@@ -590,6 +599,24 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 4324945770238498151, guid: 154db50e1bbf14f0bb6191a6882ec7f9, type: 3}
   m_PrefabInstance: {fileID: 238402466}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &656484936
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 656484932}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 13cd94ff962c545868d5b2b88767729a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  itemListContainer: {fileID: 1009307392}
+  materialListContainer: {fileID: 2356988}
+  selectRecipeEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  currentCrafter: {fileID: 0}
 --- !u!1 &683573747
 GameObject:
   m_ObjectHideFlags: 0
@@ -725,6 +752,11 @@ MonoBehaviour:
   - {fileID: 1524637570}
   populationText: {fileID: 1295648615}
   skillCosts: 6400000064000000f4010000f4010000e8030000e8030000
+--- !u!1 &1009307392 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8566663632862769269, guid: 154db50e1bbf14f0bb6191a6882ec7f9, type: 3}
+  m_PrefabInstance: {fileID: 238402466}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &1042778647 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2423058644852248039, guid: 76df38b081a794c31bce42809befd3f7, type: 3}

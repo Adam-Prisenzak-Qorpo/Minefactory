@@ -6,6 +6,8 @@ using Minefactory.Factories.Recipes;
 using UnityEngine;
 using Minefactory.Factories;
 using Minefactory.Game;
+using System.Collections.Generic;
+
 namespace Minefactory.World.Tiles.Behaviour
 {
     public class CrafterTileBehaviour : BreakableTileBehaviour
@@ -15,8 +17,9 @@ namespace Minefactory.World.Tiles.Behaviour
         private StorageData storage;
         private Collision2DProxy inputCollider;
         private Collision2DProxy outputCollider;
-        private ItemRecipe recipe;
+        private ItemRecipe currentRecipe;
         private GameObject crafterUI;
+        private bool isHovered = false;
 
         void Start()
         {
@@ -32,11 +35,45 @@ namespace Minefactory.World.Tiles.Behaviour
             inputCollider.OnTriggerStay2D_Action += Input_OnTriggerStay2D;
 
             outputCollider = transform.Find("Output").GetComponent<Collision2DProxy>();
-            if (outputCollider is not null) return;
-            Debug.LogError("Output collider is null");
+            if (outputCollider is null)
+            {
+                Debug.LogError("Output collider is null");
+            }
+
+            // Load saved recipe from metadata if it exists
+            LoadRecipeFromMetadata();
         }
 
-        private bool isHovered = false;
+        private void LoadRecipeFromMetadata()
+        {
+            var modManager = WorldManager.activeBaseWorld.GetComponent<WorldModificationManager>();
+            var metadata = modManager.GetModificationMetadata(transform.position);
+
+            if (metadata != null && metadata.ContainsKey("recipeOutput"))
+            {
+                string recipeName = metadata["recipeOutput"];
+                var gameState = GetComponent<GameState>() ?? FindObjectOfType<GameState>();
+                if (gameState != null)
+                {
+                    currentRecipe = gameState.itemRecipes.Find(r => r.outputItemName == recipeName && r.type == RecipeType.Crafting);
+                }
+            }
+        }
+
+        private void SaveRecipeToMetadata()
+        {
+            if (currentRecipe != null)
+            {
+                var modManager = WorldManager.activeBaseWorld.GetComponent<WorldModificationManager>();
+                var metadata = modManager.GetModificationMetadata(transform.position) ?? new Dictionary<string, string>();
+                
+                metadata["recipeOutput"] = currentRecipe.outputItemName;
+                
+                var tileRegistry = WorldManager.activeBaseWorld.tileRegistry;
+                var tileData = tileRegistry.GetTileByItem(item);
+                modManager.SetModification(transform.position, tileData, orientation, metadata);
+            }
+        }
 
         private void OnMouseEnter()
         {
@@ -48,23 +85,24 @@ namespace Minefactory.World.Tiles.Behaviour
             isHovered = false;
         }
 
-
         void Update()
         {
             var mouseDown = Input.GetMouseButtonDown(1);
             if (mouseDown && isHovered && !crafterUI.activeSelf)
             {
-                var script = crafterUI.GetComponent<FurnaceBehaviour>();
-                script.SelectRecipe(recipe);
+                var script = crafterUI.GetComponent<CrafterBehaviour>();
+                script.ClearListeners();
+                script.SelectRecipe(currentRecipe);
                 script.selectRecipeEvent.AddListener(OnSelectRecipe);
+                script.currentCrafter = this;
                 WorldManager.Instance.GetUIManager().OpenCrafterUI();
             }
-
         }
 
         private void OnSelectRecipe(ItemRecipe newRecipe)
         {
-            recipe = newRecipe;
+            currentRecipe = newRecipe;
+            SaveRecipeToMetadata();
         }
 
         private void Input_OnTriggerStay2D(Collider2D collider)
@@ -90,19 +128,18 @@ namespace Minefactory.World.Tiles.Behaviour
 
         private bool AcceptsItemCheck(ItemData collidedItem)
         {
-            var part = recipe?.parts.Find(part => part.item == collidedItem.itemName);
-            return part is not null;
+            if (currentRecipe == null) return false;
+            var part = currentRecipe.parts.Find(part => part.item == collidedItem.itemName);
+            return part != null;
         }
 
         private bool CanCraftRecipe()
         {
-            if (recipe == null) return false;
+            if (currentRecipe == null) return false;
 
-            foreach (var part in recipe.parts)
+            foreach (var part in currentRecipe.parts)
             {
-                // Count the total number of the given item in storage
                 int itemCount = 0;
-
                 for (int i = 0; i < storage.maxItems; i++)
                 {
                     var itemStack = storage.GetItemStack(i);
@@ -112,38 +149,30 @@ namespace Minefactory.World.Tiles.Behaviour
                     }
                 }
 
-                // If any part is not satisfied, we cannot craft the recipe
-                if (itemCount < part.quantity) // Assuming 1 needed, adjust if RecipePart has a count field
+                if (itemCount < part.quantity)
                 {
                     return false;
                 }
             }
-
             return true;
         }
 
         private void CraftRecipe()
         {
-            // Check if the current recipe is not null
-            if (recipe == null) return;
+            if (currentRecipe == null) return;
 
-            // Iterate through each part required by the recipe
-            foreach (var part in recipe.parts)
+            foreach (var part in currentRecipe.parts)
             {
-                int countToRemove = part.quantity; // Assuming 'quantity' is a needed field here
-
-                // Loop through the storage slots
+                int countToRemove = part.quantity;
                 for (int i = 0; i < storage.maxItems && countToRemove > 0; i++)
                 {
                     ItemStack stack = storage.GetItemStack(i);
                     if (stack != null && stack.item.itemName == part.item)
                     {
-                        // Calculate how many items to remove
                         int removeCount = Mathf.Min(stack.amount, countToRemove);
                         stack.amount -= removeCount;
                         countToRemove -= removeCount;
 
-                        // If the stack is empty now, remove the stack from the storage
                         if (stack.amount <= 0)
                         {
                             storage.RemoveItem(stack.item);
@@ -152,40 +181,31 @@ namespace Minefactory.World.Tiles.Behaviour
                 }
             }
 
-            // Assuming 'outputItemName' is in a format that can be used to create or fetch an ItemData instance
-            var craftedItemData = itemRegistry.GetItem(recipe.outputItemName);
-
-            // Spawn the crafted item, on the output (top) of the furnace, look out for rotation
-            var prefab = craftedItemData.prefab;
-            if (prefab is null)
+            var craftedItemData = itemRegistry.GetItem(currentRecipe.outputItemName);
+            if (craftedItemData == null || craftedItemData.prefab == null)
             {
-                Debug.LogError($"Item prefab for {craftedItemData.name} not found.");
+                Debug.LogError($"Item prefab for {currentRecipe.outputItemName} not found.");
                 return;
             }
-            // Calculate the position to instantiate based on current tile's orientation
-            Vector3 spawnOffset = Vector3.zero;
-            switch (orientation)
-            {
-                case Orientation.Up:
-                    spawnOffset = new Vector3(0, 1, 0); // Move item to the top of the tile
-                    break;
-                case Orientation.Right:
-                    spawnOffset = new Vector3(1, 0, 0); // Move item to the right of the tile
-                    break;
-                case Orientation.Down:
-                    spawnOffset = new Vector3(0, -1, 0); // Move item to the bottom of the tile
-                    break;
-                case Orientation.Left:
-                    spawnOffset = new Vector3(-1, 0, 0); // Move item to the left of the tile
-                    break;
-            }
 
-            // Instantiate the prefab at the calculated position
+            Vector3 spawnOffset = GetSpawnOffset();
             Vector3 spawnPosition = transform.position + spawnOffset;
-            Instantiate(prefab, spawnPosition, Quaternion.identity);
+            var spawnedItem = Instantiate(craftedItemData.prefab, spawnPosition, Quaternion.identity);
+            spawnedItem.GetComponent<ItemBehaviour>().item = craftedItemData;
 
-            // Optionally: Notify the player or system that crafting was successful
-            Debug.Log($"Crafted item: {recipe.outputItemName}");
+            Debug.Log($"Crafted item: {currentRecipe.outputItemName}");
+        }
+
+        private Vector3 GetSpawnOffset()
+        {
+            return orientation switch
+            {
+                Orientation.Up => new Vector3(0, 1, 0),
+                Orientation.Right => new Vector3(1, 0, 0),
+                Orientation.Down => new Vector3(0, -1, 0),
+                Orientation.Left => new Vector3(-1, 0, 0),
+                _ => Vector3.zero
+            };
         }
     }
 }
