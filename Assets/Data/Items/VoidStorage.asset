@@ -10,8 +10,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6c1d201c5fc744b0ebf2e384d4ce86bc, type: 3}
-  m_Name: MinerOutput
+  m_Name: VoidStorage
   m_EditorClassIdentifier: 
   sprite: {fileID: -5141803887006647134, guid: c89d4906c38984a4bb1fce092096fc11, type: 3}
-  prefab: {fileID: 0}
-  itemName: miner_output
+  prefab: {fileID: 8769634307742190171, guid: 2e1dbf5e3e0ac48638445b00a95902b8, type: 3}
+  itemName: void_storage

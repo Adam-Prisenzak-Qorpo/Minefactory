@@ -40,7 +40,7 @@ namespace Minefactory.Player.Inventory
             var furnace = itemRegistry.GetItem("furnace");
             inventoryData.AddItem(furnace);
             var rawIron = itemRegistry.GetItem("iron_raw");
-            var minerOutput = itemRegistry.GetItem("miner_output");
+            var minerOutput = itemRegistry.GetItem("void_storage");
             var autoMiner = itemRegistry.GetItem("auto_miner");
             for (int i = 0; i < 20; i++)
             {
@@ -48,7 +48,7 @@ namespace Minefactory.Player.Inventory
                 inventoryData.AddItem(minerOutput);
                 inventoryData.AddItem(autoMiner);
             }
-            
+
             inventoryData.AddItems(rawIron, 6);
             var crafter = itemRegistry.GetItem("crafter");
             inventoryData.AddItem(crafter);

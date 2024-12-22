@@ -101,7 +101,7 @@ GameObject:
   - component: {fileID: 7468090504334244591}
   - component: {fileID: 5404738973993601546}
   - component: {fileID: -2483993299749228120}
-  - component: {fileID: -693322713409822670}
+  - component: {fileID: -5733341936661168873}
   m_Layer: 0
   m_Name: Void Storage
   m_TagString: Solid
@@ -223,7 +223,7 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
---- !u!114 &-693322713409822670
+--- !u!114 &-5733341936661168873
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -232,12 +232,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 5242337658903041165}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c0d19ece45f0e4406a34995214db43cc, type: 3}
+  m_Script: {fileID: 11500000, guid: eec7062a860c54dcf89cd3112723266a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  item: {fileID: 0}
+  item: {fileID: 11400000, guid: 9affb158209e8471ebdc359dfe9d8d8d, type: 2}
   orientation: 0
-  furnaceUI: {fileID: 0}
+  gameState: {fileID: 11400000, guid: e81cc04d0172d4f7296a95419546d17d, type: 2}
+  isGhostTile: 0
+  configUIPrefab: {fileID: 3770495134304662029, guid: f93915e27091f44e78fbeec23e0526dd, type: 3}
   itemRegistry: {fileID: 11400000, guid: 3ab5254fe788b4a7f866da9ec9ded5e2, type: 2}
 --- !u!1 &6906081580845769829
 GameObject:

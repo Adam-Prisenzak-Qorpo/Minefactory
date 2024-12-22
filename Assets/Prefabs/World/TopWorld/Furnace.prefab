@@ -235,9 +235,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c0d19ece45f0e4406a34995214db43cc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  item: {fileID: 0}
+  item: {fileID: 11400000, guid: 8ea3ed1f2c59a476db2be0bb3e8a36e8, type: 2}
   orientation: 0
-  furnaceUI: {fileID: 0}
+  gameState: {fileID: 0}
+  isGhostTile: 0
   itemRegistry: {fileID: 11400000, guid: 3ab5254fe788b4a7f866da9ec9ded5e2, type: 2}
 --- !u!1 &6906081580845769829
 GameObject:

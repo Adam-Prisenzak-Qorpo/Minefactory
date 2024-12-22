@@ -730,7 +730,7 @@ GameObject:
   - component: {fileID: 6598442197526460896}
   - component: {fileID: -4040078029895038461}
   m_Layer: 5
-  m_Name: MinerOutputConfig
+  m_Name: VoidStorageConfig
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
