@@ -14,7 +14,6 @@ namespace Minefactory.Player.Inventory
         public GameState gameState;
         public ItemStack itemStack;
 
-        private bool isHovered = false;
 
         void OnMouseDown()
         {
@@ -28,38 +27,5 @@ namespace Minefactory.Player.Inventory
             WorldManager.activeBaseWorld.onItemSelect(itemStack.item);
         }
 
-        void OnMouseEnter()
-        {
-            isHovered = true;
-        }
-
-
-        void OnMouseExit()
-        {
-            isHovered = false;
-        }
-
-        // Check if Q is pressed and the player is hovering over the item
-        void Update()
-        {
-            if (Input.GetKeyDown(KeyCode.Q) && isHovered && itemStack?.item is not null)
-            {
-                var item = itemStack.item;
-                // Remove the item from the inventory
-                Inventory.useItem(item);
-                // Put item on ground with prefab "Item"
-                Debug.Log(itemStack);
-                var prefab = item.prefab;
-
-                if (!prefab)
-                {
-                    Debug.LogError($"Item prefab for {item.name} not found.");
-                    return;
-                }
-                prefab.GetComponent<ItemBehaviour>().item = item;
-
-                Instantiate(prefab, gameState.player.transform.position + new Vector3(1, 0), Quaternion.identity);
-            }
-        }
     }
 }
