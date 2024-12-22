@@ -13,23 +13,26 @@ namespace Minefactory.World.Tiles.Behaviour
 
         public void OnTilePlaced()
         {
-            // Try immediately
+            Debug.Log("tu som");
             if (GameStateManager.Instance != null)
             {
+                Debug.Log("jak to je");
                 GameStateManager.Instance.Population += 100;
             }
             else
             {
-                // Try again next frame
+                Debug.Log("korutinka");
                 StartCoroutine(RetryAwardPopulation());
             }
         }
 
         private IEnumerator RetryAwardPopulation()
         {
+            Debug.Log("teraz tu");
             yield return new WaitForEndOfFrame();
             if (GameStateManager.Instance != null)
             {
+                Debug.Log("tada");
                 GameStateManager.Instance.Population += 100;
             }
         }

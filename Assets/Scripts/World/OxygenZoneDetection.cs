@@ -4,7 +4,6 @@ using System.Collections;
 
 public class OxygenZone : MonoBehaviour
 {
-    public int oxygenReplenishAmount = 5;  // Amount of oxygen to add (in seconds)
     public float refillTimePerSegment = 1f; // Time (in seconds) to refill one segment, adjustable in Inspector
     private Coroutine refillCoroutine;  // Keep track of the coroutine
     private bool isInZone = false;
