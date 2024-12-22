@@ -1,7 +1,10 @@
 using System;
+using UnityEngine;
+using System.Collections;
+using UnityEngine.Rendering.Universal;
 using Minefactory.Game;
 using Minefactory.Storage;
-using UnityEngine;
+using Minefactory.World;
 
 namespace Minefactory.Player
 {
@@ -13,9 +16,9 @@ namespace Minefactory.Player
         public bool topWorld;
         private Rigidbody2D rb;
         private SpriteRenderer[] srs;
+        private Light2D light2D;
         private Animator anim;
         private float horizontal;
-
 
 
         private void Start()
@@ -115,11 +118,67 @@ namespace Minefactory.Player
 
         }
 
-        public void IncreaseJumpHeight(float multiplier)
+
+
+        private void ApplyMovementSpeedUpgrade(float newMovementSpeed)
         {
-            jumpForce *= multiplier;
-            Debug.Log("Jump height increased! New jump force: " + jumpForce);
+            speed = newMovementSpeed;
         }
 
+        private void OnEnable()
+        {
+            StartCoroutine(WaitForSkillTreeManager());
+            StartCoroutine(WaitForGameStateManager());
+        }
+
+        private void OnDisable()
+        {
+            SkillTreeManager.Instance.OnMovementSpeedPurchased -= ApplyMovementSpeedUpgrade;
+        }
+
+        private void JumpForceUpgrade()
+        {
+            jumpForce = GameStateManager.Instance.GetSharedState("JumpForce", jumpForce); //either we get the upgrade, or just stick to the current jumpForce
+        }
+
+        private void FlashlightUpgrade()
+        {
+            light2D = GetComponentInChildren<Light2D>();
+
+            if (light2D == null)
+            {
+                return;
+            }
+
+            float newFlashlightRadius = GameStateManager.Instance.GetSharedState("Flashlight", light2D.pointLightOuterRadius);
+            light2D.pointLightOuterRadius = newFlashlightRadius;
+        }
+
+        private void MovementSpeedUpgrade()
+        {
+            float newMovementSpeed = GameStateManager.Instance.GetSharedState("Speed", speed);
+            speed = newMovementSpeed;
+        }
+
+        private IEnumerator WaitForGameStateManager()
+        {
+            while (GameStateManager.Instance == null)
+            {
+                yield return null; // Wait until the next frame
+            }
+
+            JumpForceUpgrade();
+            FlashlightUpgrade();
+            MovementSpeedUpgrade();
+        }
+
+        private IEnumerator WaitForSkillTreeManager()
+        {
+            while (SkillTreeManager.Instance == null)
+            {
+                yield return null; // Wait until the next frame
+            }
+            SkillTreeManager.Instance.OnMovementSpeedPurchased += ApplyMovementSpeedUpgrade;
+        }
     }
 }

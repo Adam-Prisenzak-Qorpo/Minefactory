@@ -3,13 +3,8 @@ using System;
 using System.IO;
 using Minefactory.Player;
 using Minefactory.Player.Inventory;
-using Minefactory.Storage;
-using Minefactory.Storage.Items;
 using Minefactory.World;
-using Minefactory.World.Tiles;
-using Minefactory.Common;
 using Minefactory.World.Tiles.Behaviour;
-using System.Collections.Generic;
 
 
 
@@ -20,6 +15,8 @@ namespace Minefactory.Save
         private static SaveManager instance;
         private GameObject topWorld;
         private GameObject undergroundWorld;
+        public bool saveExists;
+        private Inventory inventory;
         public static SaveManager Instance
         {
             get
@@ -54,27 +51,23 @@ namespace Minefactory.Save
                 bool topWorldActive = topWorld.activeSelf;
                 PlayerController player = null;
                 BaseWorldGeneration worldGen = null;
-                Inventory inventory = null;
 
                 if (topWorldActive)
                 {
                     player = topWorld.GetComponentInChildren<PlayerController>();
                     worldGen = topWorld.GetComponentInChildren<BaseWorldGeneration>();
-                    inventory = topWorld.GetComponentInChildren<Inventory>();
                 }
                 else
                 {
                     player = undergroundWorld.GetComponentInChildren<PlayerController>();
                     worldGen = undergroundWorld.GetComponentInChildren<BaseWorldGeneration>();
-                    inventory = undergroundWorld.GetComponentInChildren<Inventory>();
                 }
 
                 var inventoryData = new InventoryData();
                 if (inventory != null && inventory.inventoryData != null)
                 {
-                    for (int i = 0; i < inventory.inventoryData.maxItems; i++)
+                    foreach (var itemStack in inventory.inventoryData.storageItems)
                     {
-                        var itemStack = inventory.inventoryData.GetItemStack(i);
                         if (itemStack != null && itemStack.item != null && itemStack.amount > 0)
                         {
                             inventoryData.items.Add(new InventoryItemData(
@@ -83,6 +76,14 @@ namespace Minefactory.Save
                             ));
                         }
                     }
+                }
+                if (inventory is null)
+                {
+                    Debug.LogError("Inventory is null");
+                }
+                if (inventory.inventoryData is null)
+                {
+                    Debug.LogError("InventoryData is null");
                 }
 
                 GameSaveData saveData = new GameSaveData
@@ -113,15 +114,17 @@ namespace Minefactory.Save
             }
         }
 
-        public void LoadGame(GameObject topWorld, GameObject undergroundWorld)
+        public void LoadGame(GameObject topWorld, GameObject undergroundWorld, Inventory inventory)
         {
             Debug.Log("Loading game... save path: " + SavePath);
+            this.inventory = inventory;
             if (!File.Exists(SavePath))
             {
                 Debug.Log("No save file found.");
                 this.CreateNewGame(topWorld, undergroundWorld);
                 return;
             }
+            saveExists = true;
 
             try
             {
@@ -146,13 +149,11 @@ namespace Minefactory.Save
                     }
                 }
 
-                
+
 
                 topWorld.SetActive(true);
                 TopWorldGeneration topWorldGen = topWorld.GetComponentInChildren<TopWorldGeneration>();
                 topWorldGen.InitializeWorld(saveData.worldData.seed, saveData.worldData.topWorldModifications);
-
-                Inventory inventory = topWorldGen.playerInventory;
 
                 LoadInventory(saveData, inventory);
 
@@ -220,8 +221,8 @@ namespace Minefactory.Save
                 float seed = UnityEngine.Random.Range(0, 1000000);
                 topWorldGen.InitializeWorld(seed);
                 underWorldGen.InitializeWorld(seed);
-                topWorld.SetActive(false);
-                undergroundWorld.SetActive(true);
+                topWorld.SetActive(true);
+                undergroundWorld.SetActive(false);
                 Debug.Log("New game created successfully with seed: " + seed);
             }
             catch (Exception e)
@@ -230,10 +231,5 @@ namespace Minefactory.Save
             }
         }
 
-
-        private void OnApplicationQuit()
-        {
-            SaveGame();
-        }
     }
 }

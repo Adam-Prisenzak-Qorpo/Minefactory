@@ -6,7 +6,7 @@ namespace Minefactory.World.Tiles.Behaviour
 {
     public class BreakableTileBehaviour : BaseTileBehaviour
     {
-        void OnMouseDown()
+        public void OnMouseDown()
         {
             if (isGhostTile)
             {

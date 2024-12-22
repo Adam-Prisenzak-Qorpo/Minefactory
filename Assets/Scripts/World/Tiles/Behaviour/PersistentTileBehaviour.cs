@@ -32,9 +32,11 @@ namespace Minefactory.World.Tiles.Behaviour
 
         protected override void OnDestroy()
         {
+            Debug.Log("PersistentTIle onDestroy");
             isBeingDestroyed = true;
             if (WorldManager.activeBaseWorld != null)
             {
+                Debug.Log($"isPersistentActive: {isPersistentActive}");
                 var modManager = WorldManager.activeBaseWorld.GetComponent<WorldModificationManager>();
                 if (modManager != null)
                 {

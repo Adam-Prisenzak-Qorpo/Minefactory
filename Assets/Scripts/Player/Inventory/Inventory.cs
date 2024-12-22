@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Minefactory.Game;
+using Minefactory.Save;
 using Minefactory.Storage;
 using Minefactory.Storage.Items;
 using Minefactory.World.Tiles;
@@ -34,24 +35,17 @@ namespace Minefactory.Player.Inventory
                     cells.Add(cell.gameObject);
                 }
             }
+
             useItem += RemoveItemFromInventory;
-            var item = itemRegistry.GetItem("belt");
-            inventoryData.AddItems(item, 20);
-            var furnace = itemRegistry.GetItem("furnace");
-            inventoryData.AddItem(furnace);
-            var rawIron = itemRegistry.GetItem("iron_raw");
-            var minerOutput = itemRegistry.GetItem("miner_output");
-            var autoMiner = itemRegistry.GetItem("auto_miner");
-            for (int i = 0; i < 20; i++)
+            // Handle save data
+            if (!SaveManager.Instance.saveExists)
             {
-                inventoryData.AddItem(rawIron);
-                inventoryData.AddItem(minerOutput);
-                inventoryData.AddItem(autoMiner);
+                var item = itemRegistry.GetItem("belt");
+                inventoryData.AddItems(item, 2);
+
+                var crafter = itemRegistry.GetItem("crafter");
+                inventoryData.AddItem(crafter);
             }
-            
-            inventoryData.AddItems(rawIron, 6);
-            var crafter = itemRegistry.GetItem("crafter");
-            inventoryData.AddItem(crafter);
 
             UpdateUI();
         }

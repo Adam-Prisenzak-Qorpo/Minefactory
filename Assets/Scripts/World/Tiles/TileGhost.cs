@@ -5,6 +5,7 @@ using UnityEngine;
 using Minefactory.Game;
 using Minefactory.World.Tiles.Behaviour;
 using Minefactory.Storage;
+using Minefactory.Storage.Items;
 
 namespace Minefactory.World.Tiles
 {
@@ -14,6 +15,8 @@ namespace Minefactory.World.Tiles
         public Orientation orientation = Orientation.Up;
 
         public Vector3 hoveredLocation;
+        public bool placeable = true;
+        public ItemData itemData;
 
         private bool canPlace = true;
 
@@ -27,10 +30,13 @@ namespace Minefactory.World.Tiles
             {
                 Destroy(gameObject);
             }
-            bool rotate = Input.GetKeyDown(KeyCode.R);
-            if (rotate)
+            if (placeable)
             {
-                Rotate();
+                bool rotate = Input.GetKeyDown(KeyCode.R);
+                if (rotate)
+                {
+                    Rotate();
+                }
             }
             bool drop = Input.GetKeyDown(KeyCode.Q);
             if (drop)
@@ -42,18 +48,17 @@ namespace Minefactory.World.Tiles
         private void DropItem()
         {
 
-            var item = tileData.item;
             // Remove the item from the inventory
-            Inventory.useItem(item);
+            Inventory.useItem(itemData);
             // Put item on ground with prefab "Item"
-            var prefab = item.prefab;
+            var prefab = itemData.prefab;
 
             if (!prefab)
             {
-                Debug.LogError($"Item prefab for {item.name} not found.");
+                Debug.LogError($"Item prefab for {itemData.name} not found.");
                 return;
             }
-            prefab.GetComponent<ItemBehaviour>().item = item;
+            prefab.GetComponent<ItemBehaviour>().item = itemData;
 
             Instantiate(prefab, transform.position, Quaternion.identity);
             Destroy(gameObject);
@@ -73,6 +78,10 @@ namespace Minefactory.World.Tiles
 
         void OnMouseOver()
         {
+            if (!placeable)
+            {
+                return;
+            }
             var sprite = GetComponent<SpriteRenderer>();
             var behavior = GetComponent<BaseTileBehaviour>();
             canPlace = behavior.CanBePlaced(transform.position);
@@ -89,11 +98,10 @@ namespace Minefactory.World.Tiles
 
         void OnMouseDown()
         {
-            // if (!canPlace)
-            // {
-            //     return;
-            // }
-            Debug.Log("Placing tile");
+            if (!placeable)
+            {
+                return;
+            }
             var placed = WorldManager.activeBaseWorld.onPlaceTile(transform.position, tileData.item, orientation);
             if (placed)
             {

@@ -1,4 +1,3 @@
-using System;
 using Minefactory.Common;
 using Minefactory.Storage;
 using Minefactory.Storage.Items;
@@ -16,11 +15,12 @@ namespace Minefactory.World.Tiles.Behaviour
         private StorageData storage;
         private Collision2DProxy inputCollider;
         private Collision2DProxy outputCollider;
-
         private ItemRecipe recipe;
+        private GameObject crafterUI;
 
         void Start()
         {
+            crafterUI = WorldManager.Instance.GetUIManager().crafterUI;
             storage = ScriptableObject.CreateInstance<StorageData>();
 
             inputCollider = transform.Find("Input").GetComponent<Collision2DProxy>();
@@ -48,9 +48,9 @@ namespace Minefactory.World.Tiles.Behaviour
             isHovered = false;
         }
 
+
         void Update()
         {
-            var crafterUI = WorldManager.Instance.GetUIManager().crafterUI;
             var mouseDown = Input.GetMouseButtonDown(1);
             if (mouseDown && isHovered && !crafterUI.activeSelf)
             {

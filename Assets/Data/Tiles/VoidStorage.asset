@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7b55ce94dd6da4eaa85c1d269153ea20, type: 3}
-  m_Name: MinerOutput
+  m_Name: VoidStorage
   m_EditorClassIdentifier: 
-  tileName: miner_output
+  tileName: void_storage
   sortingLayer: Default
   underGroundTilePrefab: {fileID: 0}
-  topTilePrefab: {fileID: 5242337658903041165, guid: ffae6a468ef0841f396bf6b2dc4f6a7e, type: 3}
+  topTilePrefab: {fileID: 5242337658903041165, guid: 90876b706a20e423d8fbdb2bced0a5a5, type: 3}
   item: {fileID: 11400000, guid: 9affb158209e8471ebdc359dfe9d8d8d, type: 2}

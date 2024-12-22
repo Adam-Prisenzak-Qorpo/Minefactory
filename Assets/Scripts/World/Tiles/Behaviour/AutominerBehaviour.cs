@@ -2,6 +2,7 @@ using UnityEngine;
 using Minefactory.Game;
 using Minefactory.Factories.Mining;
 using System.Collections.Generic;
+using System.Collections;
 
 namespace Minefactory.World.Tiles.Behaviour
 {
@@ -27,7 +28,7 @@ namespace Minefactory.World.Tiles.Behaviour
                 var activeWorld = WorldManager.activeBaseWorld;
                 var modManager = activeWorld.GetComponent<WorldModificationManager>();
                 var savedMetadata = modManager.GetModificationMetadata(position);
-                
+
                 if (savedMetadata != null && savedMetadata.ContainsKey("oreType"))
                 {
                     currentOreType = savedMetadata["oreType"];
@@ -64,17 +65,17 @@ namespace Minefactory.World.Tiles.Behaviour
         protected override void Start()
         {
             base.Start();
-            
+
             if (!isGhostTile)
             {
                 var modManager = WorldManager.activeBaseWorld.GetComponent<WorldModificationManager>();
                 var savedMetadata = modManager.GetModificationMetadata(transform.position);
-                
+
                 if (savedMetadata != null && savedMetadata.ContainsKey("oreType"))
                 {
                     currentOreType = savedMetadata["oreType"];
                 }
-                
+
                 // Set metadata including ore type
                 var metadata = new Dictionary<string, string>();
                 if (!string.IsNullOrEmpty(currentOreType))

@@ -3,6 +3,7 @@ using Minefactory.Common;
 using Minefactory.Save;
 using Minefactory.World;
 using Minefactory.Factories.Mining;
+using Minefactory.Player.Inventory;
 
 namespace Minefactory.Game
 {
@@ -12,6 +13,7 @@ namespace Minefactory.Game
         [SerializeField] private GameObject undergroundWorld;
         [SerializeField] private GameObject canvas;
         [SerializeField] private UIManager uIManager;
+        [SerializeField] private Inventory inventory;
 
 
         // Static reference to the instance for global access
@@ -32,7 +34,10 @@ namespace Minefactory.Game
             {
                 if (instance == null)
                     return null;
-                return instance.GetActiveWorld().GetComponent<BaseWorldGeneration>();
+                var world = instance.GetActiveWorld();
+                if (world == null)
+                    return null;
+                return world.GetComponentInChildren<BaseWorldGeneration>();
             }
         }
 
@@ -60,9 +65,7 @@ namespace Minefactory.Game
                 return;
             }
 
-            saveManager = SaveManager.Instance;
-            var miningManager = MiningProductionManager.Instance;
-            saveManager.LoadGame(topWorld, undergroundWorld);
+            SaveManager.Instance.LoadGame(topWorld, undergroundWorld, inventory);
             lastSwitchTime = Time.time;
         }
 
@@ -105,7 +108,7 @@ namespace Minefactory.Game
             {
                 canvasComp.worldCamera = GetActiveWorld().GetComponentInChildren<Camera>();
             }
-            
+
 
             lastSwitchTime = Time.time;
 

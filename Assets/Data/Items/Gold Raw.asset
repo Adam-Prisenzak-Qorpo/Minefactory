@@ -1,0 +1,17 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6c1d201c5fc744b0ebf2e384d4ce86bc, type: 3}
+  m_Name: Gold Raw
+  m_EditorClassIdentifier: 
+  sprite: {fileID: 2966463345756381461, guid: 9769e5ee0e0ae4812b5b57ae5ca0513a, type: 3}
+  prefab: {fileID: 8769634307742190171, guid: 90e80f08904ba462b8cd9d2bebb8c17b, type: 3}
+  itemName: gold_raw

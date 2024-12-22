@@ -143,7 +143,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ed70911f753d04afc860557a6e2c979f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  item: {fileID: 11400000, guid: 730f809ac99f73141b037342c3276783, type: 2}
+  item: {fileID: 11400000, guid: 9541d12a278d77545b9063e92764dbad, type: 2}
   orientation: 0
   gameState: {fileID: 0}
   isGhostTile: 0

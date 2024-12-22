@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: AutoMiner
   m_EditorClassIdentifier: 
   sprite: {fileID: -3634848148184516906, guid: 5d09d99ab9dcf4e1f98791ce908f0d7a, type: 3}
-  prefab: {fileID: 0}
+  prefab: {fileID: 8769634307742190171, guid: e44e669a343c74fc1a11422a0593c5ea, type: 3}
   itemName: auto_miner
