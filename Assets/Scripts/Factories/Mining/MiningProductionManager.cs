@@ -49,6 +49,11 @@ namespace Minefactory.Factories.Mining
             }
         }
 
+        public void UpgradeMiningProduction(float upgradedMiningRate){
+            totalProductionRates["iron"] = upgradedMiningRate;
+            totalProductionRates["gold"] = upgradedMiningRate;
+        }
+
         public void RemoveMiningProduction(string oreType, float rate)
         {
             if (totalProductionRates.ContainsKey(oreType))

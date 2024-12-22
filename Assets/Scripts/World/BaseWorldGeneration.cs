@@ -299,12 +299,6 @@ namespace Minefactory.World
                     Destroy(newTile);
                     return false;
                 }
-            if (tileBehaviour is ColonyTileBehaviour colonyTileBehaviour){
-                if (recordModification){
-                    colonyTileBehaviour.OnTilePlaced();
-                }
-                
-            }
             }
 
             chunk.RegisterTile(roundedPosition, newTile);

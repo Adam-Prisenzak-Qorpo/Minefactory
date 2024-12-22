@@ -7,6 +7,8 @@ public class UIManager: MonoBehaviour {
 
     public GameObject inventoryUI;
 
+    public GameObject skillTreeUI;
+
 
     public void OpenFurnaceUI()
     {
@@ -26,6 +28,11 @@ public class UIManager: MonoBehaviour {
         inventoryUI.SetActive(true);
     }
 
+    public void OpenSkillTreeUI(){
+        CloseAllUI();
+        skillTreeUI.SetActive(true);
+    }
+
 
 
     public void CloseAllUI()
@@ -33,6 +40,7 @@ public class UIManager: MonoBehaviour {
         inventoryUI.SetActive(false);
         furnaceUI.SetActive(false);
         crafterUI.SetActive(false);
+        skillTreeUI.SetActive(false);
     }
 
     public void Update()
@@ -45,6 +53,11 @@ public class UIManager: MonoBehaviour {
         if (Input.GetKeyDown(KeyCode.I))
         {
             OpenInventoryUI();
+        }
+
+        if (Input.GetKeyDown(KeyCode.P))
+        {
+            OpenSkillTreeUI();
         }
     }
 

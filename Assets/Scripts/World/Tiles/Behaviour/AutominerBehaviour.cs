@@ -2,6 +2,7 @@ using UnityEngine;
 using Minefactory.Game;
 using Minefactory.Factories.Mining;
 using System.Collections.Generic;
+using System.Collections;
 
 namespace Minefactory.World.Tiles.Behaviour
 {

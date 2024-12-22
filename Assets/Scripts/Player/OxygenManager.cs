@@ -37,7 +37,7 @@ namespace Minefactory.Player
 
         private void Start()
         {
-
+            Debug.Log("Starting OxygenManager");
             currentOxygen = totalOxygenSegments;
             InitializeOxygenBar();
             depletionCoroutine = StartCoroutine(OxygenDepletionRoutine());
@@ -146,6 +146,7 @@ namespace Minefactory.Player
         
         private void OnEnable()
         {
+            Debug.Log("Starting OnEnable OxygenManager");
             StartCoroutine(WaitForSkillTreeManager());
         }
 

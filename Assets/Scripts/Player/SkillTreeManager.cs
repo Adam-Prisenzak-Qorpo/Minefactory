@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Collections.Generic;
 using System;
+using UnityEditor.ShaderGraph.Internal;
 
 public class SkillTreeManager : MonoBehaviour
 {
@@ -11,6 +12,7 @@ public class SkillTreeManager : MonoBehaviour
 
     public event Action<float> OnOxygenSkillPurchased;
     public event Action<float> OnMovementSpeedPurchased;
+    public event Action<float> OnMiningRatePurchased;
 
     [Header("UI Elements")]
     public GameObject skillTreePanel;
@@ -54,14 +56,7 @@ public class SkillTreeManager : MonoBehaviour
         UpdateUI(); // Update the skill tree to reflect the initial state
     }
     
-    private void Update()
-    {
-        // Toggle the skill tree panel with the P key
-        if (Input.GetKeyDown(KeyCode.P))
-        {
-            skillTreePanel.SetActive(!skillTreePanel.activeSelf);
-        }
-    }
+    
 
     public void PurchaseSkill(int skillIndex)
     {
@@ -105,7 +100,7 @@ public class SkillTreeManager : MonoBehaviour
         }
 
         // Purchase the skill
-        GameStateManager.Instance.Population -= skillCosts[skillIndex];
+        //GameStateManager.Instance.Population -= skillCosts[skillIndex];
         skillsPurchased[skillIndex] = true;
 
         // Disable the other skill in the same row
@@ -234,7 +229,10 @@ public class SkillTreeManager : MonoBehaviour
                 GameStateManager.Instance.SetSharedState("JumpForce", newJumpForce);
                 break;
             case 4:  // Skill 3A
-                // Example for another skill
+                float newMiningRate = 2f;
+                OnMiningRatePurchased?.Invoke(newMiningRate);
+                GameStateManager.Instance.SetSharedState("Mining", newMiningRate);
+                Debug.Log("invoke mining rate from skill tree");
                 break;
             case 5:  // Skill 3B
                 // Example for another skill

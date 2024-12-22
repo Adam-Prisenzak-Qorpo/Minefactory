@@ -5,26 +5,22 @@ public class PauseMenuManager : MonoBehaviour
 {
     public static bool isPaused = false;
     public GameObject pauseMenuUI;
-    public GameObject instructionsUI;  // Reference to the instructions panel
+    public GameObject howToPlayUI;  // Reference to the instructions panel
     
     void Start()
     {
-        // Ensure both menus are hidden at start
         pauseMenuUI.SetActive(false);
-        instructionsUI.SetActive(false);
         isPaused = false;
     }
 
     void Update()
     {
         // Check for escape key press
-        if (Input.GetKeyDown(KeyCode.Escape))
+        if (Input.GetKeyDown(KeyCode.B))
         {
-            Debug.Log("Escape key pressed"); // This will show in the console when you press Escape
             if (isPaused)
             {
-                 Debug.Log("Trying to resume"); // Debug pause state
-                if (instructionsUI.activeSelf)
+                if (howToPlayUI.activeSelf)
                 {
                     Debug.Log("Hiding instructions");
                     // If instructions are showing, hide them first
@@ -46,7 +42,7 @@ public class PauseMenuManager : MonoBehaviour
     public void Resume()
     {
         pauseMenuUI.SetActive(false);
-        instructionsUI.SetActive(false);
+        howToPlayUI.SetActive(false);
         Time.timeScale = 1f;
         isPaused = false;
     }
@@ -67,13 +63,13 @@ public class PauseMenuManager : MonoBehaviour
     public void ShowInstructions()
     {
         pauseMenuUI.SetActive(false);
-        instructionsUI.SetActive(true);
+        howToPlayUI.SetActive(true);
         // Game remains paused while showing instructions
     }
 
     public void HideInstructions()
     {
-        instructionsUI.SetActive(false);
+        howToPlayUI.SetActive(false);
         pauseMenuUI.SetActive(true);
     }
 

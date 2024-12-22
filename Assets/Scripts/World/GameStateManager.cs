@@ -18,15 +18,17 @@ public class GameStateManager : MonoBehaviour
         get { return population; }
         set 
         {
-            Debug.Log($"Population changed from {population} to {value} by {Time.time}."); 
+            var stackTrace = new System.Diagnostics.StackTrace(true);
+            Debug.Log($"Population changed from {population} to {value} at time {Time.time}\nCalled from:\n{stackTrace}"); 
             population = value;
-            UpdatePopulationText();
             OnPopulationChanged?.Invoke();
+            UpdatePopulationText();
         }
     }
 
     private void Start()
     {
+        Debug.Log($"Population at the start: {population}");
         UpdatePopulationText();  
     }
 

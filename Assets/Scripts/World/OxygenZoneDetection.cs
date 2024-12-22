@@ -1,16 +1,19 @@
 using UnityEngine;
 using Minefactory.Player;
 using System.Collections;
+using Minefactory.World.Tiles.Behaviour;
 
 public class OxygenZone : MonoBehaviour
 {
     public float refillTimePerSegment = 1f; // Time (in seconds) to refill one segment, adjustable in Inspector
     private Coroutine refillCoroutine;  // Keep track of the coroutine
     private bool isInZone = false;
+
     
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.CompareTag("Player"))
+        var baseTileBehaviour = this.transform.parent.GetComponent<BaseTileBehaviour>();
+        if (other.CompareTag("Player") && !baseTileBehaviour.isGhostTile)
         {
             isInZone = true;
             OxygenManager.Instance?.SetOxygenZoneState(true);

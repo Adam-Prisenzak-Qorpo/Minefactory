@@ -6,52 +6,59 @@ using System.Collections;
 
 namespace Minefactory.World.Tiles.Behaviour
 {
-    public class ColonyTileBehaviour : BreakableTileBehaviour
+    public class ColonyTileBehaviour : PersistentTileBehaviour
     {
-        public GameObject oxygenZoneObject;
+        private bool isInitialized = false;
 
-
-        public void OnTilePlaced()
+        
+        protected override void Start()
         {
-            Debug.Log("tu som");
+            base.Start();
+
+            if(!isGhostTile){
+                OnActivate();
+            }
+        }
+
+        public override void OnActivate()
+        {
+            base.OnActivate();
             if (GameStateManager.Instance != null)
             {
-                Debug.Log("jak to je");
                 GameStateManager.Instance.Population += 100;
             }
             else
             {
-                Debug.Log("korutinka");
                 StartCoroutine(RetryAwardPopulation());
             }
+            isInitialized = true; // Mark as initialized after placement is complete
         }
 
         private IEnumerator RetryAwardPopulation()
         {
-            Debug.Log("teraz tu");
             yield return new WaitForEndOfFrame();
             if (GameStateManager.Instance != null)
             {
-                Debug.Log("tada");
                 GameStateManager.Instance.Population += 100;
             }
         }
 
-        // Override OnMouseDown to handle population reduction before destroying
-        void OnMouseDown()
+        public override void OnDeactivate()
         {
-            // Reduce population first
+            Debug.Log("ondeactivate");
+            if (!isInitialized) return; // Only handle destruction if the tile has been fully initialized
+            
             if (GameStateManager.Instance != null)
             {
                 GameStateManager.Instance.Population -= 100;
             }
             else
             {
+                Debug.Log("tu som");
                 StartCoroutine(RetryReducePopulation());
             }
 
-            // Call the base class OnMouseDown to handle the rest of the destruction logic
-            base.OnMouseDown();
+            base.OnDeactivate();
         }
 
         private IEnumerator RetryReducePopulation()
