@@ -1,3 +1,4 @@
+using Minefactory.Save;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -10,6 +11,7 @@ public class UIManager : MonoBehaviour
     public GameObject skillTreeUI;
     public GameObject pauseMenuUI;
     public GameObject howToPlayUI;
+
 
     private bool isPaused = false;
     private bool isModalOpen = false;
@@ -57,6 +59,7 @@ public class UIManager : MonoBehaviour
         crafterUI.SetActive(false);
         skillTreeUI.SetActive(false);
         pauseMenuUI.SetActive(false);
+        howToPlayUI.SetActive(false);
         isModalOpen = false;
     }
 
@@ -92,21 +95,13 @@ public class UIManager : MonoBehaviour
 
     public void Resume()
     {
-        pauseMenuUI.SetActive(false);
-        howToPlayUI.SetActive(false);
+        CloseAllUI();
         Time.timeScale = 1f;
         isPaused = false;
     }
 
     public void Pause()
     {
-        Debug.Log("Pause function called"); // Debug pause function
-        if (pauseMenuUI == null)
-        {
-            Debug.LogError("pauseMenu is not assigned!"); // Check if reference is missing
-            return;
-        }
-        pauseMenuUI.SetActive(true);
         Time.timeScale = 0f;
         isPaused = true;
     }
@@ -115,7 +110,6 @@ public class UIManager : MonoBehaviour
     {
         pauseMenuUI.SetActive(false);
         howToPlayUI.SetActive(true);
-        // Game remains paused while showing instructions
     }
 
     public void HideInstructions()
@@ -127,6 +121,7 @@ public class UIManager : MonoBehaviour
     public void LoadMainMenu()
     {
         Time.timeScale = 1f;
+        SaveManager.Instance.SaveGame();
         SceneManager.LoadScene("MainMenu"); // Replace with your main menu scene name
     }
 

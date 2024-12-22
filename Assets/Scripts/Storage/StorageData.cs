@@ -8,7 +8,7 @@ namespace Minefactory.Storage
     public class StorageData : ScriptableObject
     {
         public int maxItems = 20;
-        private List<ItemStack> storageItems = new();
+        public List<ItemStack> storageItems = new();
 
 
         public void AddItem(ItemData item)

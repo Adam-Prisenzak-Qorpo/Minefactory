@@ -723,7 +723,6 @@ MonoBehaviour:
   - {fileID: 233890676}
   - {fileID: 8916575}
   - {fileID: 1524637570}
-  - {fileID: 1322830489}
   populationText: {fileID: 1295648615}
   skillCosts: 6400000064000000f4010000f4010000e8030000e8030000
 --- !u!4 &1042778647 stripped
@@ -775,7 +774,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6e5400de0c39a4ef9b8c9d3401c1c73b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerInventory: {fileID: 0}
+  playerInventory: {fileID: 1398297705}
   tileRegistry: {fileID: 11400000, guid: 04762c43388674ed099d2ef4714b21ef, type: 2}
   backgroundTileData: {fileID: 11400000, guid: 8234e8ee9c3bf4abb8866ec408817298, type: 2}
   playerTransform: {fileID: 1042778647}
@@ -784,7 +783,7 @@ MonoBehaviour:
   dirtLevel: 50
   generateCaves: 1
   caveFrequency: 0.05
-  spawnPoint: {x: 50, y: 91}
+  spawnPoint: {x: 0, y: 0}
   spawnAreaRadius: 2
   oreRegistry: {fileID: 11400000, guid: 3a1c891f05b92431395dbe768775c309, type: 2}
 --- !u!1 &1078137999
@@ -796,7 +795,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1078138000}
-  - component: {fileID: 1078138001}
   m_Layer: 0
   m_Name: TopWorld
   m_TagString: Untagged
@@ -823,27 +821,6 @@ Transform:
   - {fileID: 1924386280}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1078138001
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1078137999}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aad15b0a3a4744f3aaf1873485df394c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  playerInventory: {fileID: 1398297705}
-  tileRegistry: {fileID: 11400000, guid: 04762c43388674ed099d2ef4714b21ef, type: 2}
-  backgroundTileData: {fileID: 11400000, guid: afd167427018441b8b874913393429cd, type: 2}
-  playerTransform: {fileID: 1960920687}
-  chunkSize: 16
-  renderDistance: 1
-  safeRadius: 10
-  siliconeFrequency: 0.05
-  stoneFrequency: 0.05
 --- !u!114 &1220745886 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 3623705791498866290, guid: 7186e98363504499aa1f0c4f1da6178b, type: 3}
@@ -888,6 +865,7 @@ MonoBehaviour:
   undergroundWorld: {fileID: 2021988898}
   canvas: {fileID: 1514989428}
   uIManager: {fileID: 513580762}
+  inventory: {fileID: 1398297705}
 --- !u!4 &1233042604
 Transform:
   m_ObjectHideFlags: 0
@@ -982,17 +960,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1295648613}
   m_CullTransparentMesh: 1
---- !u!114 &1322830489 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 7590295033866242526, guid: 7186e98363504499aa1f0c4f1da6178b, type: 3}
-  m_PrefabInstance: {fileID: 5918959653615253250}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &1349047162
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1303,7 +1270,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 36bc8d3901b61354386028307d99051d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  population: 1000
+  population: 0
   populationText: {fileID: 1295648615}
 --- !u!4 &1393313797
 Transform:
@@ -2012,7 +1979,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   totalOxygenSegments: 10
-  timePerSegment: 1
+  timePerSegment: 60
   oxygenBarContainer: {fileID: 2076493712}
   oxygenSegmentPrefab: {fileID: 3526274062190667094, guid: e721693e23d1f2b43aa9e81ae96c2273, type: 3}
 --- !u!1 &1888323967
@@ -2132,7 +2099,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aad15b0a3a4744f3aaf1873485df394c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerInventory: {fileID: 0}
+  playerInventory: {fileID: 1398297705}
   tileRegistry: {fileID: 11400000, guid: 04762c43388674ed099d2ef4714b21ef, type: 2}
   backgroundTileData: {fileID: 11400000, guid: afd167427018441b8b874913393429cd, type: 2}
   playerTransform: {fileID: 1960920687}
@@ -2155,7 +2122,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2021988899}
-  - component: {fileID: 2021988900}
   m_Layer: 0
   m_Name: UndergroundWorld
   m_TagString: Untagged
@@ -2183,30 +2149,6 @@ Transform:
   - {fileID: 1059815175}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2021988900
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2021988898}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6e5400de0c39a4ef9b8c9d3401c1c73b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  playerInventory: {fileID: 1398297705}
-  tileRegistry: {fileID: 11400000, guid: 04762c43388674ed099d2ef4714b21ef, type: 2}
-  backgroundTileData: {fileID: 11400000, guid: 8234e8ee9c3bf4abb8866ec408817298, type: 2}
-  playerTransform: {fileID: 1042778647}
-  chunkSize: 16
-  renderDistance: 1
-  dirtLevel: 50
-  generateCaves: 1
-  caveFrequency: 0.05
-  spawnPoint: {x: 0, y: 0}
-  spawnAreaRadius: 5
-  oreRegistry: {fileID: 11400000, guid: 3a1c891f05b92431395dbe768775c309, type: 2}
 --- !u!1 &2025511628
 GameObject:
   m_ObjectHideFlags: 0
@@ -2305,6 +2247,22 @@ PrefabInstance:
     - target: {fileID: 1737142723641662772, guid: 6d3476c80b28240bebb682032ecc25a8, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
+      objectReference: {fileID: 513580762}
+    - target: {fileID: 1737142723641662772, guid: 6d3476c80b28240bebb682032ecc25a8, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: LoadMainMenu
+      objectReference: {fileID: 0}
+    - target: {fileID: 1737142723641662772, guid: 6d3476c80b28240bebb682032ecc25a8, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: UIManager, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 2377384089798074120, guid: 6d3476c80b28240bebb682032ecc25a8, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -0.000061035156
+      objectReference: {fileID: 0}
+    - target: {fileID: 2805730695205066768, guid: 6d3476c80b28240bebb682032ecc25a8, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 80
       objectReference: {fileID: 0}
     - target: {fileID: 3371693597068047455, guid: 6d3476c80b28240bebb682032ecc25a8, type: 3}
       propertyPath: m_Pivot.x
@@ -2393,6 +2351,14 @@ PrefabInstance:
     - target: {fileID: 8051885581955167897, guid: 6d3476c80b28240bebb682032ecc25a8, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
+      objectReference: {fileID: 513580762}
+    - target: {fileID: 8051885581955167897, guid: 6d3476c80b28240bebb682032ecc25a8, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: Resume
+      objectReference: {fileID: 0}
+    - target: {fileID: 8051885581955167897, guid: 6d3476c80b28240bebb682032ecc25a8, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: UIManager, Assembly-CSharp
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

@@ -233,9 +233,6 @@ namespace Minefactory.World
                     GameStateManager.Instance.SetSharedState("Mining", newMiningRate);
                     Debug.Log("invoke mining rate from skill tree");
                     break;
-                case 5:  // Skill 3B
-                         // Example for another skill
-                    break;
                 default:
                     Debug.LogWarning("Skill effect not implemented!");
                     break;
