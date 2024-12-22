@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
+using Minefactory.World;
 
 namespace Minefactory.Factories.Mining
 {
@@ -49,7 +50,8 @@ namespace Minefactory.Factories.Mining
             }
         }
 
-        public void UpgradeMiningProduction(float upgradedMiningRate){
+        public void UpgradeMiningProduction(float upgradedMiningRate)
+        {
             totalProductionRates["iron"] = upgradedMiningRate;
             totalProductionRates["gold"] = upgradedMiningRate;
         }
@@ -72,7 +74,8 @@ namespace Minefactory.Factories.Mining
 
         public float GetTotalProductionRate(string oreType)
         {
-            return totalProductionRates.GetValueOrDefault(oreType, 0f);
+            var coef = GameStateManager.Instance.GetSharedState("Mining", 1f);
+            return totalProductionRates.GetValueOrDefault(oreType, 0f) * coef;
         }
 
         public float GetCurrentOutputRate(string oreType)

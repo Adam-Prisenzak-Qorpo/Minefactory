@@ -16,11 +16,12 @@ namespace Minefactory.World.Tiles.Behaviour
         private StorageData storage;
         private Collision2DProxy inputCollider;
         private Collision2DProxy outputCollider;
-
         private ItemRecipe recipe;
+        private GameObject furnaceUI;
 
         void Start()
         {
+            furnaceUI = WorldManager.Instance.GetUIManager().furnaceUI;
             storage = ScriptableObject.CreateInstance<StorageData>();
 
             inputCollider = transform.Find("Input").GetComponent<Collision2DProxy>();
@@ -48,9 +49,10 @@ namespace Minefactory.World.Tiles.Behaviour
             isHovered = false;
         }
 
+
+
         void Update()
         {
-            var furnaceUI = WorldManager.Instance.GetUIManager().furnaceUI;
             var mouseDown = Input.GetMouseButtonDown(1);
             if (mouseDown && isHovered && !furnaceUI.activeSelf)
             {

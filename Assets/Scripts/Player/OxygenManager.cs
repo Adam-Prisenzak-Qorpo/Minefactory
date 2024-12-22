@@ -1,6 +1,7 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;  // For displaying the HUD
+using Minefactory.World;
 
 namespace Minefactory.Player
 {
@@ -23,17 +24,17 @@ namespace Minefactory.Player
         private bool isInOxygenZone = false;  // Flag to check if player is in the zone
         private Coroutine depletionCoroutine;
         private void Awake()
-    {
-        // Ensure only one instance exists
-        if (Instance == null)
         {
-            Instance = this;
+            // Ensure only one instance exists
+            if (Instance == null)
+            {
+                Instance = this;
+            }
+            else
+            {
+                Destroy(gameObject);
+            }
         }
-        else
-        {
-            Destroy(gameObject);
-        }
-    }
 
         private void Start()
         {
@@ -95,33 +96,35 @@ namespace Minefactory.Player
             }
         }
 
-            private IEnumerator OxygenDepletionRoutine()
-            {
-                isDepleting = true;
-                
-                while (CurrentOxygen > 0 && !isInOxygenZone)
-                {
-                    yield return new WaitForSeconds(timePerSegment);  
-                    if (!isInOxygenZone) // Double check we're still supposed to deplete
-                    {
-                        currentOxygen--;
-                        UpdateOxygenBar();
+        private IEnumerator OxygenDepletionRoutine()
+        {
+            isDepleting = true;
 
-                        if (CurrentOxygen <= 0)
-                        {
-                            PlayerDeath();
-                        }
+            while (CurrentOxygen > 0 && !isInOxygenZone)
+            {
+                yield return new WaitForSeconds(timePerSegment);
+                if (!isInOxygenZone) // Double check we're still supposed to deplete
+                {
+                    currentOxygen--;
+                    UpdateOxygenBar();
+
+                    if (CurrentOxygen <= 0)
+                    {
+                        PlayerDeath();
                     }
                 }
-                
-                isDepleting = false;
-                depletionCoroutine = null;
             }
+
+            isDepleting = false;
+            depletionCoroutine = null;
+        }
 
         private void UpdateOxygenBar()
         {
-            for (int i = 0; i < oxygenSegments.Length; i++){
-                if (i < currentOxygen) {
+            for (int i = 0; i < oxygenSegments.Length; i++)
+            {
+                if (i < currentOxygen)
+                {
                     oxygenSegments[i].enabled = true;  // Show segment
                 }
                 else
@@ -143,7 +146,7 @@ namespace Minefactory.Player
             currentOxygen = Mathf.Min(currentOxygen + amount, totalOxygenSegments);
             UpdateOxygenBar();
         }
-        
+
         private void OnEnable()
         {
             Debug.Log("Starting OnEnable OxygenManager");
@@ -170,6 +173,6 @@ namespace Minefactory.Player
             Debug.Log($"Additional oxygen added: {extraOxygen}. New time per segment: {timePerSegment}");
         }
 
-        
+
     }
 }

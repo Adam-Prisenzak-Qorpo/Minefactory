@@ -1,10 +1,10 @@
 using System;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using System.Collections;
 using UnityEngine.Rendering.Universal;
 using Minefactory.Game;
 using Minefactory.Storage;
+using Minefactory.World;
 
 namespace Minefactory.Player
 {
@@ -68,7 +68,7 @@ namespace Minefactory.Player
             }
             else if (horizontal > 0)
             {
-               transform.localScale = new Vector3(1, 1, 1);
+                transform.localScale = new Vector3(1, 1, 1);
             }
             if (topWorld)
             {
@@ -92,10 +92,11 @@ namespace Minefactory.Player
 
         private void Update()
         {
-            if(anim){
+            if (anim)
+            {
                 anim.SetFloat("horizontal", horizontal);
             }
-            
+
         }
 
 
@@ -104,7 +105,7 @@ namespace Minefactory.Player
         {
             speed = newMovementSpeed;
         }
-        
+
         private void OnEnable()
         {
             StartCoroutine(WaitForSkillTreeManager());
@@ -116,12 +117,13 @@ namespace Minefactory.Player
             SkillTreeManager.Instance.OnMovementSpeedPurchased -= ApplyMovementSpeedUpgrade;
         }
 
-        private void JumpForceUpgrade(){
-            float newJumpForce = GameStateManager.Instance.GetSharedState("JumpForce", jumpForce); //either we get the upgrade, or just stick to the current jumpForce
-            jumpForce = newJumpForce;
+        private void JumpForceUpgrade()
+        {
+            jumpForce = GameStateManager.Instance.GetSharedState("JumpForce", jumpForce); //either we get the upgrade, or just stick to the current jumpForce
         }
 
-        private void FlashlightUpgrade(){
+        private void FlashlightUpgrade()
+        {
             light2D = GetComponentInChildren<Light2D>();
 
             if (light2D == null)
@@ -133,11 +135,12 @@ namespace Minefactory.Player
             light2D.pointLightOuterRadius = newFlashlightRadius;
         }
 
-        private void MovementSpeedUpgrade(){
-            float newMovementSpeed = GameStateManager.Instance.GetSharedState("Speed", speed); 
+        private void MovementSpeedUpgrade()
+        {
+            float newMovementSpeed = GameStateManager.Instance.GetSharedState("Speed", speed);
             speed = newMovementSpeed;
         }
-        
+
         private IEnumerator WaitForGameStateManager()
         {
             while (GameStateManager.Instance == null)

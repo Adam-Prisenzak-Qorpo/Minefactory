@@ -1,39 +1,54 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
-public class UIManager: MonoBehaviour {
+public class UIManager : MonoBehaviour
+{
 
     public GameObject furnaceUI;
     public GameObject crafterUI;
-
     public GameObject inventoryUI;
-
     public GameObject skillTreeUI;
+    public GameObject pauseMenuUI;
+    public GameObject howToPlayUI;
 
+    private bool isPaused = false;
+    private bool isModalOpen = false;
+
+    public void OpenPauseMenu()
+    {
+        CloseAllUI();
+        isModalOpen = true;
+        pauseMenuUI.SetActive(true);
+        Pause();
+    }
 
     public void OpenFurnaceUI()
     {
         CloseAllUI();
+        isModalOpen = true;
         furnaceUI.SetActive(true);
     }
 
     public void OpenCrafterUI()
     {
         CloseAllUI();
+        isModalOpen = true;
         crafterUI.SetActive(true);
     }
 
     public void OpenInventoryUI()
     {
         CloseAllUI();
+        isModalOpen = true;
         inventoryUI.SetActive(true);
     }
 
-    public void OpenSkillTreeUI(){
+    public void OpenSkillTreeUI()
+    {
         CloseAllUI();
+        isModalOpen = true;
         skillTreeUI.SetActive(true);
     }
-
-
 
     public void CloseAllUI()
     {
@@ -41,13 +56,26 @@ public class UIManager: MonoBehaviour {
         furnaceUI.SetActive(false);
         crafterUI.SetActive(false);
         skillTreeUI.SetActive(false);
+        pauseMenuUI.SetActive(false);
+        isModalOpen = false;
     }
 
     public void Update()
     {
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-           CloseAllUI();
+            if (isPaused)
+            {
+                Resume();
+            }
+            else if (isModalOpen)
+            {
+                CloseAllUI();
+            }
+            else
+            {
+                OpenPauseMenu();
+            }
         }
 
         if (Input.GetKeyDown(KeyCode.I))
@@ -61,5 +89,54 @@ public class UIManager: MonoBehaviour {
         }
     }
 
+
+    public void Resume()
+    {
+        pauseMenuUI.SetActive(false);
+        howToPlayUI.SetActive(false);
+        Time.timeScale = 1f;
+        isPaused = false;
+    }
+
+    public void Pause()
+    {
+        Debug.Log("Pause function called"); // Debug pause function
+        if (pauseMenuUI == null)
+        {
+            Debug.LogError("pauseMenu is not assigned!"); // Check if reference is missing
+            return;
+        }
+        pauseMenuUI.SetActive(true);
+        Time.timeScale = 0f;
+        isPaused = true;
+    }
+
+    public void ShowInstructions()
+    {
+        pauseMenuUI.SetActive(false);
+        howToPlayUI.SetActive(true);
+        // Game remains paused while showing instructions
+    }
+
+    public void HideInstructions()
+    {
+        howToPlayUI.SetActive(false);
+        pauseMenuUI.SetActive(true);
+    }
+
+    public void LoadMainMenu()
+    {
+        Time.timeScale = 1f;
+        SceneManager.LoadScene("MainMenu"); // Replace with your main menu scene name
+    }
+
+    public void QuitGame()
+    {
+        Application.Quit();
+#if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false;
+#endif
+
+    }
 }
 
