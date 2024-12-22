@@ -64,19 +64,38 @@ namespace Minefactory.Player
 
             if (horizontal < 0)
             {
-                transform.localScale = new Vector3(-1, 1, 1);
+                if (topWorld){
+                    transform.rotation = Quaternion.Euler(0, 0, 90);
+                }
+                else{
+                    transform.localScale = new Vector3(-1, 1, 1);
+                }
             }
             else if (horizontal > 0)
             {
-                transform.localScale = new Vector3(1, 1, 1);
+                if (topWorld){
+                    transform.rotation = Quaternion.Euler(0, 0, -90);
+                }
+                else{
+                    transform.localScale = new Vector3(1, 1, 1);
+                }
             }
             if (topWorld)
             {
                 rb.velocity = move;
+                if (vertical > 0)
+                {
+                   transform.rotation = Quaternion.Euler(0, 0, 0);
+                }
+                else if (vertical < 0)
+                {
+                    transform.rotation = Quaternion.Euler(0, 0, 180);
+                }
                 return;
             }
-            move.y = rb.velocity.y;
 
+
+            move.y = rb.velocity.y;
             float jump = Input.GetAxisRaw("Jump");
             Console.WriteLine(isGrounded);
             if (vertical > 0.1f || jump > 0.1f)
